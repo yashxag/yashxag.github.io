@@ -1,0 +1,1 @@
+import fs from 'node:fs';const p=JSON.parse(fs.readFileSync('public/data/jobs.json','utf8'));if(!Array.isArray(p.jobs))throw Error('jobs must be an array');const ids=new Set();for(const j of p.jobs){if(!j.id||!j.title||!j.company)throw Error('Invalid job '+j.id);if(ids.has(j.id))throw Error('Duplicate '+j.id);ids.add(j.id)}console.log('Valid jobs:',ids.size);
