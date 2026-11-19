@@ -1,0 +1,130 @@
+{
+  "updatedAt": "2026-11-20",
+  "problems": [
+    {
+      "id": "DSA-001",
+      "slug": "two-sum",
+      "title": "Find Two Numbers That Add to a Target",
+      "difficulty": "Easy",
+      "topic": "Arrays & Hash Maps",
+      "dateAdded": "2026-11-20",
+      "estimatedMinutes": 15,
+      "statement": "Given an integer array nums and an integer target, return the indices of two distinct elements whose sum equals target. Exactly one valid pair exists, and the same index cannot be used twice.",
+      "example": {
+        "input": "nums = [2, 7, 11, 15], target = 9",
+        "output": "[0, 1]",
+        "explanation": "nums[0] + nums[1] = 2 + 7 = 9."
+      },
+      "constraints": [
+        "2 <= nums.length <= 10,000",
+        "-1,000,000 <= nums[i], target <= 1,000,000",
+        "Exactly one valid answer exists."
+      ],
+      "approach": "Hash map of previously seen numbers",
+      "steps": [
+        "Create a HashMap from number to its index.",
+        "Scan the array from left to right. For each number x, compute complement = target - x.",
+        "If the complement is already in the map, return its stored index and the current index.",
+        "Otherwise record x and its index, then continue. Store only after checking to avoid using the current element twice."
+      ],
+      "javaCode": "import java.util.HashMap;\nimport java.util.Map;\n\nclass Solution {\n    public int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> seen = new HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            int needed = target - nums[i];\n            if (seen.containsKey(needed)) {\n                return new int[] {seen.get(needed), i};\n            }\n            seen.put(nums[i], i);\n        }\n        throw new IllegalArgumentException(\"No solution\");\n    }\n}",
+      "timeComplexity": "O(n) expected",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Explain why you check for the complement before inserting the current element. HashMap operations are O(1) on average.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-002",
+      "slug": "valid-brackets",
+      "title": "Check Whether Brackets Are Balanced",
+      "difficulty": "Easy",
+      "topic": "Stacks",
+      "dateAdded": "2026-11-20",
+      "estimatedMinutes": 15,
+      "statement": "Given a string containing only parentheses (), square brackets [], and curly braces {}, determine whether every opening bracket is closed by the correct type in the correct order.",
+      "example": {
+        "input": "s = \"({[]})\"",
+        "output": "true",
+        "explanation": "Every closing bracket matches the most recently opened unmatched bracket."
+      },
+      "constraints": [
+        "0 <= s.length <= 10,000",
+        "s contains only ()[]{} characters."
+      ],
+      "approach": "Stack of expected closing brackets",
+      "steps": [
+        "Create an empty stack of characters.",
+        "For an opening bracket, push its matching closing bracket onto the stack.",
+        "For a closing bracket, the stack must be nonempty and its top must equal that character; otherwise return false.",
+        "After the entire string, return true only if the stack is empty."
+      ],
+      "javaCode": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\nclass Solution {\n    public boolean isValid(String s) {\n        Deque<Character> expected = new ArrayDeque<>();\n        for (char c : s.toCharArray()) {\n            if (c == '(') expected.push(')');\n            else if (c == '[') expected.push(']');\n            else if (c == '{') expected.push('}');\n            else if (expected.isEmpty() || expected.pop() != c) return false;\n        }\n        return expected.isEmpty();\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Mention why a counter cannot handle mixed bracket types or nesting order.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-003",
+      "slug": "largest-contiguous-sum",
+      "title": "Maximum Sum of a Contiguous Subarray",
+      "difficulty": "Medium",
+      "topic": "Dynamic Programming",
+      "dateAdded": "2026-11-20",
+      "estimatedMinutes": 25,
+      "statement": "Given a nonempty array of integers, find the greatest possible sum among all contiguous, nonempty subarrays. Negative numbers are allowed.",
+      "example": {
+        "input": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+        "output": "6",
+        "explanation": "The contiguous segment [4, -1, 2, 1] gives 6."
+      },
+      "constraints": [
+        "1 <= nums.length <= 100,000",
+        "-10,000 <= nums[i] <= 10,000"
+      ],
+      "approach": "Kadane's algorithm",
+      "steps": [
+        "Initialize currentSum and bestSum to the first element, which handles all-negative arrays.",
+        "For each subsequent element x, decide whether to start a new subarray at x or extend the previous one: currentSum = max(x, currentSum + x).",
+        "Update bestSum = max(bestSum, currentSum).",
+        "Return bestSum after processing every element."
+      ],
+      "javaCode": "class Solution {\n    public int maxSubArray(int[] nums) {\n        int currentSum = nums[0];\n        int bestSum = nums[0];\n        for (int i = 1; i < nums.length; i++) {\n            currentSum = Math.max(nums[i], currentSum + nums[i]);\n            bestSum = Math.max(bestSum, currentSum);\n        }\n        return bestSum;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Be ready to explain why initializing to zero would give the wrong answer for an all-negative input.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-004",
+      "slug": "longest-distinct-substring",
+      "title": "Longest Substring Without Repeated Characters",
+      "difficulty": "Medium",
+      "topic": "Sliding Window",
+      "dateAdded": "2026-11-20",
+      "estimatedMinutes": 25,
+      "statement": "Given a string s, return the length of the longest contiguous substring with no repeated character. Treat Java characters as UTF-16 code units for this problem.",
+      "example": {
+        "input": "s = \"abcabcbb\"",
+        "output": "3",
+        "explanation": "The substring \"abc\" has three distinct characters; any longer window repeats a character."
+      },
+      "constraints": [
+        "0 <= s.length <= 50,000",
+        "s may contain letters, digits, symbols or spaces."
+      ],
+      "approach": "Sliding window and last-seen positions",
+      "steps": [
+        "Start a window at left = 0 and maintain a map from character to its latest index.",
+        "Move right across the string. If the current character was seen within the current window, move left just past its previous index.",
+        "Update the character's latest index to right.",
+        "Update best with the window length right - left + 1; return best after the scan."
+      ],
+      "javaCode": "import java.util.HashMap;\nimport java.util.Map;\n\nclass Solution {\n    public int lengthOfLongestSubstring(String s) {\n        Map<Character, Integer> lastSeen = new HashMap<>();\n        int left = 0, best = 0;\n        for (int right = 0; right < s.length(); right++) {\n            char c = s.charAt(right);\n            if (lastSeen.containsKey(c)) {\n                left = Math.max(left, lastSeen.get(c) + 1);\n            }\n            lastSeen.put(c, right);\n            best = Math.max(best, right - left + 1);\n        }\n        return best;\n    }\n}",
+      "timeComplexity": "O(n) expected",
+      "spaceComplexity": "O(min(n, character set size))",
+      "interviewTip": "Why use max when moving left? A previously seen character may be outside the current window.",
+      "source": "Original interview-style formulation"
+    }
+  ]
+}
