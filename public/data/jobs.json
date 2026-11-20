@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19",
+  "updatedAt": "2026-11-20",
   "jobs": [
     {
       "id": "JOB-001",
@@ -1932,6 +1932,29 @@
       "dsaPrep": "High: arrays, hash maps, trees, graphs, DP, complexity",
       "corePrep": "High: Java fundamentals, API design, testing, AWS, observability, distributed systems",
       "description": "Amazon UTR Pick Stage software development: design, test and deploy components; troubleshoot production failures; collaborate on design, reviews and operations. 1+ years non-internship professional software development experience."
+    },
+    {
+      "id": "JOB-085",
+      "company": "Amazon",
+      "title": "Software Development Engineer, Last Mile Platform Services, SDE",
+      "location": "Gurugram, Haryana, India",
+      "workMode": "Not specified",
+      "experience": "3+ years software development; 2+ years design/architecture",
+      "dateFound": "2026-11-20",
+      "postedDate": "2026-10-07",
+      "vacancyStatus": "Active",
+      "priority": "Medium",
+      "fit": "Stretch: NCR backend role, but 3+ years required versus 1.5 years experience",
+      "skills": "Backend APIs, distributed systems, software development, system design, reliability",
+      "salary": "Not disclosed",
+      "url": "https://www.amazon.jobs/en/jobs/10572202/software-development-engineer-last-mile-platform-services-sde",
+      "notes": "Official Amazon requisition; Gurugram; 3+ years experience required.",
+      "lastChecked": "2026-11-20 IST",
+      "verification": "2026-11-20 IST: Exact official Amazon job page displays Apply now and 3+ years minimum; https://www.amazon.jobs/en/jobs/10572202/software-development-engineer-last-mile-platform-services-sde",
+      "requisitionId": "10572202",
+      "dsaPrep": "Medium–Hard: arrays, hash maps, trees, graphs, dynamic programming",
+      "corePrep": "Advanced: Java, API design, distributed systems, messaging, scalability and reliability",
+      "description": "Build and operate Amazon Last Mile communications platforms including push notifications, newsfeed and messaging APIs for delivery partners. Integrate content and audience systems, develop reliable internationalized delivery messaging and AI-assisted communication workflows. The role requires at least three years of professional software development and two years of design or architecture experience."
     }
   ]
 }
