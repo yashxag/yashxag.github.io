@@ -539,25 +539,19 @@ body{background-image:none;background-attachment:scroll}
 @media(max-width:600px){.main{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}}
 @media(max-width:360px){.mobile-nav{width:calc(100% - 20px);padding:5px;gap:3px}.mobile-nav-item{font-size:10px}}
 
-/* Profolio original SVG loading indicator. No dependencies or image assets. */
-.profolio-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:210px;padding:28px 16px;color:#405477;text-align:center}
-.profolio-loading.is-compact{min-height:92px;padding:10px 12px;gap:3px}
-.profolio-loader-svg{display:block;width:72px;height:72px;overflow:visible;flex-shrink:0}
-.profolio-loading.is-compact .profolio-loader-svg{width:44px;height:44px}
-.profolio-loader-label{color:#465a79;font-size:13px;font-weight:650;letter-spacing:.005em}
-.profolio-loader-ring{transform-origin:40px 40px;animation:profolio-ring-spin .85s linear infinite}
-.profolio-loader-spark{transform-origin:40px 40px;animation:profolio-spark-pulse .85s ease-in-out infinite}
-.profolio-loader-dot{animation:profolio-dot-fade .85s ease-in-out infinite alternate}
-.profolio-loader-dot.dot-two{animation-delay:.25s}
-.profolio-loader-ellipsis{display:inline-block;overflow:hidden;vertical-align:bottom;width:1.4em;letter-spacing:1px;animation:profolio-ellipsis 1s steps(4,end) infinite}
-@keyframes profolio-ring-spin{to{transform:rotate(360deg)}}
-@keyframes profolio-spark-pulse{0%,100%{transform:scale(.90);opacity:.78}50%{transform:scale(1.08);opacity:1}}
-@keyframes profolio-dot-fade{from{opacity:.35;transform:scale(.75)}to{opacity:1;transform:scale(1.15)}}
-@keyframes profolio-ellipsis{0%{width:0}100%{width:1.4em}}
+/* Reliable SVG loader: rotation uses one CSS transform, no competing SVG transforms. */
+.profolio-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-height:160px;padding:20px 16px;color:#405477;text-align:center;background:transparent}
+.profolio-loading.is-compact{min-height:78px;padding:8px 12px;gap:4px}
+.profolio-loader-svg{display:block;width:64px;height:64px;flex:none;overflow:visible}
+.profolio-loading.is-compact .profolio-loader-svg{width:42px;height:42px}
+.profolio-loader-label{display:block;font-size:13px;font-weight:650;line-height:1.5;color:#405477}
+.profolio-loader-ring{transform-origin:center;transform-box:view-box;animation:profolio-spin .9s linear infinite}
+.profolio-loader-spark{transform-origin:center;transform-box:view-box;animation:profolio-pulse 1.2s ease-in-out infinite}
+@keyframes profolio-spin{from{transform:rotate(-90deg)}to{transform:rotate(270deg)}}
+@keyframes profolio-pulse{0%,100%{opacity:.72;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
 @media(prefers-reduced-motion:reduce){
- .profolio-loader-ring,.profolio-loader-spark,.profolio-loader-dot,.profolio-loader-ellipsis{animation:none!important}
- .profolio-loader-spark,.profolio-loader-dot{opacity:1}
- .profolio-loader-ellipsis{width:1.4em}
+ .profolio-loader-ring{animation:none;transform:rotate(-90deg)}
+ .profolio-loader-spark{animation:none;opacity:1;transform:none}
 }
 
 /* Matte container boundaries: distinct yet understated against white canvas. */
@@ -588,3 +582,8 @@ body{background-image:none;background-attachment:scroll}
 .detail-summary-item,.job-fit-explanation,
 .toolkit-prompt{border-color:#cbd7e7}
 .mobile-nav{border-color:#c3d0e3}
+
+/* Keep the entire site canvas white. Only individual cards use pastels. */
+:root{color-scheme:light;--cb-bg:#ffffff}
+html,body,#root,.shell,.main{background-color:#ffffff}
+body{background-image:none}
