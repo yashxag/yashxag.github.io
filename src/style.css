@@ -471,7 +471,7 @@ footer{border-color:var(--cb-border)}
  --cb-mist-blue:#edf3fc;
  --cb-mist-lilac:#f2effb;
  --cb-mist-mint:#eaf6f1;
- --cb-mist-peach:#fff3e9;
+
 }
 html,body{background-color:var(--cb-bg)}
 body{background-image:none;background-attachment:scroll}
@@ -482,13 +482,13 @@ body{background-image:none;background-attachment:scroll}
 .home-panel .home-listing:hover{background:#fff}
 .home-panel .home-empty{background:rgba(255,255,255,.70)}
 .jobs-search-panel{background:#edf3fc!important;border-color:#d7e3f3!important}
-.jobs-list>.job:nth-child(4n+1){background:#fff9f1;border-color:#f0e2cf}
+.jobs-list>.job:nth-child(4n+1){background:#eef4fc;border-color:#dbe6f4}
 .jobs-list>.job:nth-child(4n+2){background:#f1f7fe;border-color:#dbe8f6}
 .jobs-list>.job:nth-child(4n+3){background:#f2faf5;border-color:#d9ecdf}
 .jobs-list>.job:nth-child(4n+4){background:#f7f3fc;border-color:#e6def0}
 .jobs-list>.job .tag{background:rgba(255,255,255,.78);border-color:#dce4ee}
 .job-detail .job-detail-hero{background:#edf3fc;border-color:#d7e3f3}
-.job-detail>.two>div:first-child>.panel:nth-child(1){background:#fff9f2;border-color:#efe4d5}
+.job-detail>.two>div:first-child>.panel:nth-child(1){background:#f1f6fd;border-color:#dbe7f4}
 .job-detail>.two>div:first-child>.panel:nth-child(2){background:#eef8f5;border-color:#d9ece5}
 .job-detail>.two>div:first-child>.panel:nth-child(3){background:#f5f2fb;border-color:#e4dff0}
 .job-detail>.two>div:last-child>.panel{background:#f6f8fc}
@@ -497,7 +497,7 @@ body{background-image:none;background-attachment:scroll}
 .dsa-card:nth-of-type(3n+2){background:#eef8f2;border-color:#dbece0}
 .dsa-card:nth-of-type(3n){background:#f7f1fb;border-color:#e8dff0}
 .dsa-detail>.panel:nth-of-type(1){background:#edf3fc;border-color:#d7e3f3}
-.dsa-detail>.panel:nth-of-type(2){background:#f9f5ed;border-color:#eee5d5}
+.dsa-detail>.panel:nth-of-type(2){background:#f0f5fc;border-color:#dce6f2}
 .dsa-detail>.panel:nth-of-type(3){background:#eff8f3;border-color:#dcece1}
 .home-panel h2,.job-detail h2,.job-title-link h3,.dsa-card h3{color:#1e2b44}
 @media(max-width:950px){
