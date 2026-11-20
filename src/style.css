@@ -326,3 +326,34 @@ footer{border-color:var(--cb-border)}
  .jobs-list .job-side .job-detail-link{grid-column:2;justify-self:end}
 }
 @media(max-width:360px){.jobs-filters{grid-template-columns:1fr}.jobs-filters>.MuiFormControl-root:first-child{grid-column:1}.home-panel .home-listing{flex-wrap:wrap}.home-panel .home-listing .verification-badge{margin-left:0}}
+
+/* Job detail: compact header and natural-height summary, no stretched fit tile. */
+.job-detail .job-detail-hero{padding:22px}
+.job-detail-eyebrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px}
+.job-detail-eyebrow .micro{margin:0}
+.job-detail-eyebrow .vacancy-badge{margin-left:auto}
+.job-detail-hero h1{margin:0 0 10px;font-size:clamp(1.45rem,2.2vw,1.95rem);line-height:1.32}
+.job-detail-location{font-size:14px;line-height:1.5;color:#526078;margin:0 0 7px;overflow-wrap:anywhere}
+.job-detail-experience{font-size:13px;line-height:1.55;color:#526078;overflow-wrap:anywhere}
+.job-detail-experience strong{color:#293b56}
+.job-detail-actions{margin:15px 0 0}
+.job-detail-actions .MuiButton-root{min-height:40px;text-transform:none;font-weight:700}
+.detail-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}
+.detail-summary-item{min-width:0;border:1px solid #dce4ee;background:#fafcff;border-radius:12px;padding:12px 13px}
+.detail-summary-item .micro{display:block;margin:0 0 7px;font-size:10px}
+.detail-summary-item strong{display:block;color:#253550;font-size:14px;line-height:1.4;overflow-wrap:anywhere;font-weight:750}
+.job-fit-explanation{margin-top:13px;padding:11px 13px;background:#f5f8fd;border:1px solid #e1e8f2;border-radius:11px}
+.job-fit-explanation>strong{display:block;font-size:12px;color:#31496d}
+.job-fit-explanation p{color:#526078;margin:4px 0 0;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:800px){.detail-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ .job-detail .job-detail-hero{padding:16px}
+ .job-detail-eyebrow{gap:7px;margin-bottom:11px}
+ .job-detail-eyebrow .vacancy-badge{margin-left:0}
+ .job-detail-hero h1{font-size:clamp(1.35rem,5.2vw,1.7rem);margin-bottom:10px}
+ .job-detail-actions .MuiButton-root{width:100%}
+ .detail-summary{gap:8px;margin-top:15px}
+ .detail-summary-item{padding:10px;min-height:0}
+ .detail-summary-item strong{font-size:13px}
+ .job-fit-explanation{padding:10px}
+}
