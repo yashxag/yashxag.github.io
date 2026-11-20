@@ -465,7 +465,7 @@ footer{border-color:var(--cb-border)}
 
 /* Profolio soft Material-inspired pastel surfaces (matte, high contrast). */
 :root{
- --cb-bg:#f6f8fc;
+ --cb-bg:#ffffff;
  --cb-card:#ffffff;
  --cb-border:#dce4ef;
  --cb-mist-blue:#edf3fc;
@@ -474,7 +474,7 @@ footer{border-color:var(--cb-border)}
  --cb-mist-peach:#fff3e9;
 }
 html,body{background-color:var(--cb-bg)}
-body{background-image:linear-gradient(125deg,#f5f8ff 0%,#f7f8fc 44%,#f5faf7 100%);background-attachment:fixed}
+body{background-image:none;background-attachment:scroll}
 .home-sections>.home-panel:nth-child(1){background:#edf3fc;border-color:#d7e3f3}
 .home-sections>.home-panel:nth-child(2){background:#f1effa;border-color:#e0dcef}
 .home-sections>.home-panel:nth-child(3){background:#eaf6f1;border-color:#d5e9e0}
