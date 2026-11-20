@@ -539,3 +539,55 @@ body{background-image:none;color:#182439}
 
 /* Neutral navigation border. */
 .mobile-nav{border-color:#cbd6e3}
+
+/* Compact mobile-first DSA overview, aligned with Jobs discovery. */
+.dsa-list-page{min-width:0}
+.dsa-page-heading{display:block!important;margin:0 0 17px!important}
+.dsa-page-heading h1{margin:0 0 5px;font-size:clamp(1.65rem,3.2vw,2.25rem);line-height:1.2}
+.dsa-page-heading p{color:#526078;font-size:13px;line-height:1.55;margin:0}
+.dsa-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 9px}
+.dsa-summary-item{display:flex;flex-direction:column;min-width:0;min-height:82px;gap:6px;padding:13px 15px;background:#fff;border:1px solid #d5dee9;border-radius:13px;box-shadow:0 1px 3px rgba(35,55,80,.03)}
+.dsa-summary-item>span{font-size:11px;color:#63738c;font-weight:700;line-height:1.35}
+.dsa-summary-item strong{font-size:26px;line-height:1.1;color:#3153bb;font-weight:750}
+.dsa-summary-item small{font-size:11px;color:#63738c;line-height:1.25}
+.dsa-progress-track{height:5px;background:#e4eaf3;overflow:hidden;border-radius:999px;margin:0 0 19px}
+.dsa-progress-track>div{height:100%;border-radius:inherit;background:#3153bb;transition:width .18s ease-out}
+.dsa-search-panel{padding:15px!important;margin:0 0 16px!important}
+.dsa-search-panel>.MuiFormControl-root .MuiOutlinedInput-root{border-radius:11px;min-height:44px}
+.dsa-search-panel>.MuiFormControl-root .MuiInputBase-input{font-size:14px}
+.dsa-quick-filters{display:flex;gap:7px;align-items:center;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:12px 1px 4px}
+.dsa-quick-filters::-webkit-scrollbar{display:none;width:0;height:0}
+.dsa-filter-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.dsa-filter-actions .MuiButton-root{text-transform:none;min-height:38px;font-size:12px;font-weight:700}
+.dsa-extra-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px;padding-top:14px;border-top:1px solid #e3eaf3}
+.dsa-extra-filters>.MuiFormControl-root{min-width:0;width:100%}
+.dsa-extra-filters .MuiInputBase-root{min-height:42px;border-radius:10px}
+.dsa-results-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+.dsa-results-line strong{font-size:15px;color:#1c2d46}
+.dsa-results-line span{font-size:12px;color:#63738c}
+.dsa-problem-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dsa-problem-list>.dsa-card{display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:16px;min-width:0;margin:0!important;padding:17px!important}
+.dsa-problem-list .dsa-card-topline{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:11px}
+.dsa-topic-pill{display:inline-flex;align-items:center;max-width:100%;padding:4px 9px;border:1px solid #d7e2f5;background:#edf3ff;color:#3153a6;font-size:11px;font-weight:750;border-radius:8px;line-height:1.4}
+.dsa-problem-list .dsa-body h3{font-size:1.1rem;font-weight:750;color:#243652;line-height:1.4;margin:0 0 8px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.dsa-card-meta{color:#62728a;font-size:12px;line-height:1.5;margin:0!important}
+.dsa-problem-list .dsa-actions{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid #e6ebf3}
+.dsa-problem-list .dsa-actions .MuiButton-root{min-height:39px;text-transform:none;font-size:12px;font-weight:700}
+@media(max-width:950px){.dsa-problem-list{grid-template-columns:1fr}}
+@media(max-width:600px){
+ .dsa-page-heading{margin-bottom:14px!important}
+ .dsa-page-heading h1{font-size:1.75rem}
+ .dsa-page-heading p{font-size:12px}
+ .dsa-summary{gap:7px}
+ .dsa-summary-item{padding:10px 8px;min-height:73px;border-radius:11px;gap:5px}
+ .dsa-summary-item>span{font-size:10px}
+ .dsa-summary-item strong{font-size:21px}
+ .dsa-summary-item small{font-size:9px}
+ .dsa-search-panel{padding:12px!important;margin-bottom:14px!important}
+ .dsa-quick-filters{gap:6px}
+ .dsa-problem-list{gap:11px}
+ .dsa-problem-list>.dsa-card{padding:15px!important;gap:12px}
+ .dsa-problem-list .dsa-body h3{font-size:1.05rem}
+}
+@media(max-width:360px){.dsa-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.dsa-progress-track>div{transition:none}}
