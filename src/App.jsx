@@ -17,7 +17,12 @@ const companyPalette=['blue','purple','teal','amber','rose','slate'];
 const CompanyPill=({name})=>{const company=name||'Unknown company';const color=companyPalette[[...company].reduce((sum,char)=>sum+char.charCodeAt(0),0)%companyPalette.length];return <span className={'company-pill company-'+color} title={company}>{company}</span>};
 const briefFit=fit=>{const raw=(fit||'Not rated').trim();return raw.split(':')[0].trim().slice(0,36)};
 const ranking=j=>{const p={High:3,Medium:2,Low:1}[j.priority]||0;const fit=(j.fit||'').toLowerCase();const match=/strong|high:|best|excellent/.test(fit)?4:/good/.test(fit)?3:/stretch/.test(fit)?1:0;return p*10+match};
-const sortValue=(a,b,field)=>{if(field==='priority')return ranking(b)-ranking(a);if(field==='newest')return (b.dateFound||'').localeCompare(a.dateFound||'');if(field==='oldest')return (a.dateFound||'').localeCompare(b.dateFound||'');if(field==='company')return a.company.localeCompare(b.company);if(field==='title')return a.title.localeCompare(b.title);if(field==='fit')return (briefFit(a.fit)).localeCompare(briefFit(b.fit));return 0};
+const priorityRank={High:3,Medium:2,Low:1};
+const fitRank=fit=>{const s=(fit||'').toLowerCase();return /strong|excellent|best|high:/.test(s)?4:/good/.test(s)?3:/stretch/.test(s)?2:/unclear/.test(s)?1:0};
+const sortValue=(a,b,field)=>{if(field==='priority')return (priorityRank[b.priority]||0)-(priorityRank[a.priority]||0);if(field==='fit')return fitRank(b.fit)-fitRank(a.fit);if(field==='newest')return (b.dateFound||'').localeCompare(a.dateFound||'');if(field==='oldest')return (a.dateFound||'').localeCompare(b.dateFound||'');if(field==='company')return (a.company||'').localeCompare(b.company||'');if(field==='title')return (a.title||'').localeCompare(b.title||'');return 0};
+const sortOptions=[['priority','Priority: High first'],['fit','Best fit first'],['newest','Newest first'],['oldest','Oldest first'],['company','Company A–Z'],['title','Title A–Z']];
+const secondaryRules={priority:['fit','newest','oldest','company','title'],fit:['priority','newest','oldest','company','title'],newest:['priority','fit','company','title'],oldest:['priority','fit','company','title'],company:['priority','fit','newest','oldest','title'],title:['priority','fit','newest','oldest','company']};
+
 function Picker({value,onChange}){return <FormControl size="small" sx={{minWidth:155}}><Select value={value||'Not applied'} onChange={e=>onChange(e.target.value)}>{statusOptions.map(s=><MenuItem key={s} value={s}>{s}</MenuItem>)}</Select></FormControl>}
 function App(){const [navVisible,setNavVisible]=useState(true),[desktop,setDesktop]=useState(()=>window.matchMedia('(min-width:951px)').matches);const reduceMotion=useReducedMotion();
 useEffect(()=>{const media=window.matchMedia('(min-width:951px)');const update=()=>setDesktop(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update)},[]);
@@ -52,9 +57,11 @@ return <div className="home-sections">
 </section>
 </div>}
 function Jobs({jobs,mine,change,save,restore,reload}){
-const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('newest'),[applied,setApplied]=useState('All');
-const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(vac==='All'||j.vacancyStatus===vac)&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||sortValue(a,b,'newest')||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied]);
-const sortOptions=[['priority','Priority + fit'],['newest','Newest first'],['oldest','Oldest first'],['company','Company A–Z'],['title','Title A–Z'],['fit','Fit label A–Z']];
+const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('fit'),[applied,setApplied]=useState('All');
+const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(vac==='All'||j.vacancyStatus===vac)&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied]);
+const allowedSecondary=secondaryRules[primarySort]||[];
+const secondaryOptions=[['none','No tie-breaker'],...sortOptions.filter(([value])=>allowedSecondary.includes(value))];
+const handlePrimarySort=value=>{setPrimarySort(value);setSecondarySort((secondaryRules[value]||[])[0]||'none')};
 const makeSelect=(label,value,setter,options)=><TextField key={label} select size="small" label={label} value={value} onChange={e=>setter(e.target.value)}>{options.map(item=><MenuItem key={Array.isArray(item)?item[0]:item} value={Array.isArray(item)?item[0]:item}>{Array.isArray(item)?item[1]:item}</MenuItem>)}</TextField>;
 return <><div className="head-row jobs-header"><div><h1>Explore opportunities</h1><p className="sub">{list.length} matching jobs · Active vacancies shown first by default</p></div><div className="actions"><Tooltip title="Refresh listings"><IconButton aria-label="Refresh job listings" onClick={reload}><Refresh/></IconButton></Tooltip><Button startIcon={<Download/>} onClick={save}>Export statuses</Button><Button startIcon={<Upload/>} component="label">Import statuses<input hidden type="file" accept=".json,application/json" onChange={e=>{restore(e.target.files?.[0]);e.target.value=''}}/></Button></div></div>
 <div className="panel filters jobs-filters">
@@ -63,8 +70,8 @@ return <><div className="head-row jobs-header"><div><h1>Explore opportunities</h
 {makeSelect('Work mode',mode,setMode,['All','Remote','Hybrid','Office','On-site'])}
 {makeSelect('Priority',priority,setPriority,['All','High','Medium','Low'])}
 {makeSelect('My status',applied,setApplied,['All',...statusOptions])}
-{makeSelect('Sort by',primarySort,setPrimarySort,sortOptions)}
-{makeSelect('Then by',secondarySort,setSecondarySort,[['none','No second sort'],...sortOptions])}
+{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}
+{makeSelect('Then by',secondarySort,setSecondarySort,secondaryOptions)}
 </div>
 <div className="jobs-list">{list.map(j=><article className="panel job" key={j.id}>
 <div className="job-content"><div className="job-topline"><CompanyPill name={j.company}/><Status s={j.vacancyStatus}/></div>
@@ -75,5 +82,27 @@ return <><div className="head-row jobs-header"><div><h1>Explore opportunities</h
 </div><div className="job-side"><label className="input-caption" htmlFor={'job-status-'+j.id}>Your application</label><div id={'job-status-'+j.id}><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></div><Link className="job-detail-link" to={'/jobs/'+slug(j)}>View details ↗</Link></div></article>)}</div>
 {!list.length&&<div className="panel home-empty">No matching jobs for these filters. Try switching Vacancy to All.</div>}
 <Alert severity="info" sx={{mt:3}}>Application statuses stay in this browser. Export or import them when switching devices.</Alert></>}
-function Detail({jobs,mine,change}){let {slug:route}=useParams();let j=jobs.find(x=>slug(x)===route);if(!j)return <section className="panel"><p>Job not found, or data is still loading.</p><Link to="/jobs">Back to jobs</Link></section>;return <div className="detail-page"><Link to="/jobs" className="back"><ArrowBack fontSize="small"/> Back to jobs</Link><section className="panel"><p className="micro">{j.company} · {j.id}</p><div className="head-row"><h1>{j.title}</h1><Button href={j.url||undefined} disabled={!j.url} target="_blank" rel="noopener noreferrer" variant="contained" endIcon={<OpenInNew/>}>Official listing</Button></div><p className="sub">{j.location} · {j.workMode} · {j.experience} YOE</p><Status s={j.vacancyStatus}/><div className="stats compact">{[['Salary',j.salary||'Not disclosed'],['Fit',j.fit],['Priority',j.priority],['Found',date(j.dateFound)]].map(([k,v])=><div className="stat" key={k}><div className="micro">{k}</div><b>{v||'Unknown'}</b></div>)}</div></section><div className="two"><div><section className="panel"><h2>Job description</h2><p className="description">{j.description||'The original dataset does not contain the full job description for this listing. Use the official application link for complete details.'}</p>{j.notes&&<p className="sub">{j.notes}</p>}</section><section className="panel"><h2>Skills & requirements</h2><div className="tags">{(j.skills||'').split(',').filter(Boolean).map((s,i)=><span className="tag" key={i}>{s.trim()}</span>)}</div></section><section className="panel"><h2>Verification history</h2><p className="sub">Last checked: {j.lastChecked||'Not recorded'}</p><p className="description">{j.verification||'No verification evidence recorded.'}</p></section></div><div><section className="panel"><h2>Your application</h2><p className="sub">Saved on this device only</p><Picker value={mine[j.id]} onChange={s=>change(j.id,s)}/></section><section className="panel"><h2>Role details</h2>{[['Company',j.company],['Experience',j.experience],['Work mode',j.workMode],['Vacancy',j.vacancyStatus],['Last checked',j.lastChecked]].map(([k,v])=><div className="breakdown" key={k}><span>{k}</span><b>{v||'Unknown'}</b></div>)}</section></div></div></div>}
+function Detail({jobs,mine,change}){
+const {slug:route}=useParams();const j=jobs.find(x=>slug(x)===route);
+if(!j)return <section className="panel"><p>Job not found, or data is still loading.</p><Link to="/jobs">Back to jobs</Link></section>;
+const summary=[['Salary',j.salary||'Not disclosed'],['Fit',briefFit(j.fit)],['Priority',j.priority],['Found',date(j.dateFound)]];
+const locationLine=[j.location,j.workMode&&j.workMode!=='Unconfirmed'&&j.workMode!=='Not specified'?j.workMode:null].filter(Boolean).join(' · ');
+return <div className="detail-page job-detail">
+<Link to="/jobs" className="back"><ArrowBack fontSize="small"/> Back to jobs</Link>
+<section className="panel job-detail-hero">
+<div className="job-detail-eyebrow"><CompanyPill name={j.company}/><span className="micro">{j.id}</span><Status s={j.vacancyStatus}/></div>
+<h1>{j.title}</h1>
+<p className="job-detail-location">{locationLine||'Location not specified'}</p>
+<div className="job-detail-experience"><strong>Experience:</strong> {j.experience||'Not specified'}</div>
+<div className="job-detail-actions"><Button href={j.url||undefined} disabled={!j.url} target="_blank" rel="noopener noreferrer" variant="contained" size="small" endIcon={<OpenInNew/>}>Official listing</Button></div>
+<div className="detail-summary">{summary.map(([label,value])=><div className="detail-summary-item" key={label}><span className="micro">{label}</span><strong title={value||'Not specified'}>{value||'Not specified'}</strong></div>)}</div>
+{j.fit&&briefFit(j.fit)!==j.fit.trim()&&<div className="job-fit-explanation"><strong>Fit assessment</strong><p>{j.fit}</p></div>}
+</section>
+<div className="two">
+<div><section className="panel"><h2>Job description</h2><p className="description">{j.description||'The original dataset does not contain the full job description for this listing. Use the official application link for complete details.'}</p>{j.notes&&<p className="sub">{j.notes}</p>}</section>
+<section className="panel"><h2>Skills & requirements</h2><div className="tags">{(j.skills||'').split(',').filter(Boolean).map((skill,i)=><span className="tag" key={i}>{skill.trim()}</span>)}</div></section>
+<section className="panel"><h2>Verification history</h2><p className="sub">Last checked: {j.lastChecked||'Not recorded'}</p><p className="description">{j.verification||'No verification evidence recorded.'}</p></section></div>
+<div><section className="panel"><h2>Your application</h2><p className="sub">Saved on this device only</p><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></section>
+<section className="panel"><h2>Role details</h2>{[['Company',j.company],['Experience',j.experience],['Work mode',j.workMode],['Vacancy',j.vacancyStatus],['Last checked',j.lastChecked]].map(([label,value])=><div className="breakdown" key={label}><span>{label}</span><b>{value||'Unknown'}</b></div>)}</section></div>
+</div></div>}
 export default App;
