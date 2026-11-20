@@ -1,5 +1,6 @@
 import React,{useState,useEffect,useMemo} from 'react';
 import Dsa from './Dsa.jsx';
+import JobToolkit from './JobToolkit.jsx';
 import {motion,useReducedMotion} from 'framer-motion';
 import {Link,NavLink,Routes,Route,useParams} from 'react-router-dom';
 import {Box,Button,Paper,Chip,TextField,MenuItem,Typography,FormControl,Select,Alert,IconButton,Tooltip} from '@mui/material';
@@ -104,5 +105,5 @@ return <div className="detail-page job-detail">
 <section className="panel"><h2>Verification history</h2><p className="sub">Last checked: {j.lastChecked||'Not recorded'}</p><p className="description">{j.verification||'No verification evidence recorded.'}</p></section></div>
 <div><section className="panel"><h2>Your application</h2><p className="sub">Saved on this device only</p><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></section>
 <section className="panel"><h2>Role details</h2>{[['Company',j.company],['Experience',j.experience],['Work mode',j.workMode],['Vacancy',j.vacancyStatus],['Last checked',j.lastChecked]].map(([label,value])=><div className="breakdown" key={label}><span>{label}</span><b>{value||'Unknown'}</b></div>)}</section></div>
-</div></div>}
+</div><JobToolkit job={j}/></div>}
 export default App;
