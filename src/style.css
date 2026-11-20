@@ -219,3 +219,35 @@ footer{border-color:var(--cb-border)}
 
 /* Motion controls nav transforms across breakpoints. */
 @media(min-width:951px){.mobile-nav{transform:none}}
+
+/* Explicit MUI button contrast: the light theme's inherited primary text
+   must never render dark blue over a blue contained button. */
+.MuiButton-root.MuiButton-containedPrimary:not(.Mui-disabled){
+  background-color:#3153bb;
+  color:#ffffff;
+}
+.MuiButton-root.MuiButton-containedPrimary:not(.Mui-disabled):hover{
+  background-color:#24439c;
+  color:#ffffff;
+}
+.MuiButton-root.MuiButton-containedSuccess:not(.Mui-disabled){
+  background-color:#237347;
+  color:#ffffff;
+}
+.MuiButton-root.MuiButton-containedSuccess:not(.Mui-disabled):hover{
+  background-color:#185b37;
+  color:#ffffff;
+}
+.MuiButton-root.MuiButton-outlinedPrimary:not(.Mui-disabled),
+.MuiButton-root.MuiButton-textPrimary:not(.Mui-disabled){
+  color:#2349a9;
+}
+.MuiButton-root.MuiButton-outlinedPrimary:not(.Mui-disabled):hover,
+.MuiButton-root.MuiButton-textPrimary:not(.Mui-disabled):hover{
+  color:#19377f;
+}
+.MuiButton-root.Mui-disabled{
+  opacity:1;
+  color:#64748b;
+  background-color:#e2e8f0;
+}
