@@ -58,14 +58,14 @@ return <div className="home-sections">
 </section>
 </div>}
 function Jobs({jobs,mine,change,save,restore,reload}){
-const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('fit'),[applied,setApplied]=useState('All');
+const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('newest'),[applied,setApplied]=useState('All');
 const [moreFilters,setMoreFilters]=useState(false),[actionsAnchor,setActionsAnchor]=useState(null);
 const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(vac==='All'||j.vacancyStatus===vac)&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied]);
-const activeExtra=[mode!=='All',priority!=='All',applied!=='All',secondarySort!=='fit'].filter(Boolean).length;
-const reset=()=>{setQ('');setVac('Active');setMode('All');setPriority('All');setPrimarySort('priority');setSecondarySort('fit');setApplied('All')};
+const activeExtra=[mode!=='All',priority!=='All',applied!=='All'].filter(Boolean).length;
+const reset=()=>{setQ('');setVac('Active');setMode('All');setPriority('All');setPrimarySort('priority');setSecondarySort('newest');setApplied('All')};
 const allowedSecondary=secondaryRules[primarySort]||[];
 const secondaryOptions=[['none','No additional sort'],...sortOptions.filter(([value])=>allowedSecondary.includes(value))];
-const handlePrimarySort=value=>{setPrimarySort(value);setSecondarySort((secondaryRules[value]||[])[0]||'none')};
+const handlePrimarySort=value=>{setPrimarySort(value);setSecondarySort((secondaryRules[value]||[]).includes('newest')?'newest':(secondaryRules[value]||[])[0]||'none')};
 const makeSelect=(label,value,setter,options)=><TextField key={label} select size="small" label={label} value={value} onChange={e=>setter(e.target.value)}>{options.map(item=><MenuItem key={Array.isArray(item)?item[0]:item} value={Array.isArray(item)?item[0]:item}>{Array.isArray(item)?item[1]:item}</MenuItem>)}</TextField>;
 return <div className="jobs-page">
 <header className="jobs-page-heading"><div className="jobs-page-title"><h1>Explore jobs</h1><p>Find relevant roles and track your applications.</p></div>
@@ -79,15 +79,14 @@ return <div className="jobs-page">
 <div className="jobs-quick-filters" role="group" aria-label="Vacancy status">
 {[['Active','Active'],['All','All jobs'],['Recheck','Recheck'],['Unknown','Unknown'],['Closed','Closed'],['Expired','Expired']].map(([value,label])=><button type="button" key={value} className={'jobs-filter-chip '+(vac===value?'selected':'')} aria-pressed={vac===value} onClick={()=>setVac(value)}>{label}</button>)}
 </div>
-<div className="jobs-control-row"><div className="jobs-primary-sort">{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}</div>
+<div className="jobs-control-row"><div className="jobs-sort-pair"><div className="jobs-primary-sort">{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}</div><div className="jobs-secondary-sort">{makeSelect('Then by',secondarySort,setSecondarySort,secondaryOptions)}</div></div>
 <Button variant={moreFilters?'contained':'outlined'} className="jobs-more-filter-button" size="small" startIcon={<Tune fontSize="small"/>} endIcon={moreFilters?<ExpandLess fontSize="small"/>:<ExpandMore fontSize="small"/>} onClick={()=>setMoreFilters(v=>!v)} aria-expanded={moreFilters} aria-controls="jobs-extra-filters">Filters{activeExtra?' ('+activeExtra+')':''}</Button>
-{(q||vac!=='Active'||mode!=='All'||priority!=='All'||applied!=='All'||primarySort!=='priority'||secondarySort!=='fit')&&<Button size="small" className="jobs-reset" onClick={reset}>Reset</Button>}
+{(q||vac!=='Active'||mode!=='All'||priority!=='All'||applied!=='All'||primarySort!=='priority'||secondarySort!=='newest')&&<Button size="small" className="jobs-reset" onClick={reset}>Reset</Button>}
 </div>
 <Collapse in={moreFilters} timeout={140}><div id="jobs-extra-filters" className="jobs-extra-filters">
 {makeSelect('Work mode',mode,setMode,['All','Remote','Hybrid','Office','On-site'])}
 {makeSelect('Priority',priority,setPriority,['All','High','Medium','Low'])}
 {makeSelect('My application',applied,setApplied,['All',...statusOptions])}
-{makeSelect('Then by',secondarySort,setSecondarySort,secondaryOptions)}
 <p className="jobs-filter-help">Sorting is applied in order: primary first, then your selected tie-breaker.</p>
 </div></Collapse>
 </section>
