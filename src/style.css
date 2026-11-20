@@ -444,3 +444,6 @@ footer{border-color:var(--cb-border)}
  .jobs-primary-sort{flex-basis:100%}
  .jobs-control-row .jobs-more-filter-button{flex:1}
 }
+
+/* The global header rule must not add a large gap below the jobs heading. */
+.main .jobs-page-heading{margin-bottom:14px}
