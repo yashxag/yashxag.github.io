@@ -559,3 +559,32 @@ body{background-image:none;background-attachment:scroll}
  .profolio-loader-spark,.profolio-loader-dot{opacity:1}
  .profolio-loader-ellipsis{width:1.4em}
 }
+
+/* Matte container boundaries: distinct yet understated against white canvas. */
+:root{--cb-border:#cdd8e6}
+.panel,.stat{border:1px solid var(--cb-border);box-shadow:0 1px 3px rgba(34,57,92,.045)}
+.home-sections>.home-panel:nth-child(1),
+.jobs-search-panel,.job-detail .job-detail-hero,
+.dsa-detail>.panel:nth-of-type(1){border:1px solid #b9cde7!important}
+.home-sections>.home-panel:nth-child(2),
+.job-detail>.two>div:first-child>.panel:nth-child(3),
+.dsa-card:nth-of-type(3n){border:1px solid #d1c5e7}
+.home-sections>.home-panel:nth-child(3),
+.job-detail>.two>div:first-child>.panel:nth-child(2),
+.dsa-card:nth-of-type(3n+2){border:1px solid #bddbcc}
+.jobs-list>.job:nth-child(4n+1),
+.jobs-list>.job:nth-child(4n+2),
+.job-detail>.two>div:first-child>.panel:nth-child(1),
+.dsa-card:nth-of-type(3n+1),
+.dsa-detail>.panel:nth-of-type(2){border:1px solid #c0d3e9}
+.jobs-list>.job:nth-child(4n+3),
+.dsa-detail>.panel:nth-of-type(3){border:1px solid #bddbcc}
+.jobs-list>.job:nth-child(4n+4){border:1px solid #d1c5e7}
+.job-detail>.two>div:last-child>.panel,
+.job-detail .job-toolkit{border:1px solid #c6d5e9}
+.home-panel .home-listing{border:1px solid #c8d6e7;background:#fff}
+.home-panel .home-listing:hover,
+.jobs-list>.job:hover,.dsa-card:hover{border-color:#809bc9;box-shadow:0 3px 10px rgba(40,65,104,.085)}
+.detail-summary-item,.job-fit-explanation,
+.toolkit-prompt{border-color:#cbd7e7}
+.mobile-nav{border-color:#c3d0e3}
