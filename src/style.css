@@ -110,3 +110,89 @@ a:focus-visible,button:focus-visible,.MuiButtonBase-root:focus-visible,input:foc
  .topbar .small{width:100%}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* CareerBoard light theme: consistent readable surfaces, compact spacing. */
+:root{color-scheme:light;--cb-bg:#f5f7fb;--cb-card:#ffffff;--cb-text:#182439;--cb-muted:#526078;--cb-border:#dce4ee;--cb-accent:#3153bb;--cb-soft:#eff4ff}
+html{background:var(--cb-bg)}
+body{background:var(--cb-bg);color:var(--cb-text)}
+h1{background:none;color:#17253e;font-weight:760}
+h2,h3{color:#1e2b44;line-height:1.35}
+p{color:inherit}
+a:focus-visible,button:focus-visible,.MuiButtonBase-root:focus-visible,input:focus-visible{outline:3px solid #3153bb;outline-offset:3px}
+.sidebar{background:#fff;border-color:var(--cb-border)}
+.brand{color:#17253e}.brand span,.mobile-brand span{color:#3153bb}
+.nav{color:#43516a}.nav.active{background:#e9efff;color:#2145a1}
+.nav:hover,.mobile-nav-item:hover{background:#eef3ff;color:#2349af}
+.aside-footer,footer{color:#566680}
+.micro{color:#526078;font-size:11px;font-weight:750}
+.small,.sub,small{color:#526078}
+.stat,.panel{background:var(--cb-card);border-color:var(--cb-border);box-shadow:0 2px 9px rgba(25,47,84,.035)}
+.stat strong{color:#2849ae}
+.stat b{color:#26344e}
+.listing{background:#fafcff;border:1px solid var(--cb-border)}
+.listing:hover,.job:hover{border-color:#7b98dc}
+.listing:focus-visible{border-color:#3153bb}
+.listing p,.job p,.example p{color:#526078}
+.listing small,.job small{color:#607089}
+.head-row>a,.job-side>a,.back{color:#234aa4}
+.breakdown{border-color:#e6ebf3}
+.breakdown>span{color:#526078}
+.breakdown b{color:#1f2f47}
+.tag{background:#eef3fd;color:#2b4167;border:1px solid #dfe7f7}
+.description{color:#314158;line-height:1.7}
+.dsa-steps{color:#314158;line-height:1.7}
+.input-caption{color:#526078}
+.dsa-body a:hover h3{color:#3153bb}
+.example{background:#f7f9fd;border-color:#dce4ee;color:#24334d}
+.example span{color:#526078}
+.example code{color:#183b7d}
+.example p{color:#526078}
+.java-code{background:#142135;color:#f3f7ff;border-color:#263b5e}
+.complexities{color:#41536d}
+.interview-note{background:#f0f5ff;border-left-color:#3153bb;color:#213958}
+.interview-note p{color:#425572}
+.mobile-nav{background:#fff;border-color:#dce4ee;box-shadow:0 -5px 20px rgba(36,56,94,.09)}
+.mobile-nav-item{color:#54647c}
+.mobile-nav-item.active{background:#e9efff;color:#2349a9}
+.mobile-brand{color:#17253e}
+footer{border-color:var(--cb-border)}
+.topbar{border-color:var(--cb-border)}
+.MuiAlert-root{border-radius:12px}
+.chart-container{height:198px;width:100%;min-width:0}
+.detail-page{display:flex;flex-direction:column;gap:18px;max-width:1190px}
+.detail-page .back{align-self:flex-start;margin:0;text-decoration:none;gap:8px}
+.detail-page>.panel{margin:0}
+.detail-page>.two{align-items:start}
+.detail-page .two .panel{margin-bottom:16px}
+.detail-page .panel h2{margin:0 0 14px}
+.detail-page .panel h3{margin:16px 0 8px}
+.detail-page .panel .head-row{margin-bottom:12px}
+.detail-page .panel .head-row h1{margin:0}
+.detail-page .stats.compact{margin:18px 0 0}
+.detail-page .stats.compact .stat{padding:16px}
+.detail-page .description{margin:8px 0 13px}
+.detail-page .sub{margin:8px 0 12px}
+.detail-page .dsa-tags{margin:12px 0 0}
+.detail-page .dsa-steps{margin:10px 0 16px}
+.detail-page .example{margin:12px 0 16px;padding:14px}
+.detail-page .java-code{margin:12px 0 14px;padding:16px}
+.detail-page .complexities{margin:12px 0}
+.detail-page .interview-note{padding:14px}
+.detail-page .interview-note p{margin:5px 0}
+@media(max-width:950px){.detail-page{gap:14px}.detail-page .two{gap:14px}.detail-page .two .panel{margin-bottom:14px}}
+@media(max-width:600px){
+ .main{padding:18px 14px calc(110px + env(safe-area-inset-bottom))}
+ .main header{margin-bottom:22px}
+ .detail-page{gap:12px}
+ .detail-page .stats.compact{margin:14px 0 0;gap:9px}
+ .detail-page .stats.compact .stat{padding:12px}
+ .detail-page .panel{padding:16px}
+ .detail-page>.panel>.head-row{align-items:stretch}
+ .detail-page>.panel>.head-row .MuiButton-root{min-height:44px}
+ .detail-page .description{font-size:15px;line-height:1.68}
+ .detail-page .java-code{font-size:12.5px;line-height:1.6;padding:12px}
+ .chart-container{height:176px}
+ .listing{padding:14px}
+ .topbar{gap:8px}
+}
