@@ -1,5 +1,6 @@
 import React,{useEffect,useState,useMemo} from 'react';
 import ProfolioLoader from './ProfolioLoader.jsx';
+import {dateRangeOptions,indiaDateISO,matchesDateRange} from './dateFilters.js';
 import {Link,useParams} from 'react-router-dom';
 import {Button,Chip,TextField,MenuItem,Alert,Collapse,IconButton,InputAdornment} from '@mui/material';
 import {ArrowBack,ContentCopy,CheckCircleOutline,Code,Search,Tune,ExpandMore,ExpandLess,Close} from '@mui/icons-material';
@@ -9,14 +10,15 @@ const humanDate=x=>{if(!x)return 'Unknown';const d=new Date(x+'T12:00:00');retur
 function useProblems(){const [state,setState]=useState({problems:[],loading:true,error:''});useEffect(()=>{let alive=true;fetch(import.meta.env.BASE_URL+'data/dsa.json?ts='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{if(alive)setState({problems:data.problems||[],loading:false,error:''})}).catch(e=>{if(alive)setState({problems:[],loading:false,error:e.message})});return()=>{alive=false}},[]);return state}
 export default function Dsa(){const {problems,loading,error}=useProblems();const [solved,setSolved]=useState(loadSolved);useEffect(()=>{localStorage.setItem(storageKey,JSON.stringify(solved))},[solved]);const toggle=id=>setSolved(prev=>({...prev,[id]:!prev[id]}));const {id}=useParams();if(error)return <Alert severity="error">Could not load DSA questions: {error}</Alert>;if(loading)return <ProfolioLoader label="Loading DSA practice"/>;if(id){const problem=problems.find(p=>p.id===id||p.slug===id);return problem?<ProblemDetail p={problem} solved={!!solved[problem.id]} toggle={()=>toggle(problem.id)}/>:<section className="panel"><p>Problem not found.</p><Link to="/dsa">Back to practice</Link></section>}return <DsaList problems={problems} solved={solved} toggle={toggle}/>}
 function DsaList({problems,solved,toggle}){
-const [search,setSearch]=useState(''),[difficulty,setDifficulty]=useState('All'),[topic,setTopic]=useState('All'),[progress,setProgress]=useState('All'),[moreFilters,setMoreFilters]=useState(false);
+const [search,setSearch]=useState(''),[difficulty,setDifficulty]=useState('All'),[topic,setTopic]=useState('All'),[progress,setProgress]=useState('All'),[moreFilters,setMoreFilters]=useState(false),[dateRange,setDateRange]=useState('all');
 const topics=[...new Set(problems.map(p=>p.topic).filter(Boolean))].sort();
-const list=useMemo(()=>problems.filter(p=>(p.title+' '+p.topic).toLowerCase().includes(search.toLowerCase())&&(difficulty==='All'||p.difficulty===difficulty)&&(topic==='All'||p.topic===topic)&&(progress==='All'||(progress==='Solved'?!!solved[p.id]:!solved[p.id]))).sort((a,b)=>b.dateAdded.localeCompare(a.dateAdded)||b.id.localeCompare(a.id)),[problems,solved,search,difficulty,topic,progress]);
+const today=indiaDateISO();
+const list=useMemo(()=>problems.filter(p=>(p.title+' '+p.topic).toLowerCase().includes(search.toLowerCase())&&(difficulty==='All'||p.difficulty===difficulty)&&(topic==='All'||p.topic===topic)&&(progress==='All'||(progress==='Solved'?!!solved[p.id]:!solved[p.id]))&&matchesDateRange(p.dateAdded,dateRange,today)).sort((a,b)=>b.dateAdded.localeCompare(a.dateAdded)||b.id.localeCompare(a.id)),[problems,solved,search,difficulty,topic,progress,dateRange,today]);
 const solvedCount=problems.filter(p=>solved[p.id]).length;
 const latestDate=problems.length?problems.map(p=>p.dateAdded).sort().at(-1):null;
 const latestCount=problems.filter(p=>p.dateAdded===latestDate).length;
-const activeExtra=[topic!=='All',progress!=='All'].filter(Boolean).length;
-const reset=()=>{setSearch('');setDifficulty('All');setTopic('All');setProgress('All')};
+const activeExtra=[topic!=='All',progress!=='All',dateRange!=='all'].filter(Boolean).length;
+const reset=()=>{setSearch('');setDifficulty('All');setTopic('All');setProgress('All');setDateRange('all')};
 const makeSelect=(label,value,setter,options)=><TextField select size="small" label={label} value={value} onChange={e=>setter(e.target.value)}>{options.map(option=><MenuItem key={option} value={option}>{option}</MenuItem>)}</TextField>;
 return <div className="dsa-list-page">
 <header className="dsa-page-heading"><h1>DSA practice</h1><p>Interview-ready Java problems. Practice, track and improve.</p></header>
@@ -33,11 +35,11 @@ return <div className="dsa-list-page">
 {['All','Easy','Medium','Hard'].map(value=><button key={value} type="button" className={'jobs-filter-chip '+(difficulty===value?'selected':'')} aria-pressed={difficulty===value} onClick={()=>setDifficulty(value)}>{value==='All'?'All levels':value}</button>)}
 </div>
 <div className="dsa-filter-actions"><Button size="small" variant={moreFilters?'contained':'outlined'} startIcon={<Tune fontSize="small"/>} endIcon={moreFilters?<ExpandLess fontSize="small"/>:<ExpandMore fontSize="small"/>} onClick={()=>setMoreFilters(open=>!open)} aria-expanded={moreFilters} aria-controls="dsa-extra-filters">More filters{activeExtra?' ('+activeExtra+')':''}</Button>
-{(search||difficulty!=='All'||topic!=='All'||progress!=='All')&&<Button size="small" onClick={reset}>Reset</Button>}
+{(search||difficulty!=='All'||topic!=='All'||progress!=='All'||dateRange!=='all')&&<Button size="small" onClick={reset}>Reset</Button>}
 </div>
-<Collapse in={moreFilters} timeout={140}><div className="dsa-extra-filters" id="dsa-extra-filters">{makeSelect('Topic',topic,setTopic,['All',...topics])}{makeSelect('Progress',progress,setProgress,['All','Solved','Unsolved'])}</div></Collapse>
+<Collapse in={moreFilters} timeout={140}><div className="dsa-extra-filters" id="dsa-extra-filters">{makeSelect('Topic',topic,setTopic,['All',...topics])}{makeSelect('Progress',progress,setProgress,['All','Solved','Unsolved'])}{<TextField select size="small" label="Date added" value={dateRange} onChange={e=>setDateRange(e.target.value)}>{dateRangeOptions.map(([value,label])=><MenuItem key={value} value={value}>{label}</MenuItem>)}</TextField>}</div></Collapse>
 </section>
-<div className="dsa-results-line"><strong>{list.length} {list.length===1?'problem':'problems'}</strong><span>{progress==='Solved'?'Completed practice':progress==='Unsolved'?'Ready to practice':'Newest first'}</span></div>
+<div className="dsa-results-line"><strong>{list.length} {list.length===1?'problem':'problems'}</strong><span>{progress==='Solved'?'Completed practice':progress==='Unsolved'?'Ready to practice':dateRange==='all'?'Newest first':dateRangeOptions.find(([value])=>value===dateRange)?.[1]}</span></div>
 <div className="dsa-problem-list">{list.map(p=><article className="panel dsa-card" key={p.id}>
 <div className="dsa-body"><div className="dsa-card-topline"><span className="dsa-topic-pill">{p.topic}</span><Chip size="small" label={p.difficulty} color={p.difficulty==='Easy'?'success':p.difficulty==='Medium'?'warning':'error'} variant="outlined"/>{solved[p.id]&&<Chip size="small" color="success" label="Solved" icon={<CheckCircleOutline/>}/>}</div>
 <Link to={'/dsa/'+p.slug}><h3>{p.title}</h3></Link><p className="dsa-card-meta">Added {humanDate(p.dateAdded)} · ~{p.estimatedMinutes} min</p></div>
