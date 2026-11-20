@@ -401,7 +401,8 @@ footer{border-color:var(--cb-border)}
 .jobs-search-line .MuiOutlinedInput-root{border-radius:11px;background:#fff;min-height:44px}
 .jobs-search-line .MuiInputBase-input{font-size:14px}
 .jobs-search-line .MuiInputAdornment-root{color:#536680}
-.jobs-quick-filters{display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:thin;padding:12px 1px 4px;-webkit-overflow-scrolling:touch}
+.jobs-quick-filters{display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:12px 1px 4px;-webkit-overflow-scrolling:touch}
+.jobs-quick-filters::-webkit-scrollbar{display:none;width:0;height:0}
 .jobs-filter-chip{border:1px solid #d6e0ee;background:#fff;color:#40516c;font-weight:650;font-size:12px;line-height:1.25;white-space:nowrap;border-radius:999px;padding:8px 13px;cursor:pointer;flex-shrink:0;min-height:35px;transition:background .13s ease,border-color .13s ease,color .13s ease}
 .jobs-filter-chip.selected{color:#fff;background:#3153bb;border-color:#3153bb}
 .jobs-filter-chip:hover:not(.selected){border-color:#91a8dd;background:#edf3ff}
