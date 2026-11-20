@@ -462,3 +462,79 @@ footer{border-color:var(--cb-border)}
  .jobs-sort-pair .MuiInputLabel-root{font-size:12px}
  .jobs-sort-pair .MuiSelect-icon{right:3px}
 }
+
+/* Profolio soft Material-inspired pastel surfaces (matte, high contrast). */
+:root{
+ --cb-bg:#f6f8fc;
+ --cb-card:#ffffff;
+ --cb-border:#dce4ef;
+ --cb-mist-blue:#edf3fc;
+ --cb-mist-lilac:#f2effb;
+ --cb-mist-mint:#eaf6f1;
+ --cb-mist-peach:#fff3e9;
+}
+html,body{background-color:var(--cb-bg)}
+body{background-image:linear-gradient(125deg,#f5f8ff 0%,#f7f8fc 44%,#f5faf7 100%);background-attachment:fixed}
+.home-sections>.home-panel:nth-child(1){background:#edf3fc;border-color:#d7e3f3}
+.home-sections>.home-panel:nth-child(2){background:#f1effa;border-color:#e0dcef}
+.home-sections>.home-panel:nth-child(3){background:#eaf6f1;border-color:#d5e9e0}
+.home-panel .home-listing{background:rgba(255,255,255,.86);border-color:rgba(126,145,173,.24)}
+.home-panel .home-listing:hover{background:#fff}
+.home-panel .home-empty{background:rgba(255,255,255,.70)}
+.jobs-search-panel{background:#edf3fc!important;border-color:#d7e3f3!important}
+.jobs-list>.job:nth-child(4n+1){background:#fff9f1;border-color:#f0e2cf}
+.jobs-list>.job:nth-child(4n+2){background:#f1f7fe;border-color:#dbe8f6}
+.jobs-list>.job:nth-child(4n+3){background:#f2faf5;border-color:#d9ecdf}
+.jobs-list>.job:nth-child(4n+4){background:#f7f3fc;border-color:#e6def0}
+.jobs-list>.job .tag{background:rgba(255,255,255,.78);border-color:#dce4ee}
+.job-detail .job-detail-hero{background:#edf3fc;border-color:#d7e3f3}
+.job-detail>.two>div:first-child>.panel:nth-child(1){background:#fff9f2;border-color:#efe4d5}
+.job-detail>.two>div:first-child>.panel:nth-child(2){background:#eef8f5;border-color:#d9ece5}
+.job-detail>.two>div:first-child>.panel:nth-child(3){background:#f5f2fb;border-color:#e4dff0}
+.job-detail>.two>div:last-child>.panel{background:#f6f8fc}
+.job-detail .job-toolkit{background:#f0f4fc;border-color:#dce5f5}
+.dsa-card:nth-of-type(3n+1){background:#eef4fd;border-color:#dce7f4}
+.dsa-card:nth-of-type(3n+2){background:#eef8f2;border-color:#dbece0}
+.dsa-card:nth-of-type(3n){background:#f7f1fb;border-color:#e8dff0}
+.dsa-detail>.panel:nth-of-type(1){background:#edf3fc;border-color:#d7e3f3}
+.dsa-detail>.panel:nth-of-type(2){background:#f9f5ed;border-color:#eee5d5}
+.dsa-detail>.panel:nth-of-type(3){background:#eff8f3;border-color:#dcece1}
+.home-panel h2,.job-detail h2,.job-title-link h3,.dsa-card h3{color:#1e2b44}
+@media(max-width:950px){
+ /* Floating bottom dock: motion controls its vertical show/hide offset. */
+ .mobile-nav{
+  display:flex;
+  position:fixed;
+  left:0;
+  right:0;
+  top:auto;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  width:calc(100% - 28px);
+  max-width:430px;
+  margin-inline:auto;
+  padding:7px;
+  gap:5px;
+  background:rgba(255,255,255,.97);
+  border:1px solid #d6dfed;
+  border-radius:23px;
+  box-shadow:0 9px 28px rgba(42,61,94,.16),0 2px 6px rgba(42,61,94,.06);
+ }
+ .mobile-nav-item{
+  flex:1 1 0;
+  min-width:0;
+  min-height:53px;
+  max-width:none;
+  border-radius:17px;
+  padding:6px 4px;
+  font-size:11px;
+  line-height:1.2;
+  gap:3px;
+  color:#53647f;
+ }
+ .mobile-nav-item.active{background:#e8edfb;color:#24469c}
+ .mobile-nav-item svg{font-size:21px}
+ .mobile-code-icon{font-size:22px}
+ .main{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:600px){.main{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}}
+@media(max-width:360px){.mobile-nav{width:calc(100% - 20px);padding:5px;gap:3px}.mobile-nav-item{font-size:10px}}
