@@ -448,3 +448,17 @@ footer{border-color:var(--cb-border)}
 
 /* The global header rule must not add a large gap below the jobs heading. */
 .main .jobs-page-heading{margin-bottom:14px}
+
+/* Keep both sorts together; additional filters stay collapsed. */
+.jobs-sort-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;flex:1 1 100%;min-width:0}
+.jobs-sort-pair>div,.jobs-sort-pair .MuiFormControl-root{min-width:0;width:100%}
+.jobs-sort-pair .MuiInputBase-root{min-height:40px;border-radius:10px}
+.jobs-control-row .jobs-sort-pair{order:0}
+.jobs-control-row .jobs-more-filter-button{order:1}
+.jobs-control-row .jobs-reset{order:2}
+@media(max-width:600px){
+ .jobs-sort-pair{gap:8px}
+ .jobs-sort-pair .MuiInputBase-input{font-size:12px;padding-left:10px;padding-right:21px}
+ .jobs-sort-pair .MuiInputLabel-root{font-size:12px}
+ .jobs-sort-pair .MuiSelect-icon{right:3px}
+}
