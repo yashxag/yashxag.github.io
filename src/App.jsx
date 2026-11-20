@@ -3,8 +3,8 @@ import Dsa from './Dsa.jsx';
 import JobToolkit from './JobToolkit.jsx';
 import {motion,useReducedMotion} from 'framer-motion';
 import {Link,NavLink,Routes,Route,useParams} from 'react-router-dom';
-import {Box,Button,Paper,Chip,TextField,MenuItem,Typography,FormControl,Select,Alert,IconButton,Tooltip} from '@mui/material';
-import {Search,ArrowBack,OpenInNew,Download,Upload,Refresh,WorkOutline,DashboardOutlined,CheckCircleOutline,HelpOutline,CancelOutlined,EventBusyOutlined} from '@mui/icons-material';
+import {Box,Button,Paper,Chip,TextField,MenuItem,Typography,FormControl,Select,Alert,IconButton,Tooltip,Collapse,Menu,InputAdornment} from '@mui/material';
+import {Search,ArrowBack,OpenInNew,Download,Upload,Refresh,WorkOutline,DashboardOutlined,CheckCircleOutline,HelpOutline,CancelOutlined,EventBusyOutlined,Tune,ExpandMore,ExpandLess,MoreVert,Close} from '@mui/icons-material';
 import {ResponsiveContainer,AreaChart,Area,XAxis,Tooltip as CT} from 'recharts';
 const statusOptions=['Not applied','Saved','Applied','Assessment','Interview','Offer','Rejected'];
 const key='careerboard-application-status-v1';
@@ -59,21 +59,39 @@ return <div className="home-sections">
 </div>}
 function Jobs({jobs,mine,change,save,restore,reload}){
 const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('fit'),[applied,setApplied]=useState('All');
+const [moreFilters,setMoreFilters]=useState(false),[actionsAnchor,setActionsAnchor]=useState(null);
 const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(vac==='All'||j.vacancyStatus===vac)&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied]);
+const activeExtra=[mode!=='All',priority!=='All',applied!=='All',secondarySort!=='fit'].filter(Boolean).length;
+const reset=()=>{setQ('');setVac('Active');setMode('All');setPriority('All');setPrimarySort('priority');setSecondarySort('fit');setApplied('All')};
 const allowedSecondary=secondaryRules[primarySort]||[];
-const secondaryOptions=[['none','No tie-breaker'],...sortOptions.filter(([value])=>allowedSecondary.includes(value))];
+const secondaryOptions=[['none','No additional sort'],...sortOptions.filter(([value])=>allowedSecondary.includes(value))];
 const handlePrimarySort=value=>{setPrimarySort(value);setSecondarySort((secondaryRules[value]||[])[0]||'none')};
 const makeSelect=(label,value,setter,options)=><TextField key={label} select size="small" label={label} value={value} onChange={e=>setter(e.target.value)}>{options.map(item=><MenuItem key={Array.isArray(item)?item[0]:item} value={Array.isArray(item)?item[0]:item}>{Array.isArray(item)?item[1]:item}</MenuItem>)}</TextField>;
-return <><div className="head-row jobs-header"><div><h1>Explore opportunities</h1><p className="sub">{list.length} matching jobs · Active vacancies shown first by default</p></div><div className="actions"><Tooltip title="Refresh listings"><IconButton aria-label="Refresh job listings" onClick={reload}><Refresh/></IconButton></Tooltip><Button startIcon={<Download/>} onClick={save}>Export statuses</Button><Button startIcon={<Upload/>} component="label">Import statuses<input hidden type="file" accept=".json,application/json" onChange={e=>{restore(e.target.files?.[0]);e.target.value=''}}/></Button></div></div>
-<div className="panel filters jobs-filters">
-<TextField label="Search jobs" size="small" value={q} onChange={e=>setQ(e.target.value)}/>
-{makeSelect('Vacancy',vac,setVac,['Active','All','Recheck','Unknown','Closed','Expired'])}
+return <div className="jobs-page">
+<header className="jobs-page-heading"><div className="jobs-page-title"><h1>Explore jobs</h1><p>Find relevant roles and track your applications.</p></div>
+<div className="jobs-page-actions"><Tooltip title="Refresh listings"><IconButton size="small" aria-label="Refresh listings" onClick={reload}><Refresh fontSize="small"/></IconButton></Tooltip><Tooltip title="Import or export your statuses"><IconButton size="small" aria-label="More job actions" aria-controls={actionsAnchor?'jobs-actions-menu':undefined} aria-haspopup="true" onClick={e=>setActionsAnchor(e.currentTarget)}><MoreVert fontSize="small"/></IconButton></Tooltip>
+<Menu id="jobs-actions-menu" anchorEl={actionsAnchor} open={Boolean(actionsAnchor)} onClose={()=>setActionsAnchor(null)}>
+<MenuItem onClick={()=>{setActionsAnchor(null);save()}}><Download fontSize="small" sx={{mr:1.3}}/>Export application statuses</MenuItem>
+<MenuItem component="label"><Upload fontSize="small" sx={{mr:1.3}}/>Import application statuses<input hidden type="file" accept=".json,application/json" onChange={e=>{restore(e.target.files?.[0]);e.target.value='';setActionsAnchor(null)}}/></MenuItem>
+</Menu></div></header>
+<section className="panel jobs-search-panel" aria-label="Search and filter jobs">
+<div className="jobs-search-line"><TextField fullWidth size="small" placeholder="Search role, company, location or skill" aria-label="Search jobs" value={q} onChange={e=>setQ(e.target.value)} InputProps={{startAdornment:<InputAdornment position="start"><Search fontSize="small"/></InputAdornment>,endAdornment:q?<InputAdornment position="end"><IconButton size="small" aria-label="Clear search" onClick={()=>setQ('')}><Close fontSize="small"/></IconButton></InputAdornment>:null}}/></div>
+<div className="jobs-quick-filters" role="group" aria-label="Vacancy status">
+{[['Active','Active'],['All','All jobs'],['Recheck','Recheck'],['Unknown','Unknown'],['Closed','Closed'],['Expired','Expired']].map(([value,label])=><button type="button" key={value} className={'jobs-filter-chip '+(vac===value?'selected':'')} aria-pressed={vac===value} onClick={()=>setVac(value)}>{label}</button>)}
+</div>
+<div className="jobs-control-row"><div className="jobs-primary-sort">{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}</div>
+<Button variant={moreFilters?'contained':'outlined'} className="jobs-more-filter-button" size="small" startIcon={<Tune fontSize="small"/>} endIcon={moreFilters?<ExpandLess fontSize="small"/>:<ExpandMore fontSize="small"/>} onClick={()=>setMoreFilters(v=>!v)} aria-expanded={moreFilters} aria-controls="jobs-extra-filters">Filters{activeExtra?' ('+activeExtra+')':''}</Button>
+{(q||vac!=='Active'||mode!=='All'||priority!=='All'||applied!=='All'||primarySort!=='priority'||secondarySort!=='fit')&&<Button size="small" className="jobs-reset" onClick={reset}>Reset</Button>}
+</div>
+<Collapse in={moreFilters} timeout={140}><div id="jobs-extra-filters" className="jobs-extra-filters">
 {makeSelect('Work mode',mode,setMode,['All','Remote','Hybrid','Office','On-site'])}
 {makeSelect('Priority',priority,setPriority,['All','High','Medium','Low'])}
-{makeSelect('My status',applied,setApplied,['All',...statusOptions])}
-{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}
+{makeSelect('My application',applied,setApplied,['All',...statusOptions])}
 {makeSelect('Then by',secondarySort,setSecondarySort,secondaryOptions)}
-</div>
+<p className="jobs-filter-help">Sorting is applied in order: primary first, then your selected tie-breaker.</p>
+</div></Collapse>
+</section>
+<div className="jobs-results-line"><div><strong>{list.length} {list.length===1?'job':'jobs'}</strong><span>{vac==='Active'?'Verified open listings':vac==='All'?'All vacancy statuses':vac+' listings'}</span></div><span className="jobs-sort-summary">{sortOptions.find(([key])=>key===primarySort)?.[1]}{secondarySort!=='none'?' · '+sortOptions.find(([key])=>key===secondarySort)?.[1]:''}</span></div>
 <div className="jobs-list">{list.map(j=><article className="panel job" key={j.id}>
 <div className="job-content"><div className="job-topline"><CompanyPill name={j.company}/><Status s={j.vacancyStatus}/></div>
 <Link to={'/jobs/'+slug(j)} className="job-title-link"><h3 title={j.title}>{j.title}</h3></Link>
@@ -81,8 +99,9 @@ return <><div className="head-row jobs-header"><div><h1>Explore opportunities</h
 <div className="tags">{(j.skills||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,4).map((skill,i)=><span key={i} className="tag" title={skill}>{skill}</span>)}</div>
 <p className="job-meta">{j.priority} priority · {briefFit(j.fit)} fit · Found {date(j.dateFound)}</p>
 </div><div className="job-side"><label className="input-caption" htmlFor={'job-status-'+j.id}>Your application</label><div id={'job-status-'+j.id}><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></div><Link className="job-detail-link" to={'/jobs/'+slug(j)}>View details ↗</Link></div></article>)}</div>
-{!list.length&&<div className="panel home-empty">No matching jobs for these filters. Try switching Vacancy to All.</div>}
-<Alert severity="info" sx={{mt:3}}>Application statuses stay in this browser. Export or import them when switching devices.</Alert></>}
+{!list.length&&<div className="panel home-empty">No results for these filters. Try All jobs or reset your search.</div>}
+<p className="jobs-privacy-note">Application statuses are saved only on this device. Use the menu above to export or import them.</p>
+</div>}
 function Detail({jobs,mine,change}){
 const {slug:route}=useParams();const j=jobs.find(x=>slug(x)===route);
 if(!j)return <section className="panel"><p>Job not found, or data is still loading.</p><Link to="/jobs">Back to jobs</Link></section>;
