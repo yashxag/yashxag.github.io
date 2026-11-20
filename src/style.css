@@ -196,3 +196,23 @@ footer{border-color:var(--cb-border)}
  .listing{padding:14px}
  .topbar{gap:8px}
 }
+
+/* Unified navigation: centered desktop pill, existing mobile bottom bar. */
+@media(min-width:951px){
+ .sidebar{display:none}
+ .shell{display:block}
+ .main{width:100%;max-width:1500px;margin:0 auto;padding:28px 36px}
+ .topbar{min-height:64px;justify-content:flex-end!important;padding-left:0}
+ .topbar .desktop-only{display:none}
+ .mobile-nav{display:flex;position:fixed;top:16px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);z-index:100;align-items:center;justify-content:center;gap:5px;width:max-content;max-width:calc(100vw - 32px);padding:6px;background:#fff;border:1px solid #dce4ee;border-radius:18px;box-shadow:0 5px 20px rgba(36,56,94,.10)}
+ .mobile-nav-item{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;min-height:42px;max-width:none;padding:0 16px;border-radius:12px;font-size:13px;font-weight:650;white-space:nowrap;color:#54647c}
+ .mobile-nav-item.active{background:#e9efff;color:#2349a9}
+ .mobile-code-icon{font-size:21px}
+}
+@media(min-width:951px) and (max-width:1100px){
+ .main{padding:25px 24px}
+ .mobile-nav-item{padding:0 11px}
+}
+/* Detail titles should not overpower the actual content. */
+.detail-page h1{font-size:clamp(1.45rem,2.35vw,2rem);line-height:1.25;letter-spacing:-.025em;overflow-wrap:anywhere}
+@media(max-width:600px){.detail-page h1{font-size:clamp(1.4rem,5.5vw,1.8rem)}}
