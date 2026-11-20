@@ -1,18 +1,15 @@
 import React from 'react';
 
-/**
- * Lightweight, accessible SVG loader shared by jobs and DSA.
- * Motion comes from CSS and turns off for reduced-motion preferences.
- */
+/** Lightweight, accessible SVG loader for job and DSA requests. */
 export default function ProfolioLoader({label='Loading Profolio',compact=false}){
   return <div className={'profolio-loading'+(compact?' is-compact':'')} role="status" aria-live="polite" aria-label={label}>
-    <svg className="profolio-loader-svg" viewBox="0 0 80 80" width="72" height="72" fill="none" aria-hidden="true" focusable="false">
-      <circle cx="40" cy="40" r="30" stroke="#E1EAF7" strokeWidth="5"/>
-      <circle className="profolio-loader-ring" cx="40" cy="40" r="30" stroke="#3658B8" strokeWidth="5" strokeLinecap="round" strokeDasharray="68 188" transform="rotate(-90 40 40)"/>
-      <path className="profolio-loader-spark" d="M40 22.5L44.6 35.4 57.5 40 44.6 44.6 40 57.5 35.4 44.6 22.5 40 35.4 35.4Z" fill="#4969C2"/>
-      <circle className="profolio-loader-dot dot-one" cx="15" cy="20" r="3.5" fill="#A89CE1"/>
-      <circle className="profolio-loader-dot dot-two" cx="66" cy="57" r="3" fill="#7FC4AB"/>
+    <svg className="profolio-loader-svg" viewBox="0 0 64 64" width="64" height="64" fill="none" aria-hidden="true" focusable="false">
+      <circle cx="32" cy="32" r="23" stroke="#DEE7F5" strokeWidth="5"/>
+      <circle className="profolio-loader-ring" cx="32" cy="32" r="23" stroke="#3153BB" strokeWidth="5" strokeLinecap="round" strokeDasharray="51 145"/>
+      <path className="profolio-loader-spark" d="M32 20L35.4 28.6 44 32 35.4 35.4 32 44 28.6 35.4 20 32 28.6 28.6Z" fill="#526BC5"/>
+      <circle cx="12" cy="14" r="3" fill="#A99ADD"/>
+      <circle cx="53" cy="48" r="2.8" fill="#8CCBB5"/>
     </svg>
-    <span className="profolio-loader-label">{label}<span className="profolio-loader-ellipsis" aria-hidden="true">...</span></span>
-  </div>
+    <span className="profolio-loader-label">{label}<span aria-hidden="true">…</span></span>
+  </div>;
 }
