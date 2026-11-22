@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20",
+  "updatedAt": "2026-11-22",
   "jobs": [
     {
       "id": "JOB-001",
@@ -1955,6 +1955,29 @@
       "dsaPrep": "Medium–Hard: arrays, hash maps, trees, graphs, dynamic programming",
       "corePrep": "Advanced: Java, API design, distributed systems, messaging, scalability and reliability",
       "description": "Build and operate Amazon Last Mile communications platforms including push notifications, newsfeed and messaging APIs for delivery partners. Integrate content and audience systems, develop reliable internationalized delivery messaging and AI-assisted communication workflows. The role requires at least three years of professional software development and two years of design or architecture experience."
+    },
+    {
+      "id": "JOB-086",
+      "company": "Secfix",
+      "title": "Backend Engineer – GTM Engineering (Fresh grad, India)",
+      "location": "Remote - India",
+      "workMode": "Remote",
+      "experience": "0–2 years; 1+ years backend experience via job or internships",
+      "dateFound": "2026-11-22",
+      "postedDate": "",
+      "vacancyStatus": "Active",
+      "priority": "High",
+      "fit": "Strong: Python/SQL/REST APIs, production backend, 0–2 YOE and explicitly India-remote; GTM/internal systems rather than core product backend",
+      "skills": "Python, SQL, REST APIs, webhooks, data modeling, backend integrations, data pipelines, Git, deployment, testing, logging, AI APIs",
+      "salary": "USD 20,000–32,000/year (location-dependent) + shares",
+      "url": "https://jobs.ashbyhq.com/secfix/583140f4-b26c-47b4-a9be-c7a88dc3c0f5/",
+      "notes": "Secfix official Ashby listing explicitly directs applicants to its careers application form; 100% India remote with minimum 4h CET overlap. GTM engineering scope.",
+      "lastChecked": "2026-11-22 IST",
+      "verification": "2026-11-22 IST: Official Ashby Secfix requisition indexed recently with Overview/Application and explicit instruction that applications are accepted through the careers form. Live Ashby page requires JavaScript, so actual form submission not tested.",
+      "requisitionId": "583140f4-b26c-47b4-a9be-c7a88dc3c0f5",
+      "dsaPrep": "Easy–Medium: arrays, hash maps, strings, SQL, practical coding",
+      "corePrep": "Python, SQL schema design, REST/webhooks, ETL pipelines, production debugging, API integration, reliability",
+      "description": "Build and own backend systems for Secfix's go-to-market team, including centralized data pipelines, integrations, internal services and AI agents. Design account/contact ingestion, cleaning, deduplication and scoring pipelines; maintain a reliable data layer and connect APIs, CRM and outreach systems. Write Python and SQL in production, with deployment, testing, logging and debugging. The role requests 0–2 years of experience, at least one year of backend exposure via employment or internships, REST API and webhook experience, and a minimum four-hour overlap with CET while working remotely from India."
     }
   ]
 }
