@@ -1978,6 +1978,29 @@
       "dsaPrep": "Easy–Medium: arrays, hash maps, strings, SQL, practical coding",
       "corePrep": "Python, SQL schema design, REST/webhooks, ETL pipelines, production debugging, API integration, reliability",
       "description": "Build and own backend systems for Secfix's go-to-market team, including centralized data pipelines, integrations, internal services and AI agents. Design account/contact ingestion, cleaning, deduplication and scoring pipelines; maintain a reliable data layer and connect APIs, CRM and outreach systems. Write Python and SQL in production, with deployment, testing, logging and debugging. The role requests 0–2 years of experience, at least one year of backend exposure via employment or internships, REST API and webhook experience, and a minimum four-hour overlap with CET while working remotely from India."
+    },
+    {
+      "id": "JOB-087",
+      "company": "Sophos",
+      "title": "Software Engineer 1 (Java Developer)",
+      "location": "India",
+      "workMode": "Remote (India)",
+      "experience": "1–2 years",
+      "dateFound": "2026-11-22",
+      "postedDate": "",
+      "vacancyStatus": "Recheck",
+      "priority": "High",
+      "fit": "Strong: Java, Spring Boot, AWS, REST APIs, testing, CI/CD; 1–2 YOE; remote from India. Some Kubernetes/Terraform learning required.",
+      "skills": "Java, Spring Boot, microservices, AWS, REST APIs, Terraform, CI/CD, Docker, Kubernetes, unit and integration testing",
+      "salary": "",
+      "url": "https://jobs.ashbyhq.com/sophos/6b42a0ac-2500-4559-a813-2bfa43eb2ea6",
+      "notes": "Official Sophos Ashby listing indexed within the past week; explicitly India remote and 1–2 years. Live ATS renders only a JavaScript placeholder, so accepting applications could not be confirmed; marked Recheck rather than Active.",
+      "lastChecked": "2026-11-22 IST",
+      "verification": "2026-11-22 IST: Official Ashby requisition indexed 6 days ago with India remote, Java/Spring Boot/AWS and 1–2 years. Direct ATS response required JavaScript; application acceptance not independently confirmed.",
+      "requisitionId": "6b42a0ac-2500-4559-a813-2bfa43eb2ea6",
+      "dsaPrep": "Easy–Medium: arrays, strings, hash maps, OOP, basic algorithms and data structures",
+      "corePrep": "Java, Spring Boot REST services, AWS fundamentals, CI/CD, Terraform basics, Docker, Kubernetes, testing",
+      "description": "Software Engineer 1 on Sophos cloud engineering teams. Build and customize Terraform automation with Java; design and implement Java backend features, microservices and AWS-based modules; manage API endpoints; fix defects; write unit and integration tests in CI/CD; contribute to cloud infrastructure services with Docker and Kubernetes. Requirements include 1–2 years of Java, Spring Boot, microservices and cloud development, API design and data structures, product development familiarity, CI/CD and complete software development lifecycle experience. Remote roles require residence and work authorization in India."
     }
   ]
 }
