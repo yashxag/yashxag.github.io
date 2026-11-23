@@ -1,0 +1,2185 @@
+{
+  "updatedAt": "2026-11-23",
+  "solutions": [
+    {
+      "id": "ROAD-039",
+      "slug": "combination-sum",
+      "title": "Combination Sum",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/combination-sum/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Given distinct positive candidate values, return unique combinations summing to target. Reuse a candidate any number of times.",
+      "example": {
+        "input": "candidates=[2,3,6,7], target=7",
+        "output": "[[2,2,3],[7]]",
+        "explanation": "The two combinations reach 7 without changing combination order."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Start with 2, remaining 5; choose 2, remaining 3",
+        "Choose 3, remaining 0, save [2,2,3]",
+        "Backtrack to root; choosing 7 saves [7]"
+      ],
+      "dryRun": [
+        "Start with 2, remaining 5; choose 2, remaining 3",
+        "Choose 3, remaining 0, save [2,2,3]",
+        "Backtrack to root; choosing 7 saves [7]"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> combinationSum(int[] candidates, int target) {\n        List<List<Integer>> ans = new ArrayList<>();\n        dfs(candidates, 0, target, new ArrayList<>(), ans);\n        return ans;\n    }\n    private void dfs(int[] a, int start, int left, List<Integer> path, List<List<Integer>> ans) {\n        if (left == 0) { ans.add(new ArrayList<>(path)); return; }\n        for (int i = start; i < a.length; i++) {\n            if (a[i] > left) continue;\n            path.add(a[i]);\n            dfs(a, i, left - a[i], path, ans);\n            path.remove(path.size() - 1);\n        }\n    }\n}",
+      "timeComplexity": "Exponential in target; output-sensitive",
+      "spaceComplexity": "O(target / minCandidate) recursion depth plus output",
+      "interviewTip": "Index i (not i+1) permits repeated use; nondecreasing candidate indices avoid permutation duplicates.",
+      "testCases": [
+        {
+          "input": "candidates=[2,3,6,7], target=7",
+          "expected": "[[2,2,3],[7]]",
+          "reason": "The two combinations reach 7 without changing combination order."
+        },
+        {
+          "input": "candidates=[2], target=1",
+          "expected": "[]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate arbitrary sequences up to the target and deduplicate sorted multisets afterward."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "Exponential in target; output-sensitive",
+          "spaceComplexity": "O(target / minCandidate) recursion depth plus output",
+          "explanation": "Start with 2, remaining 5; choose 2, remaining 3 Choose 3, remaining 0, save [2,2,3] Backtrack to root; choosing 7 saves [7]",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> combinationSum(int[] candidates, int target) {\n        List<List<Integer>> ans = new ArrayList<>();\n        dfs(candidates, 0, target, new ArrayList<>(), ans);\n        return ans;\n    }\n    private void dfs(int[] a, int start, int left, List<Integer> path, List<List<Integer>> ans) {\n        if (left == 0) { ans.add(new ArrayList<>(path)); return; }\n        for (int i = start; i < a.length; i++) {\n            if (a[i] > left) continue;\n            path.add(a[i]);\n            dfs(a, i, left - a[i], path, ans);\n            path.remove(path.size() - 1);\n        }\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-040",
+      "slug": "generate-parentheses",
+      "title": "Generate Parentheses",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/generate-parentheses/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Google",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Generate every well-formed string containing exactly n pairs of parentheses.",
+      "example": {
+        "input": "n=3",
+        "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]",
+        "explanation": "Only balanced prefixes are allowed."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "At start, only '(' is legal",
+        "From '((' you may add '(' or ')' while close<open",
+        "Collect all length-6 balanced strings; branch ')' never exceeds '('"
+      ],
+      "dryRun": [
+        "At start, only '(' is legal",
+        "From '((' you may add '(' or ')' while close<open",
+        "Collect all length-6 balanced strings; branch ')' never exceeds '('"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<String> generateParenthesis(int n) {\n        List<String> ans = new ArrayList<>();\n        dfs(n, 0, 0, new StringBuilder(), ans);\n        return ans;\n    }\n    private void dfs(int n, int open, int close, StringBuilder s, List<String> ans) {\n        if (s.length() == 2 * n) { ans.add(s.toString()); return; }\n        if (open < n) {\n            s.append('('); dfs(n, open + 1, close, s, ans); s.deleteCharAt(s.length() - 1);\n        }\n        if (close < open) {\n            s.append(')'); dfs(n, open, close + 1, s, ans); s.deleteCharAt(s.length() - 1);\n        }\n    }\n}",
+      "timeComplexity": "O(Cn·n), Catalan number Cn",
+      "spaceComplexity": "O(n) working stack, excluding output",
+      "interviewTip": "Prune invalid partial strings immediately instead of checking after generating them.",
+      "testCases": [
+        {
+          "input": "n=3",
+          "expected": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]",
+          "reason": "Only balanced prefixes are allowed."
+        },
+        {
+          "input": "n=1",
+          "expected": "[\"()\"]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n·4^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Generate all 2^(2n) parenthesis strings and filter balanced strings."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(Cn·n), Catalan number Cn",
+          "spaceComplexity": "O(n) working stack, excluding output",
+          "explanation": "At start, only '(' is legal From '((' you may add '(' or ')' while close<open Collect all length-6 balanced strings; branch ')' never exceeds '('",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<String> generateParenthesis(int n) {\n        List<String> ans = new ArrayList<>();\n        dfs(n, 0, 0, new StringBuilder(), ans);\n        return ans;\n    }\n    private void dfs(int n, int open, int close, StringBuilder s, List<String> ans) {\n        if (s.length() == 2 * n) { ans.add(s.toString()); return; }\n        if (open < n) {\n            s.append('('); dfs(n, open + 1, close, s, ans); s.deleteCharAt(s.length() - 1);\n        }\n        if (close < open) {\n            s.append(')'); dfs(n, open, close + 1, s, ans); s.deleteCharAt(s.length() - 1);\n        }\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-041",
+      "slug": "word-search",
+      "title": "Word Search",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/word-search/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Determine whether a word can be traced through adjacent up/down/left/right board cells without using a cell twice.",
+      "example": {
+        "input": "board=[[A,B,C,E],[S,F,C,S],[A,D,E,E]], word=\"ABCCED\"",
+        "output": "true",
+        "explanation": "A-B-C-C-E-D forms a valid connected path."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Start at board[0][0]=A",
+        "Trace right B,C, then down C and E",
+        "Move left to D; matched all six letters -> true"
+      ],
+      "dryRun": [
+        "Start at board[0][0]=A",
+        "Trace right B,C, then down C and E",
+        "Move left to D; matched all six letters -> true"
+      ],
+      "javaCode": "class Solution {\n    public boolean exist(char[][] board, String word) {\n        for (int r = 0; r < board.length; r++)\n            for (int c = 0; c < board[0].length; c++)\n                if (search(board, word, r, c, 0)) return true;\n        return false;\n    }\n    private boolean search(char[][] b, String w, int r, int c, int i) {\n        if (i == w.length()) return true;\n        if (r < 0 || c < 0 || r == b.length || c == b[0].length || b[r][c] != w.charAt(i)) return false;\n        char saved = b[r][c]; b[r][c] = '#';\n        boolean yes = search(b,w,r+1,c,i+1) || search(b,w,r-1,c,i+1)\n                   || search(b,w,r,c+1,i+1) || search(b,w,r,c-1,i+1);\n        b[r][c] = saved;\n        return yes;\n    }\n}",
+      "timeComplexity": "O(R·C·4^L) upper bound",
+      "spaceComplexity": "O(L) recursion depth",
+      "interviewTip": "Mark visited temporarily and restore during backtracking; recursion uses O(L) stack.",
+      "testCases": [
+        {
+          "input": "board=[[A,B,C,E],[S,F,C,S],[A,D,E,E]], word=\"ABCCED\"",
+          "expected": "true",
+          "reason": "A-B-C-C-E-D forms a valid connected path."
+        },
+        {
+          "input": "board=[[A]], word=\"B\"",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential, with substantial redundant work",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate every possible walk including revisits then reject reused cells."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C·4^L) upper bound",
+          "spaceComplexity": "O(L) recursion depth",
+          "explanation": "Start at board[0][0]=A Trace right B,C, then down C and E Move left to D; matched all six letters -> true",
+          "javaCode": "class Solution {\n    public boolean exist(char[][] board, String word) {\n        for (int r = 0; r < board.length; r++)\n            for (int c = 0; c < board[0].length; c++)\n                if (search(board, word, r, c, 0)) return true;\n        return false;\n    }\n    private boolean search(char[][] b, String w, int r, int c, int i) {\n        if (i == w.length()) return true;\n        if (r < 0 || c < 0 || r == b.length || c == b[0].length || b[r][c] != w.charAt(i)) return false;\n        char saved = b[r][c]; b[r][c] = '#';\n        boolean yes = search(b,w,r+1,c,i+1) || search(b,w,r-1,c,i+1)\n                   || search(b,w,r,c+1,i+1) || search(b,w,r,c-1,i+1);\n        b[r][c] = saved;\n        return yes;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-042",
+      "slug": "n-queens",
+      "title": "N Queens",
+      "difficulty": "Hard",
+      "stageId": "recursion",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/n-queens/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "List all placements of n queens on n×n board with no row, column or diagonal conflicts.",
+      "example": {
+        "input": "n=4",
+        "output": "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"],[\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]",
+        "explanation": "Two valid arrangements exist for n=4."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Place a queen in row 0 column 1",
+        "Skip attacked columns and diagonals in row 1; choose column 3",
+        "Complete rows 2 and 3 at columns 0 and 2, save the board"
+      ],
+      "dryRun": [
+        "Place a queen in row 0 column 1",
+        "Skip attacked columns and diagonals in row 1; choose column 3",
+        "Complete rows 2 and 3 at columns 0 and 2, save the board"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<String>> solveNQueens(int n) {\n        List<List<String>> ans = new ArrayList<>();\n        boolean[] col = new boolean[n], diag1 = new boolean[2*n], diag2 = new boolean[2*n];\n        char[][] board = new char[n][n];\n        for (char[] row : board) Arrays.fill(row, '.');\n        dfs(0, n, board, col, diag1, diag2, ans);\n        return ans;\n    }\n    private void dfs(int r, int n, char[][] b, boolean[] c, boolean[] d1, boolean[] d2, List<List<String>> ans) {\n        if (r == n) { List<String> out = new ArrayList<>(); for (char[] row : b) out.add(new String(row)); ans.add(out); return; }\n        for (int j = 0; j < n; j++) {\n            int a = r-j+n, z = r+j;\n            if (c[j] || d1[a] || d2[z]) continue;\n            c[j] = d1[a] = d2[z] = true; b[r][j] = 'Q';\n            dfs(r+1,n,b,c,d1,d2,ans);\n            b[r][j] = '.'; c[j] = d1[a] = d2[z] = false;\n        }\n    }\n}",
+      "timeComplexity": "O(n!) upper bound for search",
+      "spaceComplexity": "O(n²) board and recursion, excluding output",
+      "interviewTip": "Use diagonal identities r-c+n and r+c to check conflict in O(1).",
+      "testCases": [
+        {
+          "input": "n=4",
+          "expected": "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"],[\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]",
+          "reason": "Two valid arrangements exist for n=4."
+        },
+        {
+          "input": "n=1",
+          "expected": "[[\"Q\"]]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n^(n+2))",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Generate all n^n placements of one queen per row and check collisions afterward."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n!) upper bound for search",
+          "spaceComplexity": "O(n²) board and recursion, excluding output",
+          "explanation": "Place a queen in row 0 column 1 Skip attacked columns and diagonals in row 1; choose column 3 Complete rows 2 and 3 at columns 0 and 2, save the board",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<String>> solveNQueens(int n) {\n        List<List<String>> ans = new ArrayList<>();\n        boolean[] col = new boolean[n], diag1 = new boolean[2*n], diag2 = new boolean[2*n];\n        char[][] board = new char[n][n];\n        for (char[] row : board) Arrays.fill(row, '.');\n        dfs(0, n, board, col, diag1, diag2, ans);\n        return ans;\n    }\n    private void dfs(int r, int n, char[][] b, boolean[] c, boolean[] d1, boolean[] d2, List<List<String>> ans) {\n        if (r == n) { List<String> out = new ArrayList<>(); for (char[] row : b) out.add(new String(row)); ans.add(out); return; }\n        for (int j = 0; j < n; j++) {\n            int a = r-j+n, z = r+j;\n            if (c[j] || d1[a] || d2[z]) continue;\n            c[j] = d1[a] = d2[z] = true; b[r][j] = 'Q';\n            dfs(r+1,n,b,c,d1,d2,ans);\n            b[r][j] = '.'; c[j] = d1[a] = d2[z] = false;\n        }\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-044",
+      "slug": "diameter-of-binary-tree",
+      "title": "Diameter Of Binary Tree",
+      "difficulty": "Easy",
+      "stageId": "trees",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/diameter-of-binary-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return the number of edges in the longest path between any two nodes of a binary tree.",
+      "example": {
+        "input": "root=[1,2,3,4,5]",
+        "output": "3",
+        "explanation": "Longest path 4-2-1-3 has three edges."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "At leaves 4,5, subtree depths are 1",
+        "At node 2 left+right=2, its depth becomes 2",
+        "At root 1 depth left=2, right=1 -> diameter 3"
+      ],
+      "dryRun": [
+        "At leaves 4,5, subtree depths are 1",
+        "At node 2 left+right=2, its depth becomes 2",
+        "At root 1 depth left=2, right=1 -> diameter 3"
+      ],
+      "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    private int best = 0;\n    public int diameterOfBinaryTree(TreeNode root) { depth(root); return best; }\n    private int depth(TreeNode node) {\n        if (node == null) return 0;\n        int left = depth(node.left), right = depth(node.right);\n        best = Math.max(best, left + right);\n        return 1 + Math.max(left, right);\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(h) recursion, h tree height",
+      "interviewTip": "Diameter is counted in edges; adding left and right subtree heights already yields the edge count.",
+      "testCases": [
+        {
+          "input": "root=[1,2,3,4,5]",
+          "expected": "3",
+          "reason": "Longest path 4-2-1-3 has three edges."
+        },
+        {
+          "input": "root=[1,2]",
+          "expected": "1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²) worst case",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For every node, recompute depths of left and right subtrees."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h) recursion, h tree height",
+          "explanation": "At leaves 4,5, subtree depths are 1 At node 2 left+right=2, its depth becomes 2 At root 1 depth left=2, right=1 -> diameter 3",
+          "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    private int best = 0;\n    public int diameterOfBinaryTree(TreeNode root) { depth(root); return best; }\n    private int depth(TreeNode node) {\n        if (node == null) return 0;\n        int left = depth(node.left), right = depth(node.right);\n        best = Math.max(best, left + right);\n        return 1 + Math.max(left, right);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-045",
+      "slug": "balanced-binary-tree",
+      "title": "Balanced Binary Tree",
+      "difficulty": "Easy",
+      "stageId": "trees",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/balanced-binary-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return whether every node's left and right subtree heights differ by at most one.",
+      "example": {
+        "input": "root=[3,9,20,null,null,15,7]",
+        "output": "true",
+        "explanation": "Root subtrees have heights 1 and 2; all local differences are at most one."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Leaves 9,15,7 have height 1",
+        "Node 20 has heights 1 and 1, returns 2",
+        "Root sees left 1 vs right 2, difference 1 -> true"
+      ],
+      "dryRun": [
+        "Leaves 9,15,7 have height 1",
+        "Node 20 has heights 1 and 1, returns 2",
+        "Root sees left 1 vs right 2, difference 1 -> true"
+      ],
+      "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    public boolean isBalanced(TreeNode root) { return height(root) != -1; }\n    private int height(TreeNode node) {\n        if (node == null) return 0;\n        int left = height(node.left);\n        if (left == -1) return -1;\n        int right = height(node.right);\n        if (right == -1 || Math.abs(left-right) > 1) return -1;\n        return Math.max(left,right)+1;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(h)",
+      "interviewTip": "Return -1 as an unbalanced sentinel to stop rechecking subtrees.",
+      "testCases": [
+        {
+          "input": "root=[3,9,20,null,null,15,7]",
+          "expected": "true",
+          "reason": "Root subtrees have heights 1 and 2; all local differences are at most one."
+        },
+        {
+          "input": "root=[1,2,2,3,3,null,null,4,4]",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²) worst case",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "At each node, independently calculate entire subtree heights, repeating scans."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h)",
+          "explanation": "Leaves 9,15,7 have height 1 Node 20 has heights 1 and 1, returns 2 Root sees left 1 vs right 2, difference 1 -> true",
+          "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    public boolean isBalanced(TreeNode root) { return height(root) != -1; }\n    private int height(TreeNode node) {\n        if (node == null) return 0;\n        int left = height(node.left);\n        if (left == -1) return -1;\n        int right = height(node.right);\n        if (right == -1 || Math.abs(left-right) > 1) return -1;\n        return Math.max(left,right)+1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-046",
+      "slug": "lowest-common-ancestor-of-a-binary-tree",
+      "title": "Lowest Common Ancestor Of A Binary Tree",
+      "difficulty": "Medium",
+      "stageId": "trees",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Find the lowest node that is an ancestor of both specified nodes p and q in a binary tree.",
+      "example": {
+        "input": "root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1",
+        "output": "3",
+        "explanation": "Nodes 5 and 1 belong to different branches below root 3."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "At node 5 recursion finds p and returns 5",
+        "At node 1 recursion finds q and returns 1",
+        "Root 3 receives non-null from both children and is the LCA"
+      ],
+      "dryRun": [
+        "At node 5 recursion finds p and returns 5",
+        "At node 1 recursion finds q and returns 1",
+        "Root 3 receives non-null from both children and is the LCA"
+      ],
+      "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {\n        if (root == null || root == p || root == q) return root;\n        TreeNode l = lowestCommonAncestor(root.left,p,q);\n        TreeNode r = lowestCommonAncestor(root.right,p,q);\n        if (l != null && r != null) return root;\n        return l != null ? l : r;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(h)",
+      "interviewTip": "This recursive approach assumes p and q exist in the tree, as required by the linked problem.",
+      "testCases": [
+        {
+          "input": "root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1",
+          "expected": "3",
+          "reason": "Nodes 5 and 1 belong to different branches below root 3."
+        },
+        {
+          "input": "root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=4",
+          "expected": "5",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Find both root-to-node paths and walk until they diverge."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h)",
+          "explanation": "At node 5 recursion finds p and returns 5 At node 1 recursion finds q and returns 1 Root 3 receives non-null from both children and is the LCA",
+          "javaCode": "// LeetCode supplies TreeNode.\nclass Solution {\n    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {\n        if (root == null || root == p || root == q) return root;\n        TreeNode l = lowestCommonAncestor(root.left,p,q);\n        TreeNode r = lowestCommonAncestor(root.right,p,q);\n        if (l != null && r != null) return root;\n        return l != null ? l : r;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-047",
+      "slug": "serialize-and-deserialize-binary-tree",
+      "title": "Serialize And Deserialize Binary Tree",
+      "difficulty": "Hard",
+      "stageId": "trees",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Write methods to encode a binary tree to a string and rebuild an identical tree.",
+      "example": {
+        "input": "root=[1,2,3,null,null,4,5]",
+        "output": "deserialize(serialize(root)) has structure [1,2,3,null,null,4,5]",
+        "explanation": "Preorder traversal with null markers preserves shape."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Serialize root 1, then left child 2 and its null markers",
+        "Continue right subtree 3, children 4 and 5",
+        "Deserialize tokens recursively; # restores every missing child"
+      ],
+      "dryRun": [
+        "Serialize root 1, then left child 2 and its null markers",
+        "Continue right subtree 3, children 4 and 5",
+        "Deserialize tokens recursively; # restores every missing child"
+      ],
+      "javaCode": "import java.util.*;\n// LeetCode supplies TreeNode.\npublic class Codec {\n    public String serialize(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        write(root,sb);\n        return sb.toString();\n    }\n    private void write(TreeNode node, StringBuilder sb) {\n        if (node == null) { sb.append(\"#,\"); return; }\n        sb.append(node.val).append(',');\n        write(node.left,sb); write(node.right,sb);\n    }\n    public TreeNode deserialize(String data) {\n        Deque<String> q = new ArrayDeque<>(Arrays.asList(data.split(\",\")));\n        return read(q);\n    }\n    private TreeNode read(Deque<String> q) {\n        String x = q.removeFirst();\n        if (x.equals(\"#\")) return null;\n        TreeNode node = new TreeNode(Integer.parseInt(x));\n        node.left = read(q); node.right = read(q);\n        return node;\n    }\n}",
+      "timeComplexity": "O(n) serialize and deserialize",
+      "spaceComplexity": "O(n) encoded output and recursion/queue",
+      "interviewTip": "Preorder plus explicit null sentinels makes the representation unambiguous.",
+      "testCases": [
+        {
+          "input": "root=[1,2,3,null,null,4,5]",
+          "expected": "deserialize(serialize(root)) has structure [1,2,3,null,null,4,5]",
+          "reason": "Preorder traversal with null markers preserves shape."
+        },
+        {
+          "input": "root=[]",
+          "expected": "deserialize(serialize(root)) = []",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n) but incorrect for general trees",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Store only preorder values, which cannot recover the original shape without null markers."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n) serialize and deserialize",
+          "spaceComplexity": "O(n) encoded output and recursion/queue",
+          "explanation": "Serialize root 1, then left child 2 and its null markers Continue right subtree 3, children 4 and 5 Deserialize tokens recursively; # restores every missing child",
+          "javaCode": "import java.util.*;\n// LeetCode supplies TreeNode.\npublic class Codec {\n    public String serialize(TreeNode root) {\n        StringBuilder sb = new StringBuilder();\n        write(root,sb);\n        return sb.toString();\n    }\n    private void write(TreeNode node, StringBuilder sb) {\n        if (node == null) { sb.append(\"#,\"); return; }\n        sb.append(node.val).append(',');\n        write(node.left,sb); write(node.right,sb);\n    }\n    public TreeNode deserialize(String data) {\n        Deque<String> q = new ArrayDeque<>(Arrays.asList(data.split(\",\")));\n        return read(q);\n    }\n    private TreeNode read(Deque<String> q) {\n        String x = q.removeFirst();\n        if (x.equals(\"#\")) return null;\n        TreeNode node = new TreeNode(Integer.parseInt(x));\n        node.left = read(q); node.right = read(q);\n        return node;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-050",
+      "slug": "kth-smallest-element-in-a-bst",
+      "title": "Kth Smallest Element In A Bst",
+      "difficulty": "Medium",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Find the kth smallest node value of a BST, where k starts at 1.",
+      "example": {
+        "input": "root=[3,1,4,null,2], k=1",
+        "output": "1",
+        "explanation": "BST inorder traversal is ascending."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Push nodes 3 then 1 while moving left",
+        "Pop 1 as the first inorder value",
+        "k decreases from 1 to 0 -> return 1"
+      ],
+      "dryRun": [
+        "Push nodes 3 then 1 while moving left",
+        "Pop 1 as the first inorder value",
+        "k decreases from 1 to 0 -> return 1"
+      ],
+      "javaCode": "import java.util.*;\n// LeetCode supplies TreeNode.\nclass Solution {\n    public int kthSmallest(TreeNode root, int k) {\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode cur = root;\n        while (cur != null || !stack.isEmpty()) {\n            while (cur != null) { stack.push(cur); cur = cur.left; }\n            cur = stack.pop();\n            if (--k == 0) return cur.val;\n            cur = cur.right;\n        }\n        throw new IllegalArgumentException(\"Invalid k\");\n    }\n}",
+      "timeComplexity": "O(h+k)",
+      "spaceComplexity": "O(h)",
+      "interviewTip": "Use an explicit stack to stop early after the kth visit.",
+      "testCases": [
+        {
+          "input": "root=[3,1,4,null,2], k=1",
+          "expected": "1",
+          "reason": "BST inorder traversal is ascending."
+        },
+        {
+          "input": "root=[5,3,6,2,4,null,null,1], k=3",
+          "expected": "3",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Collect all values, sort ascending, return the (k-1)th item."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(h+k)",
+          "spaceComplexity": "O(h)",
+          "explanation": "Push nodes 3 then 1 while moving left Pop 1 as the first inorder value k decreases from 1 to 0 -> return 1",
+          "javaCode": "import java.util.*;\n// LeetCode supplies TreeNode.\nclass Solution {\n    public int kthSmallest(TreeNode root, int k) {\n        Deque<TreeNode> stack = new ArrayDeque<>();\n        TreeNode cur = root;\n        while (cur != null || !stack.isEmpty()) {\n            while (cur != null) { stack.push(cur); cur = cur.left; }\n            cur = stack.pop();\n            if (--k == 0) return cur.val;\n            cur = cur.right;\n        }\n        throw new IllegalArgumentException(\"Invalid k\");\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-051",
+      "slug": "find-median-from-data-stream",
+      "title": "Find Median From Data Stream",
+      "difficulty": "Hard",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Morgan Stanley",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Support adding integers and asking for the median of all numbers added so far.",
+      "example": {
+        "input": "ops=[\"MedianFinder\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"], args=[[],[1],[2],[],[3],[]]",
+        "output": "[null,null,null,1.5,null,2.0]",
+        "explanation": "Medians are 1.5 for [1,2] and 2 for [1,2,3]."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Insert 1 -> lower=[1]",
+        "Insert 2 -> lower max1, upper min2, median=(1+2)/2=1.5",
+        "Insert 3 -> lower holds 2 and 1, upper holds 3, median 2"
+      ],
+      "dryRun": [
+        "Insert 1 -> lower=[1]",
+        "Insert 2 -> lower max1, upper min2, median=(1+2)/2=1.5",
+        "Insert 3 -> lower holds 2 and 1, upper holds 3, median 2"
+      ],
+      "javaCode": "import java.util.*;\nclass MedianFinder {\n    private final PriorityQueue<Integer> lower = new PriorityQueue<>(Comparator.reverseOrder());\n    private final PriorityQueue<Integer> upper = new PriorityQueue<>();\n    public void addNum(int num) {\n        lower.offer(num);\n        upper.offer(lower.poll());\n        if (upper.size() > lower.size()) lower.offer(upper.poll());\n    }\n    public double findMedian() {\n        if (lower.size() > upper.size()) return lower.peek();\n        return ((long)lower.peek() + upper.peek()) / 2.0;\n    }\n}",
+      "timeComplexity": "O(log n) insertion; O(1) median",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Maintain lower.size() as either equal to or one greater than upper.size(); use long before adding two ints.",
+      "testCases": [
+        {
+          "input": "ops=[\"MedianFinder\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"], args=[[],[1],[2],[],[3],[]]",
+          "expected": "[null,null,null,1.5,null,2.0]",
+          "reason": "Medians are 1.5 for [1,2] and 2 for [1,2,3]."
+        },
+        {
+          "input": "ops=[\"MedianFinder\",\"addNum\",\"findMedian\"], args=[[],[-1],[]]",
+          "expected": "[null,null,-1.0]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n log n) per median query",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Insert all numbers in a list; sort afresh whenever median is requested."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log n) insertion; O(1) median",
+          "spaceComplexity": "O(n)",
+          "explanation": "Insert 1 -> lower=[1] Insert 2 -> lower max1, upper min2, median=(1+2)/2=1.5 Insert 3 -> lower holds 2 and 1, upper holds 3, median 2",
+          "javaCode": "import java.util.*;\nclass MedianFinder {\n    private final PriorityQueue<Integer> lower = new PriorityQueue<>(Comparator.reverseOrder());\n    private final PriorityQueue<Integer> upper = new PriorityQueue<>();\n    public void addNum(int num) {\n        lower.offer(num);\n        upper.offer(lower.poll());\n        if (upper.size() > lower.size()) lower.offer(upper.poll());\n    }\n    public double findMedian() {\n        if (lower.size() > upper.size()) return lower.peek();\n        return ((long)lower.peek() + upper.peek()) / 2.0;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-052",
+      "slug": "merge-k-sorted-lists",
+      "title": "Merge K Sorted Lists",
+      "difficulty": "Hard",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Merge k individually sorted linked lists into one sorted linked list, keeping all values.",
+      "example": {
+        "input": "lists=[[1,4,5],[1,3,4],[2,6]]",
+        "output": "[1,1,2,3,4,4,5,6]",
+        "explanation": "Repeatedly take the smallest current head."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Heap begins with heads 1,1,2",
+        "Pop smallest 1, push its next 4; repeat with other 1, push 3",
+        "Continue heap pops to produce 1,1,2,3,4,4,5,6"
+      ],
+      "dryRun": [
+        "Heap begins with heads 1,1,2",
+        "Pop smallest 1, push its next 4; repeat with other 1, push 3",
+        "Continue heap pops to produce 1,1,2,3,4,4,5,6"
+      ],
+      "javaCode": "import java.util.*;\n// LeetCode supplies ListNode.\nclass Solution {\n    public ListNode mergeKLists(ListNode[] lists) {\n        PriorityQueue<ListNode> pq = new PriorityQueue<>((a,b)->Integer.compare(a.val,b.val));\n        for (ListNode node : lists) if (node != null) pq.offer(node);\n        ListNode dummy = new ListNode(), tail = dummy;\n        while (!pq.isEmpty()) {\n            ListNode node = pq.poll();\n            if (node.next != null) pq.offer(node.next);\n            tail.next = node; tail = tail.next;\n        }\n        tail.next = null;\n        return dummy.next;\n    }\n}",
+      "timeComplexity": "O(N log k), N total nodes",
+      "spaceComplexity": "O(k) heap",
+      "interviewTip": "Heap tracks only one frontier node per list, never every value at once.",
+      "testCases": [
+        {
+          "input": "lists=[[1,4,5],[1,3,4],[2,6]]",
+          "expected": "[1,1,2,3,4,4,5,6]",
+          "reason": "Repeatedly take the smallest current head."
+        },
+        {
+          "input": "lists=[]",
+          "expected": "[]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(N log N)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Collect all nodes into an array, sort their values, and rebuild the list."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(N log k), N total nodes",
+          "spaceComplexity": "O(k) heap",
+          "explanation": "Heap begins with heads 1,1,2 Pop smallest 1, push its next 4; repeat with other 1, push 3 Continue heap pops to produce 1,1,2,3,4,4,5,6",
+          "javaCode": "import java.util.*;\n// LeetCode supplies ListNode.\nclass Solution {\n    public ListNode mergeKLists(ListNode[] lists) {\n        PriorityQueue<ListNode> pq = new PriorityQueue<>((a,b)->Integer.compare(a.val,b.val));\n        for (ListNode node : lists) if (node != null) pq.offer(node);\n        ListNode dummy = new ListNode(), tail = dummy;\n        while (!pq.isEmpty()) {\n            ListNode node = pq.poll();\n            if (node.next != null) pq.offer(node.next);\n            tail.next = node; tail = tail.next;\n        }\n        tail.next = null;\n        return dummy.next;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-053",
+      "slug": "implement-trie-prefix-tree",
+      "title": "Implement Trie Prefix Tree",
+      "difficulty": "Medium",
+      "stageId": "tries",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Support insert(word), search(word) and startsWith(prefix) for lowercase English words.",
+      "example": {
+        "input": "insert(\"apple\"); search(\"apple\"); search(\"app\"); startsWith(\"app\")",
+        "output": "[true,false,true]",
+        "explanation": "The prefix app exists even before inserting it as a complete word."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Create nodes a->p->p->l->e and mark e as word end",
+        "search apple ends on a true marker",
+        "search app ends before a word marker; startsWith app is true"
+      ],
+      "dryRun": [
+        "Create nodes a->p->p->l->e and mark e as word end",
+        "search apple ends on a true marker",
+        "search app ends before a word marker; startsWith app is true"
+      ],
+      "javaCode": "class Trie {\n    private static class Node { Node[] next = new Node[26]; boolean end; }\n    private final Node root = new Node();\n    public void insert(String word) {\n        Node cur = root;\n        for (char ch : word.toCharArray()) {\n            int i = ch-'a';\n            if (cur.next[i] == null) cur.next[i] = new Node();\n            cur = cur.next[i];\n        }\n        cur.end = true;\n    }\n    public boolean search(String word) {\n        Node node = walk(word);\n        return node != null && node.end;\n    }\n    public boolean startsWith(String prefix) { return walk(prefix) != null; }\n    private Node walk(String word) {\n        Node cur = root;\n        for (char ch : word.toCharArray()) {\n            cur = cur.next[ch-'a'];\n            if (cur == null) return null;\n        }\n        return cur;\n    }\n}",
+      "timeComplexity": "O(L) per insert or lookup",
+      "spaceComplexity": "O(total inserted characters) nodes",
+      "interviewTip": "Trie edges represent characters; word-end markers distinguish exact words from prefixes.",
+      "testCases": [
+        {
+          "input": "insert(\"apple\"); search(\"apple\"); search(\"app\"); startsWith(\"app\")",
+          "expected": "[true,false,true]",
+          "reason": "The prefix app exists even before inserting it as a complete word."
+        },
+        {
+          "input": "insert(\"a\"); search(\"a\"); startsWith(\"b\")",
+          "expected": "[true,false]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(N·L) for a prefix",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Store every complete word in HashSet and test prefixes by scanning all words."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(L) per insert or lookup",
+          "spaceComplexity": "O(total inserted characters) nodes",
+          "explanation": "Create nodes a->p->p->l->e and mark e as word end search apple ends on a true marker search app ends before a word marker; startsWith app is true",
+          "javaCode": "class Trie {\n    private static class Node { Node[] next = new Node[26]; boolean end; }\n    private final Node root = new Node();\n    public void insert(String word) {\n        Node cur = root;\n        for (char ch : word.toCharArray()) {\n            int i = ch-'a';\n            if (cur.next[i] == null) cur.next[i] = new Node();\n            cur = cur.next[i];\n        }\n        cur.end = true;\n    }\n    public boolean search(String word) {\n        Node node = walk(word);\n        return node != null && node.end;\n    }\n    public boolean startsWith(String prefix) { return walk(prefix) != null; }\n    private Node walk(String word) {\n        Node cur = root;\n        for (char ch : word.toCharArray()) {\n            cur = cur.next[ch-'a'];\n            if (cur == null) return null;\n        }\n        return cur;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-054",
+      "slug": "design-add-and-search-words-data-structure",
+      "title": "Design Add And Search Words Data Structure",
+      "difficulty": "Medium",
+      "stageId": "tries",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Implement addWord and search where '.' in the search pattern matches any one lowercase letter.",
+      "example": {
+        "input": "addWord(\"bad\"); addWord(\"dad\"); search(\"pad\"); search(\".ad\")",
+        "output": "[false,true]",
+        "explanation": "pad absent; .ad matches bad and dad."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Add bad along b-a-d and dad along d-a-d",
+        "pad search follows missing p edge -> false",
+        ".ad recursively tries the first wildcard edge; b-ad matches -> true"
+      ],
+      "dryRun": [
+        "Add bad along b-a-d and dad along d-a-d",
+        "pad search follows missing p edge -> false",
+        ".ad recursively tries the first wildcard edge; b-ad matches -> true"
+      ],
+      "javaCode": "class WordDictionary {\n    private static class Node { Node[] next = new Node[26]; boolean end; }\n    private final Node root = new Node();\n    public void addWord(String word) {\n        Node n = root;\n        for (char c : word.toCharArray()) {\n            int i=c-'a'; if(n.next[i]==null)n.next[i]=new Node(); n=n.next[i];\n        }\n        n.end=true;\n    }\n    public boolean search(String word) { return dfs(root,word,0); }\n    private boolean dfs(Node node,String word,int i) {\n        if(node==null)return false;\n        if(i==word.length())return node.end;\n        char c=word.charAt(i);\n        if(c!='.')return dfs(node.next[c-'a'],word,i+1);\n        for(Node child:node.next)if(child!=null&&dfs(child,word,i+1))return true;\n        return false;\n    }\n}",
+      "timeComplexity": "O(L) exact; O(26^d·L) worst wildcard search",
+      "spaceComplexity": "O(L) call stack per search plus stored trie",
+      "interviewTip": "A wildcard branches through existing trie edges, not arbitrary strings.",
+      "testCases": [
+        {
+          "input": "addWord(\"bad\"); addWord(\"dad\"); search(\"pad\"); search(\".ad\")",
+          "expected": "[false,true]",
+          "reason": "pad absent; .ad matches bad and dad."
+        },
+        {
+          "input": "addWord(\"a\"); search(\".\")",
+          "expected": "true",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(N·L)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Store all words and scan them to match each wildcard pattern."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(L) exact; O(26^d·L) worst wildcard search",
+          "spaceComplexity": "O(L) call stack per search plus stored trie",
+          "explanation": "Add bad along b-a-d and dad along d-a-d pad search follows missing p edge -> false .ad recursively tries the first wildcard edge; b-ad matches -> true",
+          "javaCode": "class WordDictionary {\n    private static class Node { Node[] next = new Node[26]; boolean end; }\n    private final Node root = new Node();\n    public void addWord(String word) {\n        Node n = root;\n        for (char c : word.toCharArray()) {\n            int i=c-'a'; if(n.next[i]==null)n.next[i]=new Node(); n=n.next[i];\n        }\n        n.end=true;\n    }\n    public boolean search(String word) { return dfs(root,word,0); }\n    private boolean dfs(Node node,String word,int i) {\n        if(node==null)return false;\n        if(i==word.length())return node.end;\n        char c=word.charAt(i);\n        if(c!='.')return dfs(node.next[c-'a'],word,i+1);\n        for(Node child:node.next)if(child!=null&&dfs(child,word,i+1))return true;\n        return false;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-055",
+      "slug": "word-search-ii",
+      "title": "Word Search II",
+      "difficulty": "Hard",
+      "stageId": "tries",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/word-search-ii/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Find all dictionary words that can be formed by adjacent board cells without reusing a cell in one word.",
+      "example": {
+        "input": "board=[[o,a,a,n],[e,t,a,e],[i,h,k,r],[i,f,l,v]], words=[\"oath\",\"pea\",\"eat\",\"rain\"]",
+        "output": "[\"oath\",\"eat\"]",
+        "explanation": "Both words can be traced across adjacent cells."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Build trie branches for oath, pea, eat, rain",
+        "Starting at o, DFS follows o-a-t-h and records oath",
+        "From e follow e-a-t, record eat; unreachable words never appear"
+      ],
+      "dryRun": [
+        "Build trie branches for oath, pea, eat, rain",
+        "Starting at o, DFS follows o-a-t-h and records oath",
+        "From e follow e-a-t, record eat; unreachable words never appear"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    private static class Node { Node[] next = new Node[26]; String word; }\n    public List<String> findWords(char[][] board, String[] words) {\n        Node root=new Node();\n        for(String w:words){\n            Node cur=root;\n            for(char c:w.toCharArray()){\n                int i=c-'a'; if(cur.next[i]==null)cur.next[i]=new Node();\n                cur=cur.next[i];\n            }\n            cur.word=w;\n        }\n        List<String> ans=new ArrayList<>();\n        for(int r=0;r<board.length;r++)for(int c=0;c<board[0].length;c++)dfs(board,r,c,root,ans);\n        return ans;\n    }\n    private void dfs(char[][] b,int r,int c,Node parent,List<String> ans){\n        if(r<0||c<0||r==b.length||c==b[0].length)return;\n        char ch=b[r][c]; if(ch=='#')return;\n        Node node=parent.next[ch-'a']; if(node==null)return;\n        if(node.word!=null){ans.add(node.word);node.word=null;}\n        b[r][c]='#';\n        dfs(b,r+1,c,node,ans);dfs(b,r-1,c,node,ans);\n        dfs(b,r,c+1,node,ans);dfs(b,r,c-1,node,ans);\n        b[r][c]=ch;\n    }\n}",
+      "timeComplexity": "O(W·L + R·C·4^L) worst, L max word length",
+      "spaceComplexity": "O(W·L + L) trie and DFS, excluding output",
+      "interviewTip": "Clearing node.word suppresses duplicates found via different board paths.",
+      "testCases": [
+        {
+          "input": "board=[[o,a,a,n],[e,t,a,e],[i,h,k,r],[i,f,l,v]], words=[\"oath\",\"pea\",\"eat\",\"rain\"]",
+          "expected": "[\"oath\",\"eat\"]",
+          "reason": "Both words can be traced across adjacent cells."
+        },
+        {
+          "input": "board=[[a]], words=[\"a\",\"b\"]",
+          "expected": "[\"a\"]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(W·R·C·4^L)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For each dictionary word, run a separate full backtracking search across the board."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(W·L + R·C·4^L) worst, L max word length",
+          "spaceComplexity": "O(W·L + L) trie and DFS, excluding output",
+          "explanation": "Build trie branches for oath, pea, eat, rain Starting at o, DFS follows o-a-t-h and records oath From e follow e-a-t, record eat; unreachable words never appear",
+          "javaCode": "import java.util.*;\nclass Solution {\n    private static class Node { Node[] next = new Node[26]; String word; }\n    public List<String> findWords(char[][] board, String[] words) {\n        Node root=new Node();\n        for(String w:words){\n            Node cur=root;\n            for(char c:w.toCharArray()){\n                int i=c-'a'; if(cur.next[i]==null)cur.next[i]=new Node();\n                cur=cur.next[i];\n            }\n            cur.word=w;\n        }\n        List<String> ans=new ArrayList<>();\n        for(int r=0;r<board.length;r++)for(int c=0;c<board[0].length;c++)dfs(board,r,c,root,ans);\n        return ans;\n    }\n    private void dfs(char[][] b,int r,int c,Node parent,List<String> ans){\n        if(r<0||c<0||r==b.length||c==b[0].length)return;\n        char ch=b[r][c]; if(ch=='#')return;\n        Node node=parent.next[ch-'a']; if(node==null)return;\n        if(node.word!=null){ans.add(node.word);node.word=null;}\n        b[r][c]='#';\n        dfs(b,r+1,c,node,ans);dfs(b,r-1,c,node,ans);\n        dfs(b,r,c+1,node,ans);dfs(b,r,c-1,node,ans);\n        b[r][c]=ch;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-056",
+      "slug": "find-the-index-of-the-first-occurrence-in-a-string",
+      "title": "Find The Index Of The First Occurrence In A String",
+      "difficulty": "Easy",
+      "stageId": "tries",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return the first index where needle appears in haystack, or -1 if absent.",
+      "example": {
+        "input": "haystack=\"sadbutsad\", needle=\"sad\"",
+        "output": "0",
+        "explanation": "sad occurs starting at position 0."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Compute prefix table for sad as [0,0,0]",
+        "Scan haystack: s,a,d matches all three",
+        "Return first matching start = 0"
+      ],
+      "dryRun": [
+        "Compute prefix table for sad as [0,0,0]",
+        "Scan haystack: s,a,d matches all three",
+        "Return first matching start = 0"
+      ],
+      "javaCode": "class Solution {\n    public int strStr(String haystack, String needle) {\n        if (needle.isEmpty()) return 0;\n        int[] pi=new int[needle.length()];\n        for(int i=1,j=0;i<needle.length();i++){\n            while(j>0&&needle.charAt(i)!=needle.charAt(j))j=pi[j-1];\n            if(needle.charAt(i)==needle.charAt(j))j++;\n            pi[i]=j;\n        }\n        for(int i=0,j=0;i<haystack.length();i++){\n            while(j>0&&haystack.charAt(i)!=needle.charAt(j))j=pi[j-1];\n            if(haystack.charAt(i)==needle.charAt(j))j++;\n            if(j==needle.length())return i-j+1;\n        }\n        return -1;\n    }\n}",
+      "timeComplexity": "O(n+m)",
+      "spaceComplexity": "O(m) prefix array",
+      "interviewTip": "KMP prefix lengths let you reuse partial matches instead of restarting at index zero.",
+      "testCases": [
+        {
+          "input": "haystack=\"sadbutsad\", needle=\"sad\"",
+          "expected": "0",
+          "reason": "sad occurs starting at position 0."
+        },
+        {
+          "input": "haystack=\"leetcode\", needle=\"leeto\"",
+          "expected": "-1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n·m)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try the needle at every starting index and compare its characters."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n+m)",
+          "spaceComplexity": "O(m) prefix array",
+          "explanation": "Compute prefix table for sad as [0,0,0] Scan haystack: s,a,d matches all three Return first matching start = 0",
+          "javaCode": "class Solution {\n    public int strStr(String haystack, String needle) {\n        if (needle.isEmpty()) return 0;\n        int[] pi=new int[needle.length()];\n        for(int i=1,j=0;i<needle.length();i++){\n            while(j>0&&needle.charAt(i)!=needle.charAt(j))j=pi[j-1];\n            if(needle.charAt(i)==needle.charAt(j))j++;\n            pi[i]=j;\n        }\n        for(int i=0,j=0;i<haystack.length();i++){\n            while(j>0&&haystack.charAt(i)!=needle.charAt(j))j=pi[j-1];\n            if(haystack.charAt(i)==needle.charAt(j))j++;\n            if(j==needle.length())return i-j+1;\n        }\n        return -1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-057",
+      "slug": "insert-interval",
+      "title": "Insert Interval",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/insert-interval/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Insert a new interval into sorted, non-overlapping intervals and merge any overlap.",
+      "example": {
+        "input": "intervals=[[1,3],[6,9]], newInterval=[2,5]",
+        "output": "[[1,5],[6,9]]",
+        "explanation": "The inserted interval overlaps [1,3], forming [1,5]."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "[1,3] overlaps new [2,5]; merge to [1,5]",
+        "[6,9] starts after 5, so stop merging",
+        "Return [1,5] then [6,9]"
+      ],
+      "dryRun": [
+        "[1,3] overlaps new [2,5]; merge to [1,5]",
+        "[6,9] starts after 5, so stop merging",
+        "Return [1,5] then [6,9]"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int[][] insert(int[][] intervals, int[] newInterval) {\n        List<int[]> ans=new ArrayList<>();\n        int i=0, n=intervals.length;\n        while(i<n && intervals[i][1]<newInterval[0])ans.add(intervals[i++]);\n        int start=newInterval[0], end=newInterval[1];\n        while(i<n && intervals[i][0]<=end) {\n            start=Math.min(start,intervals[i][0]);\n            end=Math.max(end,intervals[i][1]); i++;\n        }\n        ans.add(new int[]{start,end});\n        while(i<n)ans.add(intervals[i++]);\n        return ans.toArray(new int[0][]);\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n) for result",
+      "interviewTip": "Keep three phases: before overlap, merge overlap, after overlap.",
+      "testCases": [
+        {
+          "input": "intervals=[[1,3],[6,9]], newInterval=[2,5]",
+          "expected": "[[1,5],[6,9]]",
+          "reason": "The inserted interval overlaps [1,3], forming [1,5]."
+        },
+        {
+          "input": "intervals=[], newInterval=[5,7]",
+          "expected": "[[5,7]]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Append interval, sort all intervals, and merge the sorted sequence."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n) for result",
+          "explanation": "[1,3] overlaps new [2,5]; merge to [1,5] [6,9] starts after 5, so stop merging Return [1,5] then [6,9]",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int[][] insert(int[][] intervals, int[] newInterval) {\n        List<int[]> ans=new ArrayList<>();\n        int i=0, n=intervals.length;\n        while(i<n && intervals[i][1]<newInterval[0])ans.add(intervals[i++]);\n        int start=newInterval[0], end=newInterval[1];\n        while(i<n && intervals[i][0]<=end) {\n            start=Math.min(start,intervals[i][0]);\n            end=Math.max(end,intervals[i][1]); i++;\n        }\n        ans.add(new int[]{start,end});\n        while(i<n)ans.add(intervals[i++]);\n        return ans.toArray(new int[0][]);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-058",
+      "slug": "non-overlapping-intervals",
+      "title": "Non Overlapping Intervals",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/non-overlapping-intervals/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return the fewest intervals to remove so that the remaining time intervals do not overlap.",
+      "example": {
+        "input": "intervals=[[1,2],[2,3],[3,4],[1,3]]",
+        "output": "1",
+        "explanation": "Remove [1,3] and keep the other three."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Sort by end: [1,2],[1,3],[2,3],[3,4]",
+        "Keep [1,2], skip [1,3]",
+        "Keep [2,3] and [3,4]; remove one total"
+      ],
+      "dryRun": [
+        "Sort by end: [1,2],[1,3],[2,3],[3,4]",
+        "Keep [1,2], skip [1,3]",
+        "Keep [2,3] and [3,4]; remove one total"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int eraseOverlapIntervals(int[][] intervals) {\n        Arrays.sort(intervals,(a,b)->Integer.compare(a[1],b[1]));\n        int keep=0, end=Integer.MIN_VALUE;\n        for(int[] in:intervals)if(in[0]>=end){keep++;end=in[1];}\n        return intervals.length-keep;\n    }\n}",
+      "timeComplexity": "O(n log n)",
+      "spaceComplexity": "O(log n) sorting stack, O(1) explicit",
+      "interviewTip": "The earliest finishing interval leaves maximum room for subsequent choices.",
+      "testCases": [
+        {
+          "input": "intervals=[[1,2],[2,3],[3,4],[1,3]]",
+          "expected": "1",
+          "reason": "Remove [1,3] and keep the other three."
+        },
+        {
+          "input": "intervals=[[1,2],[1,2],[1,2]]",
+          "expected": "2",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n·n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try all subsets and select the largest non-overlapping one."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "O(log n) sorting stack, O(1) explicit",
+          "explanation": "Sort by end: [1,2],[1,3],[2,3],[3,4] Keep [1,2], skip [1,3] Keep [2,3] and [3,4]; remove one total",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int eraseOverlapIntervals(int[][] intervals) {\n        Arrays.sort(intervals,(a,b)->Integer.compare(a[1],b[1]));\n        int keep=0, end=Integer.MIN_VALUE;\n        for(int[] in:intervals)if(in[0]>=end){keep++;end=in[1];}\n        return intervals.length-keep;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-060",
+      "slug": "jump-game-ii",
+      "title": "Jump Game II",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/jump-game-ii/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Each array value is the farthest jump from that position. Return the minimum jumps to reach the last index; reaching it is guaranteed.",
+      "example": {
+        "input": "nums=[2,3,1,1,4]",
+        "output": "2",
+        "explanation": "0->1->4 reaches the end in two jumps."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "From index 0, first layer ends at index 2",
+        "Within indices 1..2, farthest reachable index is 4 via index 1",
+        "Close second layer and reach last index in 2 jumps"
+      ],
+      "dryRun": [
+        "From index 0, first layer ends at index 2",
+        "Within indices 1..2, farthest reachable index is 4 via index 1",
+        "Close second layer and reach last index in 2 jumps"
+      ],
+      "javaCode": "class Solution {\n    public int jump(int[] nums) {\n        int jumps=0, end=0, farthest=0;\n        for(int i=0;i<nums.length-1;i++){\n            farthest=Math.max(farthest,i+nums[i]);\n            if(i==end){jumps++;end=farthest;}\n        }\n        return jumps;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Treat the current reachable interval as one BFS layer; close it when index reaches end.",
+      "testCases": [
+        {
+          "input": "nums=[2,3,1,1,4]",
+          "expected": "2",
+          "reason": "0->1->4 reaches the end in two jumps."
+        },
+        {
+          "input": "nums=[0]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²) worst case",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Run BFS over reachable index positions, enqueuing each possible jump."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "From index 0, first layer ends at index 2 Within indices 1..2, farthest reachable index is 4 via index 1 Close second layer and reach last index in 2 jumps",
+          "javaCode": "class Solution {\n    public int jump(int[] nums) {\n        int jumps=0, end=0, farthest=0;\n        for(int i=0;i<nums.length-1;i++){\n            farthest=Math.max(farthest,i+nums[i]);\n            if(i==end){jumps++;end=farthest;}\n        }\n        return jumps;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-061",
+      "slug": "gas-station",
+      "title": "Gas Station",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/gas-station/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Circular stations supply gas[i] and require cost[i] to reach next. Return a feasible start index or -1.",
+      "example": {
+        "input": "gas=[1,2,3,4,5], cost=[3,4,5,1,2]",
+        "output": "3",
+        "explanation": "Starting at index 3 completes the full circuit."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Start 0 cannot reach index 1, reset start 1",
+        "After failures through index 2, candidate becomes index 3",
+        "Total gas equals total cost, so the last viable start 3 succeeds"
+      ],
+      "dryRun": [
+        "Start 0 cannot reach index 1, reset start 1",
+        "After failures through index 2, candidate becomes index 3",
+        "Total gas equals total cost, so the last viable start 3 succeeds"
+      ],
+      "javaCode": "class Solution {\n    public int canCompleteCircuit(int[] gas,int[] cost) {\n        long total=0, tank=0;\n        int start=0;\n        for(int i=0;i<gas.length;i++){\n            int delta=gas[i]-cost[i];\n            total+=delta; tank+=delta;\n            if(tank<0){start=i+1;tank=0;}\n        }\n        return total<0?-1:start;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "If the cumulative tank becomes negative at i, no station since current start can work.",
+      "testCases": [
+        {
+          "input": "gas=[1,2,3,4,5], cost=[3,4,5,1,2]",
+          "expected": "3",
+          "reason": "Starting at index 3 completes the full circuit."
+        },
+        {
+          "input": "gas=[2,3,4], cost=[3,4,3]",
+          "expected": "-1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Simulate a full circular trip starting at each possible station."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Start 0 cannot reach index 1, reset start 1 After failures through index 2, candidate becomes index 3 Total gas equals total cost, so the last viable start 3 succeeds",
+          "javaCode": "class Solution {\n    public int canCompleteCircuit(int[] gas,int[] cost) {\n        long total=0, tank=0;\n        int start=0;\n        for(int i=0;i<gas.length;i++){\n            int delta=gas[i]-cost[i];\n            total+=delta; tank+=delta;\n            if(tank<0){start=i+1;tank=0;}\n        }\n        return total<0?-1:start;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-062",
+      "slug": "task-scheduler",
+      "title": "Task Scheduler",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/task-scheduler/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Given tasks represented by uppercase letters and cooldown n between equal letters, return the minimum execution intervals.",
+      "example": {
+        "input": "tasks=[A,A,A,B,B,B], n=2",
+        "output": "8",
+        "explanation": "A B idle A B idle A B uses eight slots."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "A and B each occur 3 times, so max=3 and countMax=2",
+        "Place two full cooldown frames of length n+1=3",
+        "Last frame has 2 tasks -> (3-1)*3+2=8"
+      ],
+      "dryRun": [
+        "A and B each occur 3 times, so max=3 and countMax=2",
+        "Place two full cooldown frames of length n+1=3",
+        "Last frame has 2 tasks -> (3-1)*3+2=8"
+      ],
+      "javaCode": "class Solution {\n    public int leastInterval(char[] tasks, int n) {\n        int[] freq=new int[26];\n        for(char task:tasks)freq[task-'A']++;\n        int max=0, countMax=0;\n        for(int f:freq){\n            if(f>max){max=f;countMax=1;}\n            else if(f==max&&f>0)countMax++;\n        }\n        int skeleton=(max-1)*(n+1)+countMax;\n        return Math.max(tasks.length,skeleton);\n    }\n}",
+      "timeComplexity": "O(N+26)",
+      "spaceComplexity": "O(26)",
+      "interviewTip": "The formula counts forced idle time, but total task count is always a lower bound.",
+      "testCases": [
+        {
+          "input": "tasks=[A,A,A,B,B,B], n=2",
+          "expected": "8",
+          "reason": "A B idle A B idle A B uses eight slots."
+        },
+        {
+          "input": "tasks=[A,A,A,B,B,B], n=0",
+          "expected": "6",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(N log 26 + idle slots)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Simulate unit time slots with a priority queue and a cooldown queue."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(N+26)",
+          "spaceComplexity": "O(26)",
+          "explanation": "A and B each occur 3 times, so max=3 and countMax=2 Place two full cooldown frames of length n+1=3 Last frame has 2 tasks -> (3-1)*3+2=8",
+          "javaCode": "class Solution {\n    public int leastInterval(char[] tasks, int n) {\n        int[] freq=new int[26];\n        for(char task:tasks)freq[task-'A']++;\n        int max=0, countMax=0;\n        for(int f:freq){\n            if(f>max){max=f;countMax=1;}\n            else if(f==max&&f>0)countMax++;\n        }\n        int skeleton=(max-1)*(n+1)+countMax;\n        return Math.max(tasks.length,skeleton);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-063",
+      "slug": "flood-fill",
+      "title": "Flood Fill",
+      "difficulty": "Easy",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/flood-fill/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Starting at image[sr][sc], change every four-directionally connected cell of the original color to newColor.",
+      "example": {
+        "input": "image=[[1,1,1],[1,1,0],[1,0,1]], sr=1, sc=1, color=2",
+        "output": "[[2,2,2],[2,2,0],[2,0,1]]",
+        "explanation": "Only adjacent cells of the starting color change."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Start at (1,1) color 1",
+        "BFS reaches center-connected 1 cells, recoloring on enqueue",
+        "The bottom-right 1 is isolated by zeroes and stays unchanged"
+      ],
+      "dryRun": [
+        "Start at (1,1) color 1",
+        "BFS reaches center-connected 1 cells, recoloring on enqueue",
+        "The bottom-right 1 is isolated by zeroes and stays unchanged"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int[][] floodFill(int[][] image,int sr,int sc,int color){\n        int original=image[sr][sc];\n        if(original==color)return image;\n        Deque<int[]> q=new ArrayDeque<>();q.offer(new int[]{sr,sc});image[sr][sc]=color;\n        int[][] d={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()){\n            int[] cur=q.poll();\n            for(int[] step:d){\n                int r=cur[0]+step[0],c=cur[1]+step[1];\n                if(r>=0&&r<image.length&&c>=0&&c<image[0].length&&image[r][c]==original){\n                    image[r][c]=color;q.offer(new int[]{r,c});\n                }\n            }\n        }\n        return image;\n    }\n}",
+      "timeComplexity": "O(R·C)",
+      "spaceComplexity": "O(R·C) worst BFS queue",
+      "interviewTip": "Return immediately if target color already equals the original to avoid revisiting forever.",
+      "testCases": [
+        {
+          "input": "image=[[1,1,1],[1,1,0],[1,0,1]], sr=1, sc=1, color=2",
+          "expected": "[[2,2,2],[2,2,0],[2,0,1]]",
+          "reason": "Only adjacent cells of the starting color change."
+        },
+        {
+          "input": "image=[[0]], sr=0, sc=0, color=0",
+          "expected": "[[0]]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O((R·C)²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For each pixel, rescan the whole image for any newly reachable same-color pixel."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C)",
+          "spaceComplexity": "O(R·C) worst BFS queue",
+          "explanation": "Start at (1,1) color 1 BFS reaches center-connected 1 cells, recoloring on enqueue The bottom-right 1 is isolated by zeroes and stays unchanged",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int[][] floodFill(int[][] image,int sr,int sc,int color){\n        int original=image[sr][sc];\n        if(original==color)return image;\n        Deque<int[]> q=new ArrayDeque<>();q.offer(new int[]{sr,sc});image[sr][sc]=color;\n        int[][] d={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()){\n            int[] cur=q.poll();\n            for(int[] step:d){\n                int r=cur[0]+step[0],c=cur[1]+step[1];\n                if(r>=0&&r<image.length&&c>=0&&c<image[0].length&&image[r][c]==original){\n                    image[r][c]=color;q.offer(new int[]{r,c});\n                }\n            }\n        }\n        return image;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-064",
+      "slug": "max-area-of-island",
+      "title": "Max Area Of Island",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/max-area-of-island/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return the largest number of orthogonally connected 1 cells in a binary grid.",
+      "example": {
+        "input": "grid=[[0,0,1],[1,1,0],[1,1,0]]",
+        "output": "4",
+        "explanation": "The lower-left group has four cells."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "At (0,2), DFS finds a one-cell island",
+        "At (1,0), DFS visits four connected 1s",
+        "Best area is max(1,4)=4"
+      ],
+      "dryRun": [
+        "At (0,2), DFS finds a one-cell island",
+        "At (1,0), DFS visits four connected 1s",
+        "Best area is max(1,4)=4"
+      ],
+      "javaCode": "class Solution {\n    public int maxAreaOfIsland(int[][] grid){\n        int best=0;\n        for(int r=0;r<grid.length;r++)for(int c=0;c<grid[0].length;c++)\n            if(grid[r][c]==1)best=Math.max(best,dfs(grid,r,c));\n        return best;\n    }\n    private int dfs(int[][] a,int r,int c){\n        if(r<0||c<0||r>=a.length||c>=a[0].length||a[r][c]!=1)return 0;\n        a[r][c]=0;\n        return 1+dfs(a,r+1,c)+dfs(a,r-1,c)+dfs(a,r,c+1)+dfs(a,r,c-1);\n    }\n}",
+      "timeComplexity": "O(R·C)",
+      "spaceComplexity": "O(R·C) recursion worst case",
+      "interviewTip": "This marks visited cells as 0 and mutates the input; mention that in interviews.",
+      "testCases": [
+        {
+          "input": "grid=[[0,0,1],[1,1,0],[1,1,0]]",
+          "expected": "4",
+          "reason": "The lower-left group has four cells."
+        },
+        {
+          "input": "grid=[[0,0],[0,0]]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O((R·C)²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For each land cell, perform a separate search without marking visited (repeats work)."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C)",
+          "spaceComplexity": "O(R·C) recursion worst case",
+          "explanation": "At (0,2), DFS finds a one-cell island At (1,0), DFS visits four connected 1s Best area is max(1,4)=4",
+          "javaCode": "class Solution {\n    public int maxAreaOfIsland(int[][] grid){\n        int best=0;\n        for(int r=0;r<grid.length;r++)for(int c=0;c<grid[0].length;c++)\n            if(grid[r][c]==1)best=Math.max(best,dfs(grid,r,c));\n        return best;\n    }\n    private int dfs(int[][] a,int r,int c){\n        if(r<0||c<0||r>=a.length||c>=a[0].length||a[r][c]!=1)return 0;\n        a[r][c]=0;\n        return 1+dfs(a,r+1,c)+dfs(a,r-1,c)+dfs(a,r,c+1)+dfs(a,r,c-1);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-065",
+      "slug": "rotting-oranges",
+      "title": "Rotting Oranges",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/rotting-oranges/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Each minute, rotten oranges spread rot to neighboring fresh oranges. Return minimum minutes to rot all fresh, or -1.",
+      "example": {
+        "input": "grid=[[2,1,1],[1,1,0],[0,1,1]]",
+        "output": "4",
+        "explanation": "The farthest fresh orange is reached after four breadth-first layers."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Initial rotten orange is (0,0)",
+        "Minute 1 reaches (0,1) and (1,0); each BFS layer represents one minute",
+        "After four layers every fresh orange became rotten -> 4"
+      ],
+      "dryRun": [
+        "Initial rotten orange is (0,0)",
+        "Minute 1 reaches (0,1) and (1,0); each BFS layer represents one minute",
+        "After four layers every fresh orange became rotten -> 4"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int orangesRotting(int[][] grid){\n        Deque<int[]> q=new ArrayDeque<>();\n        int fresh=0,mins=0;\n        for(int r=0;r<grid.length;r++)for(int c=0;c<grid[0].length;c++){\n            if(grid[r][c]==1)fresh++;\n            if(grid[r][c]==2)q.offer(new int[]{r,c});\n        }\n        int[][] dirs={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()&&fresh>0){\n            int size=q.size();\n            for(int i=0;i<size;i++){\n                int[] cur=q.poll();\n                for(int[] d:dirs){\n                    int r=cur[0]+d[0],c=cur[1]+d[1];\n                    if(r>=0&&c>=0&&r<grid.length&&c<grid[0].length&&grid[r][c]==1){\n                        grid[r][c]=2;fresh--;q.offer(new int[]{r,c});\n                    }\n                }\n            }\n            mins++;\n        }\n        return fresh==0?mins:-1;\n    }\n}",
+      "timeComplexity": "O(R·C)",
+      "spaceComplexity": "O(R·C) queue worst case",
+      "interviewTip": "Use multi-source BFS; all initially rotten oranges belong to minute zero.",
+      "testCases": [
+        {
+          "input": "grid=[[2,1,1],[1,1,0],[0,1,1]]",
+          "expected": "4",
+          "reason": "The farthest fresh orange is reached after four breadth-first layers."
+        },
+        {
+          "input": "grid=[[0,2]]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(minutes·R·C)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Repeatedly scan the entire grid to apply one minute of simultaneous spread."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C)",
+          "spaceComplexity": "O(R·C) queue worst case",
+          "explanation": "Initial rotten orange is (0,0) Minute 1 reaches (0,1) and (1,0); each BFS layer represents one minute After four layers every fresh orange became rotten -> 4",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int orangesRotting(int[][] grid){\n        Deque<int[]> q=new ArrayDeque<>();\n        int fresh=0,mins=0;\n        for(int r=0;r<grid.length;r++)for(int c=0;c<grid[0].length;c++){\n            if(grid[r][c]==1)fresh++;\n            if(grid[r][c]==2)q.offer(new int[]{r,c});\n        }\n        int[][] dirs={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()&&fresh>0){\n            int size=q.size();\n            for(int i=0;i<size;i++){\n                int[] cur=q.poll();\n                for(int[] d:dirs){\n                    int r=cur[0]+d[0],c=cur[1]+d[1];\n                    if(r>=0&&c>=0&&r<grid.length&&c<grid[0].length&&grid[r][c]==1){\n                        grid[r][c]=2;fresh--;q.offer(new int[]{r,c});\n                    }\n                }\n            }\n            mins++;\n        }\n        return fresh==0?mins:-1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-066",
+      "slug": "clone-graph",
+      "title": "Clone Graph",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/clone-graph/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Deep-copy a connected undirected graph, preserving neighbor lists and cycles.",
+      "example": {
+        "input": "adjList=[[2,4],[1,3],[2,4],[1,3]]",
+        "output": "clone has same adjacency but entirely new node identities",
+        "explanation": "A map connects each original node to its unique clone."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Clone node 1 and record mapping before visiting neighbors",
+        "Clone 2 and 4; recursive edges back to 1 reuse existing clone",
+        "All four nodes and their edges appear once in the resulting graph"
+      ],
+      "dryRun": [
+        "Clone node 1 and record mapping before visiting neighbors",
+        "Clone 2 and 4; recursive edges back to 1 reuse existing clone",
+        "All four nodes and their edges appear once in the resulting graph"
+      ],
+      "javaCode": "import java.util.*;\n// LeetCode supplies Node { public int val; public List<Node> neighbors; ... }\nclass Solution {\n    private final Map<Node,Node> copies=new HashMap<>();\n    public Node cloneGraph(Node node){\n        if(node==null)return null;\n        if(copies.containsKey(node))return copies.get(node);\n        Node clone=new Node(node.val);\n        copies.put(node,clone);\n        for(Node next:node.neighbors)clone.neighbors.add(cloneGraph(next));\n        return clone;\n    }\n}",
+      "timeComplexity": "O(V+E) expected",
+      "spaceComplexity": "O(V) map and recursion",
+      "interviewTip": "Insert original->clone into the map before visiting neighbors to handle cycles and self-loops.",
+      "testCases": [
+        {
+          "input": "adjList=[[2,4],[1,3],[2,4],[1,3]]",
+          "expected": "clone has same adjacency but entirely new node identities",
+          "reason": "A map connects each original node to its unique clone."
+        },
+        {
+          "input": "adjList=[]",
+          "expected": "null",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Not correct for cyclic graphs",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recreate nodes while walking each edge, but without a visited map cycles recurse forever."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(V+E) expected",
+          "spaceComplexity": "O(V) map and recursion",
+          "explanation": "Clone node 1 and record mapping before visiting neighbors Clone 2 and 4; recursive edges back to 1 reuse existing clone All four nodes and their edges appear once in the resulting graph",
+          "javaCode": "import java.util.*;\n// LeetCode supplies Node { public int val; public List<Node> neighbors; ... }\nclass Solution {\n    private final Map<Node,Node> copies=new HashMap<>();\n    public Node cloneGraph(Node node){\n        if(node==null)return null;\n        if(copies.containsKey(node))return copies.get(node);\n        Node clone=new Node(node.val);\n        copies.put(node,clone);\n        for(Node next:node.neighbors)clone.neighbors.add(cloneGraph(next));\n        return clone;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-067",
+      "slug": "pacific-atlantic-water-flow",
+      "title": "Pacific Atlantic Water Flow",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/pacific-atlantic-water-flow/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return grid coordinates from which water can flow downhill or flat to both Pacific and Atlantic borders.",
+      "example": {
+        "input": "heights=[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]",
+        "output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]",
+        "explanation": "Each listed cell can reach both oceans."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Reverse the flow: initialize BFS from top/left Pacific border",
+        "Initialize another BFS from bottom/right Atlantic border",
+        "Walk only to equal/higher neighbors; intersect the two reachable grids"
+      ],
+      "dryRun": [
+        "Reverse the flow: initialize BFS from top/left Pacific border",
+        "Initialize another BFS from bottom/right Atlantic border",
+        "Walk only to equal/higher neighbors; intersect the two reachable grids"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> pacificAtlantic(int[][] h){\n        int m=h.length,n=h[0].length;\n        boolean[][] p=new boolean[m][n],a=new boolean[m][n];\n        Deque<int[]> pq=new ArrayDeque<>(),aq=new ArrayDeque<>();\n        for(int r=0;r<m;r++){offer(p,pq,r,0);offer(a,aq,r,n-1);}\n        for(int c=0;c<n;c++){offer(p,pq,0,c);offer(a,aq,m-1,c);}\n        bfs(h,p,pq);bfs(h,a,aq);\n        List<List<Integer>> ans=new ArrayList<>();\n        for(int r=0;r<m;r++)for(int c=0;c<n;c++)if(p[r][c]&&a[r][c])ans.add(Arrays.asList(r,c));\n        return ans;\n    }\n    private void offer(boolean[][] seen,Deque<int[]> q,int r,int c){\n        if(!seen[r][c]){seen[r][c]=true;q.offer(new int[]{r,c});}\n    }\n    private void bfs(int[][] h,boolean[][] seen,Deque<int[]> q){\n        int[][] d={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()){\n            int[] pos=q.poll();\n            for(int[] step:d){\n                int r=pos[0]+step[0],c=pos[1]+step[1];\n                if(r>=0&&c>=0&&r<h.length&&c<h[0].length&&!seen[r][c]&&h[r][c]>=h[pos[0]][pos[1]]){\n                    offer(seen,q,r,c);\n                }\n            }\n        }\n    }\n}",
+      "timeComplexity": "O(R·C)",
+      "spaceComplexity": "O(R·C)",
+      "interviewTip": "Reverse-searching from oceans avoids repeating DFS separately from each cell.",
+      "testCases": [
+        {
+          "input": "heights=[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]",
+          "expected": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]",
+          "reason": "Each listed cell can reach both oceans."
+        },
+        {
+          "input": "heights=[[1]]",
+          "expected": "[[0,0]]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O((R·C)²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Run a downhill path search from every grid cell to see which ocean borders are reachable."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C)",
+          "spaceComplexity": "O(R·C)",
+          "explanation": "Reverse the flow: initialize BFS from top/left Pacific border Initialize another BFS from bottom/right Atlantic border Walk only to equal/higher neighbors; intersect the two reachable grids",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> pacificAtlantic(int[][] h){\n        int m=h.length,n=h[0].length;\n        boolean[][] p=new boolean[m][n],a=new boolean[m][n];\n        Deque<int[]> pq=new ArrayDeque<>(),aq=new ArrayDeque<>();\n        for(int r=0;r<m;r++){offer(p,pq,r,0);offer(a,aq,r,n-1);}\n        for(int c=0;c<n;c++){offer(p,pq,0,c);offer(a,aq,m-1,c);}\n        bfs(h,p,pq);bfs(h,a,aq);\n        List<List<Integer>> ans=new ArrayList<>();\n        for(int r=0;r<m;r++)for(int c=0;c<n;c++)if(p[r][c]&&a[r][c])ans.add(Arrays.asList(r,c));\n        return ans;\n    }\n    private void offer(boolean[][] seen,Deque<int[]> q,int r,int c){\n        if(!seen[r][c]){seen[r][c]=true;q.offer(new int[]{r,c});}\n    }\n    private void bfs(int[][] h,boolean[][] seen,Deque<int[]> q){\n        int[][] d={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!q.isEmpty()){\n            int[] pos=q.poll();\n            for(int[] step:d){\n                int r=pos[0]+step[0],c=pos[1]+step[1];\n                if(r>=0&&c>=0&&r<h.length&&c<h[0].length&&!seen[r][c]&&h[r][c]>=h[pos[0]][pos[1]]){\n                    offer(seen,q,r,c);\n                }\n            }\n        }\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-068",
+      "slug": "word-ladder",
+      "title": "Word Ladder",
+      "difficulty": "Hard",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/word-ladder/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Change one lowercase letter per step; every intermediate word must be in the dictionary. Return shortest sequence length.",
+      "example": {
+        "input": "beginWord=\"hit\", endWord=\"cog\", wordList=[\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]",
+        "output": "5",
+        "explanation": "hit->hot->dot->dog->cog has five words."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Begin BFS layer 1 with hit",
+        "Generate hot at layer 2, dot/lot at layer 3, dog/log at layer 4",
+        "Reach cog at layer 5 -> return 5"
+      ],
+      "dryRun": [
+        "Begin BFS layer 1 with hit",
+        "Generate hot at layer 2, dot/lot at layer 3, dog/log at layer 4",
+        "Reach cog at layer 5 -> return 5"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int ladderLength(String beginWord,String endWord,List<String> wordList){\n        Set<String> words=new HashSet<>(wordList);\n        if(!words.contains(endWord))return 0;\n        Deque<String> q=new ArrayDeque<>();q.offer(beginWord);words.remove(beginWord);\n        int length=1;\n        while(!q.isEmpty()){\n            for(int size=q.size();size>0;size--){\n                String word=q.poll();\n                if(word.equals(endWord))return length;\n                char[] a=word.toCharArray();\n                for(int i=0;i<a.length;i++){\n                    char old=a[i];\n                    for(char ch='a';ch<='z';ch++){\n                        if(ch==old)continue;a[i]=ch;\n                        String next=new String(a);\n                        if(words.remove(next))q.offer(next);\n                    }\n                    a[i]=old;\n                }\n            }\n            length++;\n        }\n        return 0;\n    }\n}",
+      "timeComplexity": "O(N·L·26·L) with Java String creation",
+      "spaceComplexity": "O(N·L) words, visited and queue",
+      "interviewTip": "BFS guarantees the first endWord encountered uses the fewest transformations.",
+      "testCases": [
+        {
+          "input": "beginWord=\"hit\", endWord=\"cog\", wordList=[\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]",
+          "expected": "5",
+          "reason": "hit->hot->dot->dog->cog has five words."
+        },
+        {
+          "input": "beginWord=\"hit\", endWord=\"cog\", wordList=[\"hot\",\"dot\"]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate all possible transformation sequences with recursive backtracking."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(N·L·26·L) with Java String creation",
+          "spaceComplexity": "O(N·L) words, visited and queue",
+          "explanation": "Begin BFS layer 1 with hit Generate hot at layer 2, dot/lot at layer 3, dog/log at layer 4 Reach cog at layer 5 -> return 5",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int ladderLength(String beginWord,String endWord,List<String> wordList){\n        Set<String> words=new HashSet<>(wordList);\n        if(!words.contains(endWord))return 0;\n        Deque<String> q=new ArrayDeque<>();q.offer(beginWord);words.remove(beginWord);\n        int length=1;\n        while(!q.isEmpty()){\n            for(int size=q.size();size>0;size--){\n                String word=q.poll();\n                if(word.equals(endWord))return length;\n                char[] a=word.toCharArray();\n                for(int i=0;i<a.length;i++){\n                    char old=a[i];\n                    for(char ch='a';ch<='z';ch++){\n                        if(ch==old)continue;a[i]=ch;\n                        String next=new String(a);\n                        if(words.remove(next))q.offer(next);\n                    }\n                    a[i]=old;\n                }\n            }\n            length++;\n        }\n        return 0;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-069",
+      "slug": "course-schedule",
+      "title": "Course Schedule",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/course-schedule/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Return whether all courses can be finished, given prerequisite edges [course, prerequisite].",
+      "example": {
+        "input": "numCourses=2, prerequisites=[[1,0]]",
+        "output": "true",
+        "explanation": "Course 0 must precede course 1."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Build 0->1, indegree 0=0, indegree 1=1",
+        "Queue course 0, process it and release course 1",
+        "Process 1, seen 2 of 2 -> true"
+      ],
+      "dryRun": [
+        "Build 0->1, indegree 0=0, indegree 1=1",
+        "Queue course 0, process it and release course 1",
+        "Process 1, seen 2 of 2 -> true"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public boolean canFinish(int n,int[][] prerequisites){\n        List<List<Integer>> graph=new ArrayList<>();\n        for(int i=0;i<n;i++)graph.add(new ArrayList<>());\n        int[] indeg=new int[n];\n        for(int[] e:prerequisites){graph.get(e[1]).add(e[0]);indeg[e[0]]++;}\n        Deque<Integer> q=new ArrayDeque<>();\n        for(int i=0;i<n;i++)if(indeg[i]==0)q.offer(i);\n        int seen=0;\n        while(!q.isEmpty()){\n            int x=q.poll();seen++;\n            for(int y:graph.get(x))if(--indeg[y]==0)q.offer(y);\n        }\n        return seen==n;\n    }\n}",
+      "timeComplexity": "O(V+E)",
+      "spaceComplexity": "O(V+E) graph and queue",
+      "interviewTip": "A directed cycle leaves nodes with nonzero indegree, so fewer than n courses get processed.",
+      "testCases": [
+        {
+          "input": "numCourses=2, prerequisites=[[1,0]]",
+          "expected": "true",
+          "reason": "Course 0 must precede course 1."
+        },
+        {
+          "input": "numCourses=2, prerequisites=[[1,0],[0,1]]",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(V!·E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try every permutation of courses and see if it satisfies all prerequisites."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(V+E)",
+          "spaceComplexity": "O(V+E) graph and queue",
+          "explanation": "Build 0->1, indegree 0=0, indegree 1=1 Queue course 0, process it and release course 1 Process 1, seen 2 of 2 -> true",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public boolean canFinish(int n,int[][] prerequisites){\n        List<List<Integer>> graph=new ArrayList<>();\n        for(int i=0;i<n;i++)graph.add(new ArrayList<>());\n        int[] indeg=new int[n];\n        for(int[] e:prerequisites){graph.get(e[1]).add(e[0]);indeg[e[0]]++;}\n        Deque<Integer> q=new ArrayDeque<>();\n        for(int i=0;i<n;i++)if(indeg[i]==0)q.offer(i);\n        int seen=0;\n        while(!q.isEmpty()){\n            int x=q.poll();seen++;\n            for(int y:graph.get(x))if(--indeg[y]==0)q.offer(y);\n        }\n        return seen==n;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-070",
+      "slug": "course-schedule-ii",
+      "title": "Course Schedule II",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/course-schedule-ii/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return any ordering of courses that respects prerequisites, or [] if a directed cycle exists.",
+      "example": {
+        "input": "numCourses=4, prerequisites=[[1,0],[2,0],[3,1],[3,2]]",
+        "output": "[0,1,2,3] or [0,2,1,3]",
+        "explanation": "Both sequences satisfy all edges."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "0 has indegree 0, so it enters the output first",
+        "Removing 0 releases 1 and 2; append both",
+        "After both, course 3 becomes available; output valid four-course order"
+      ],
+      "dryRun": [
+        "0 has indegree 0, so it enters the output first",
+        "Removing 0 releases 1 and 2; append both",
+        "After both, course 3 becomes available; output valid four-course order"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int[] findOrder(int n,int[][] prerequisites){\n        List<List<Integer>> g=new ArrayList<>();\n        for(int i=0;i<n;i++)g.add(new ArrayList<>());\n        int[] indeg=new int[n];\n        for(int[] e:prerequisites){g.get(e[1]).add(e[0]);indeg[e[0]]++;}\n        Deque<Integer> q=new ArrayDeque<>();\n        for(int i=0;i<n;i++)if(indeg[i]==0)q.offer(i);\n        int[] order=new int[n];int k=0;\n        while(!q.isEmpty()){\n            int x=q.poll();order[k++]=x;\n            for(int y:g.get(x))if(--indeg[y]==0)q.offer(y);\n        }\n        return k==n?order:new int[0];\n    }\n}",
+      "timeComplexity": "O(V+E)",
+      "spaceComplexity": "O(V+E)",
+      "interviewTip": "Topological order need not be unique; validate relative prerequisite ordering, not a fixed sequence.",
+      "testCases": [
+        {
+          "input": "numCourses=4, prerequisites=[[1,0],[2,0],[3,1],[3,2]]",
+          "expected": "[0,1,2,3] or [0,2,1,3]",
+          "reason": "Both sequences satisfy all edges."
+        },
+        {
+          "input": "numCourses=2, prerequisites=[[1,0],[0,1]]",
+          "expected": "[]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(V!·E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Sort all course permutations until a valid one appears."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(V+E)",
+          "spaceComplexity": "O(V+E)",
+          "explanation": "0 has indegree 0, so it enters the output first Removing 0 releases 1 and 2; append both After both, course 3 becomes available; output valid four-course order",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int[] findOrder(int n,int[][] prerequisites){\n        List<List<Integer>> g=new ArrayList<>();\n        for(int i=0;i<n;i++)g.add(new ArrayList<>());\n        int[] indeg=new int[n];\n        for(int[] e:prerequisites){g.get(e[1]).add(e[0]);indeg[e[0]]++;}\n        Deque<Integer> q=new ArrayDeque<>();\n        for(int i=0;i<n;i++)if(indeg[i]==0)q.offer(i);\n        int[] order=new int[n];int k=0;\n        while(!q.isEmpty()){\n            int x=q.poll();order[k++]=x;\n            for(int y:g.get(x))if(--indeg[y]==0)q.offer(y);\n        }\n        return k==n?order:new int[0];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-071",
+      "slug": "redundant-connection",
+      "title": "Redundant Connection",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/redundant-connection/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "An extra undirected edge was added to a tree. Return the last edge in input order creating a cycle.",
+      "example": {
+        "input": "edges=[[1,2],[1,3],[2,3]]",
+        "output": "[2,3]",
+        "explanation": "The final edge connects two nodes already connected."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Union (1,2), component {1,2}",
+        "Union (1,3), component {1,2,3}",
+        "Edge (2,3) has both roots equal -> cycle, return [2,3]"
+      ],
+      "dryRun": [
+        "Union (1,2), component {1,2}",
+        "Union (1,3), component {1,2,3}",
+        "Edge (2,3) has both roots equal -> cycle, return [2,3]"
+      ],
+      "javaCode": "class Solution {\n    public int[] findRedundantConnection(int[][] edges){\n        int n=edges.length;int[] p=new int[n+1],rank=new int[n+1];\n        for(int i=1;i<=n;i++)p[i]=i;\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)return e;\n            if(rank[a]<rank[b])p[a]=b;\n            else if(rank[a]>rank[b])p[b]=a;\n            else{p[b]=a;rank[a]++;}\n        }\n        return new int[0];\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}",
+      "timeComplexity": "O(n·α(n)) amortized",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "DSU cycle criterion: an edge is redundant exactly when its endpoints already share a root.",
+      "testCases": [
+        {
+          "input": "edges=[[1,2],[1,3],[2,3]]",
+          "expected": "[2,3]",
+          "reason": "The final edge connects two nodes already connected."
+        },
+        {
+          "input": "edges=[[1,2],[2,3],[3,4],[1,4],[1,5]]",
+          "expected": "[1,4]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For every edge, BFS the already-added graph to determine whether endpoints are connected."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n·α(n)) amortized",
+          "spaceComplexity": "O(n)",
+          "explanation": "Union (1,2), component {1,2} Union (1,3), component {1,2,3} Edge (2,3) has both roots equal -> cycle, return [2,3]",
+          "javaCode": "class Solution {\n    public int[] findRedundantConnection(int[][] edges){\n        int n=edges.length;int[] p=new int[n+1],rank=new int[n+1];\n        for(int i=1;i<=n;i++)p[i]=i;\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)return e;\n            if(rank[a]<rank[b])p[a]=b;\n            else if(rank[a]>rank[b])p[b]=a;\n            else{p[b]=a;rank[a]++;}\n        }\n        return new int[0];\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-072",
+      "slug": "number-of-connected-components-in-an-undirected-graph",
+      "title": "Number Of Connected Components In An Undirected Graph",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Count connected components among n labeled vertices and undirected edges.",
+      "example": {
+        "input": "n=5, edges=[[0,1],[1,2],[3,4]]",
+        "output": "2",
+        "explanation": "{0,1,2} and {3,4} are separate components."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "Begin with 5 singleton components",
+        "Union 0-1, 1-2 -> 3 groups",
+        "Union 3-4 -> 2 groups remain"
+      ],
+      "dryRun": [
+        "Begin with 5 singleton components",
+        "Union 0-1, 1-2 -> 3 groups",
+        "Union 3-4 -> 2 groups remain"
+      ],
+      "javaCode": "class Solution {\n    public int countComponents(int n,int[][] edges){\n        int[] p=new int[n],size=new int[n];\n        for(int i=0;i<n;i++){p[i]=i;size[i]=1;}\n        int groups=n;\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)continue;\n            if(size[a]<size[b]){int t=a;a=b;b=t;}\n            p[b]=a;size[a]+=size[b];groups--;\n        }\n        return groups;\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}",
+      "timeComplexity": "O((n+E)·α(n))",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "DSU counts begin at n and decrease only when an edge connects two previously separate sets.",
+      "testCases": [
+        {
+          "input": "n=5, edges=[[0,1],[1,2],[3,4]]",
+          "expected": "2",
+          "reason": "{0,1,2} and {3,4} are separate components."
+        },
+        {
+          "input": "n=3, edges=[]",
+          "expected": "3",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(V+E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Build adjacency lists and DFS each unvisited vertex."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O((n+E)·α(n))",
+          "spaceComplexity": "O(n)",
+          "explanation": "Begin with 5 singleton components Union 0-1, 1-2 -> 3 groups Union 3-4 -> 2 groups remain",
+          "javaCode": "class Solution {\n    public int countComponents(int n,int[][] edges){\n        int[] p=new int[n],size=new int[n];\n        for(int i=0;i<n;i++){p[i]=i;size[i]=1;}\n        int groups=n;\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)continue;\n            if(size[a]<size[b]){int t=a;a=b;b=t;}\n            p[b]=a;size[a]+=size[b];groups--;\n        }\n        return groups;\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-073",
+      "slug": "graph-valid-tree",
+      "title": "Graph Valid Tree",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/graph-valid-tree/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Check whether n labeled nodes and undirected edges form one connected, acyclic tree.",
+      "example": {
+        "input": "n=5, edges=[[0,1],[0,2],[0,3],[1,4]]",
+        "output": "true",
+        "explanation": "Four edges connect all five vertices without cycles."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "5 nodes require exactly 4 edges; input meets this count",
+        "Unions 0-1,0-2,0-3,1-4 all merge different components",
+        "No cycle, and n-1 edges imply connectivity -> true"
+      ],
+      "dryRun": [
+        "5 nodes require exactly 4 edges; input meets this count",
+        "Unions 0-1,0-2,0-3,1-4 all merge different components",
+        "No cycle, and n-1 edges imply connectivity -> true"
+      ],
+      "javaCode": "class Solution {\n    public boolean validTree(int n,int[][] edges){\n        if(edges.length!=n-1)return false;\n        int[] p=new int[n],size=new int[n];\n        for(int i=0;i<n;i++){p[i]=i;size[i]=1;}\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)return false;\n            if(size[a]<size[b]){int t=a;a=b;b=t;}\n            p[b]=a;size[a]+=size[b];\n        }\n        return true;\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}",
+      "timeComplexity": "O(n·α(n))",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "For an undirected simple graph, exactly n-1 edges plus acyclicity implies connectivity.",
+      "testCases": [
+        {
+          "input": "n=5, edges=[[0,1],[0,2],[0,3],[1,4]]",
+          "expected": "true",
+          "reason": "Four edges connect all five vertices without cycles."
+        },
+        {
+          "input": "n=4, edges=[[0,1],[1,2],[2,0]]",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(V+E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "DFS to test connectivity and detect cycles with parent tracking."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n·α(n))",
+          "spaceComplexity": "O(n)",
+          "explanation": "5 nodes require exactly 4 edges; input meets this count Unions 0-1,0-2,0-3,1-4 all merge different components No cycle, and n-1 edges imply connectivity -> true",
+          "javaCode": "class Solution {\n    public boolean validTree(int n,int[][] edges){\n        if(edges.length!=n-1)return false;\n        int[] p=new int[n],size=new int[n];\n        for(int i=0;i<n;i++){p[i]=i;size[i]=1;}\n        for(int[] e:edges){\n            int a=find(p,e[0]),b=find(p,e[1]);\n            if(a==b)return false;\n            if(size[a]<size[b]){int t=a;a=b;b=t;}\n            p[b]=a;size[a]+=size[b];\n        }\n        return true;\n    }\n    private int find(int[] p,int x){if(p[x]!=x)p[x]=find(p,p[x]);return p[x];}\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    },
+    {
+      "id": "ROAD-074",
+      "slug": "accounts-merge",
+      "title": "Accounts Merge",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/accounts-merge/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Merge accounts sharing email addresses (even transitively), returning name followed by sorted unique emails.",
+      "example": {
+        "input": "accounts=[[John,johnsmith@mail.com,john_newyork@mail.com],[John,johnsmith@mail.com,john00@mail.com],[Mary,mary@mail.com]]",
+        "output": "[[John,john00@mail.com,john_newyork@mail.com,johnsmith@mail.com],[Mary,mary@mail.com]]",
+        "explanation": "The two John accounts share johnsmith@mail.com."
+      },
+      "constraints": [
+        "Follow the linked problem's input constraints and node definitions; verify edge cases as part of practice."
+      ],
+      "approach": "Explain the invariant and optimize from the baseline",
+      "steps": [
+        "johnsmith@mail.com appears in two accounts, so union their email sets",
+        "Create groups by DSU root and sort each group's email addresses",
+        "Emit one John group and one independent Mary group"
+      ],
+      "dryRun": [
+        "johnsmith@mail.com appears in two accounts, so union their email sets",
+        "Create groups by DSU root and sort each group's email addresses",
+        "Emit one John group and one independent Mary group"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<String>> accountsMerge(List<List<String>> accounts){\n        Map<String,String> parent=new HashMap<>(),owner=new HashMap<>();\n        for(List<String> row:accounts){\n            for(int i=1;i<row.size();i++){\n                String mail=row.get(i); parent.putIfAbsent(mail,mail);owner.put(mail,row.get(0));\n            }\n            for(int i=2;i<row.size();i++)parent.put(root(parent,row.get(i)),root(parent,row.get(1)));\n        }\n        Map<String,TreeSet<String>> groups=new HashMap<>();\n        for(String mail:parent.keySet())groups.computeIfAbsent(root(parent,mail),k->new TreeSet<>()).add(mail);\n        List<List<String>> ans=new ArrayList<>();\n        for(TreeSet<String> emails:groups.values()){\n            List<String> row=new ArrayList<>();row.add(owner.get(emails.first()));row.addAll(emails);ans.add(row);\n        }\n        return ans;\n    }\n    private String root(Map<String,String> p,String x){\n        if(!p.get(x).equals(x))p.put(x,root(p,p.get(x)));\n        return p.get(x);\n    }\n}",
+      "timeComplexity": "O(E·α(E) + E log E)",
+      "spaceComplexity": "O(E) emails",
+      "interviewTip": "Matching names alone do not imply accounts belong together; shared emails do.",
+      "testCases": [
+        {
+          "input": "accounts=[[John,johnsmith@mail.com,john_newyork@mail.com],[John,johnsmith@mail.com,john00@mail.com],[Mary,mary@mail.com]]",
+          "expected": "[[John,john00@mail.com,john_newyork@mail.com,johnsmith@mail.com],[Mary,mary@mail.com]]",
+          "reason": "The two John accounts share johnsmith@mail.com."
+        },
+        {
+          "input": "accounts=[[A,a@mail.com],[B,b@mail.com]]",
+          "expected": "[[A,a@mail.com],[B,b@mail.com]]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(A²·E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Repeatedly compare email intersections between every pair of accounts until merges stabilize."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(E·α(E) + E log E)",
+          "spaceComplexity": "O(E) emails",
+          "explanation": "johnsmith@mail.com appears in two accounts, so union their email sets Create groups by DSU root and sort each group's email addresses Emit one John group and one independent Mary group",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<String>> accountsMerge(List<List<String>> accounts){\n        Map<String,String> parent=new HashMap<>(),owner=new HashMap<>();\n        for(List<String> row:accounts){\n            for(int i=1;i<row.size();i++){\n                String mail=row.get(i); parent.putIfAbsent(mail,mail);owner.put(mail,row.get(0));\n            }\n            for(int i=2;i<row.size();i++)parent.put(root(parent,row.get(i)),root(parent,row.get(1)));\n        }\n        Map<String,TreeSet<String>> groups=new HashMap<>();\n        for(String mail:parent.keySet())groups.computeIfAbsent(root(parent,mail),k->new TreeSet<>()).add(mail);\n        List<List<String>> ans=new ArrayList<>();\n        for(TreeSet<String> emails:groups.values()){\n            List<String> row=new ArrayList<>();row.add(owner.get(emails.first()));row.addAll(emails);ans.add(row);\n        }\n        return ans;\n    }\n    private String root(Map<String,String> p,String x){\n        if(!p.get(x).equals(x))p.put(x,root(p,p.get(x)));\n        return p.get(x);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation for an established interview pattern"
+    }
+  ]
+}
