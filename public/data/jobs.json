@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22",
+  "updatedAt": "2026-11-23",
   "jobs": [
     {
       "id": "JOB-001",
@@ -2001,6 +2001,29 @@
       "dsaPrep": "Easy–Medium: arrays, strings, hash maps, OOP, basic algorithms and data structures",
       "corePrep": "Java, Spring Boot REST services, AWS fundamentals, CI/CD, Terraform basics, Docker, Kubernetes, testing",
       "description": "Software Engineer 1 on Sophos cloud engineering teams. Build and customize Terraform automation with Java; design and implement Java backend features, microservices and AWS-based modules; manage API endpoints; fix defects; write unit and integration tests in CI/CD; contribute to cloud infrastructure services with Docker and Kubernetes. Requirements include 1–2 years of Java, Spring Boot, microservices and cloud development, API design and data structures, product development familiarity, CI/CD and complete software development lifecycle experience. Remote roles require residence and work authorization in India."
+    },
+    {
+      "id": "JOB-088",
+      "company": "Cognite",
+      "title": "Software Engineer",
+      "location": "Bengaluru, India",
+      "workMode": "Not disclosed",
+      "experience": "1–3 years",
+      "dateFound": "2026-11-23",
+      "postedDate": "",
+      "vacancyStatus": "Active",
+      "priority": "High",
+      "fit": "Strong Java/Python, REST API, SQL and cloud alignment; distributed data systems experience is a development area; Bengaluru location",
+      "skills": "Java, Python, Scala, REST APIs, microservices, SQL, NoSQL, distributed systems, Spark, Kafka, Flink, AWS, Azure, GCP, Docker, Kubernetes, CI/CD",
+      "salary": "Not disclosed",
+      "url": "https://job-boards.greenhouse.io/cognite/jobs/5034410101",
+      "notes": "Official Cognite Greenhouse requisition for Bengaluru; 1–3 years required. Data pipeline technologies are preferred rather than mandatory.",
+      "lastChecked": "2026-11-23 IST",
+      "verification": "2026-11-23 IST: Official Greenhouse job 5034410101 displayed a live application form with required candidate fields and Submit application button.",
+      "requisitionId": "5034410101",
+      "dsaPrep": "Arrays, hash maps, graphs, SQL, data structures, algorithmic complexity",
+      "corePrep": "Java/Python backend, REST APIs, SQL/NoSQL, microservices, distributed systems, cloud, Kafka/Spark fundamentals, CI/CD",
+      "description": "Cognite seeks a Software Engineer with 1–3 years of experience to build scalable backend systems and data platforms handling large volumes of industrial data in Bengaluru. Responsibilities include developing backend services and microservices, building and improving distributed data pipelines, creating reliable high-performance APIs, optimizing data processing and storage, participating in system design, troubleshooting production issues, and writing well-tested code. Required skills include strong Java, Scala or Python; backend services, REST APIs, SQL/NoSQL databases, and distributed systems fundamentals. Preferred experience includes Spark, Kafka or Flink; AWS, Azure or GCP; Docker/Kubernetes; CI/CD and observability."
     }
   ]
 }
