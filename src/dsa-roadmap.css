@@ -26,7 +26,7 @@
 .learning-mode{display:inline-flex;background:#eef2f9;border:1px solid #dce4ef;border-radius:10px;padding:4px;max-width:max-content;gap:4px}
 .learning-mode button{border:0;background:transparent;color:#516582;padding:9px 15px;border-radius:8px;font-size:13px;font-weight:750;cursor:pointer}
 .learning-mode button.active{background:#fff;color:#2449a7;box-shadow:0 1px 3px #22385018}
-.learning-filter-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px}
+.learning-filter-grid{display:grid;grid-template-columns:1fr 1fr 1.8fr 1fr;gap:10px}
 .learning-filter-grid>*{min-width:0}
 .learning-filter-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#637189}
 .learning-stage-list{display:grid;gap:12px}
@@ -152,7 +152,8 @@
  .learning-intro{align-items:flex-start;flex-direction:column}
  .learning-next{max-width:100%}
  .learning-filter-grid{grid-template-columns:1fr 1fr;gap:8px}
- .learning-filter-grid>div:nth-child(2){grid-column:1/-1;grid-row:1}
+ .learning-filter-grid>div:nth-child(3){grid-column:1/-1;grid-row:1}
+ .learning-filter-grid>div:nth-child(4){grid-column:1/-1}
  .learning-controls{gap:9px}
  .learning-stage-toggle{padding:13px 11px;align-items:flex-start;gap:9px}
  .learning-stage-n{width:35px;height:35px;border-radius:9px;font-size:13px}
@@ -223,3 +224,39 @@
  .learning-topic-pagination>a{padding:11px;font-size:11px;overflow-wrap:anywhere}
 }
 @media(max-width:370px){.learning-topic-pagination{flex-direction:column}.learning-topic-pagination>span{display:none}}
+
+/* Unified compact curriculum list: color AND icons differentiate item types. */
+.dsa-v2 .learning-exercises-head h3{font-size:1rem;letter-spacing:-.01em}
+.dsa-v2 .learning-exercises-head small{font-size:12px;color:#667992;line-height:1.5}
+.dsa-v2 .learning-sequence,.dsa-v2 .learning-all-list{gap:7px}
+.dsa-v2 .learning-problem{padding:12px 14px;border-color:#dce5f1;transition:border-color .16s ease,background-color .16s ease}
+.dsa-v2 .learning-problem:hover{border-color:#b4c4e2;background:#f9fbff}
+.dsa-v2 .learning-topic-row{background:#fbfcff}
+.dsa-v2 .learning-problem-link{flex:1;min-width:0;gap:10px}
+.dsa-v2 .learning-item-title-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px 11px;min-width:0}
+.dsa-v2 .learning-item-title-line strong{flex:0 1 auto;font-size:13px;line-height:1.5;color:#213b60}
+.dsa-v2 .learning-kind-pill{display:inline-flex;align-items:center;gap:5px;border:1px solid;border-radius:999px;padding:4px 9px;min-height:25px;line-height:1.15;font-size:10px;font-weight:800;letter-spacing:.005em;flex-shrink:0;white-space:nowrap}
+.dsa-v2 .learning-kind-pill svg{font-size:14px;flex-shrink:0}
+.dsa-v2 .kind-structure{background:#f3eaff;border-color:#d9c4f8;color:#6328aa}
+.dsa-v2 .kind-algorithm{background:#fff2d9;border-color:#f3d3a3;color:#84520b}
+.dsa-v2 .kind-problem{background:#e9f1ff;border-color:#c4d7f8;color:#254fa5}
+.dsa-v2 .learning-problem-index{min-width:0;white-space:nowrap;font-size:10px;color:#7c8ba0}
+.dsa-v2 .learning-item-summary{margin:6px 0 4px;font-size:12px;line-height:1.55;color:#5b6b83;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;max-width:105ch}
+.dsa-v2 .learning-topic-row .learning-problem-meta{margin-top:5px}
+.dsa-v2 .learning-problem-meta>span:not(.learning-difficulty){font-size:11px;overflow-wrap:anywhere}
+.dsa-v2 .learning-topic-row .learning-problem-meta>span:first-child{color:#344f79;font-weight:650}
+.dsa-v2 .learning-problem-arrow{font-size:24px;line-height:1;color:#7a95bd}
+.dsa-v2 .learning-problem-link:focus-visible{outline:3px solid #7197e3;outline-offset:4px;border-radius:4px}
+@media(max-width:620px){
+ .dsa-v2 .learning-problem{padding:11px 10px;gap:8px}
+ .dsa-v2 .learning-item-title-line{gap:6px 8px}
+ .dsa-v2 .learning-kind-pill{min-height:24px;font-size:10px;padding:4px 8px}
+ .dsa-v2 .learning-item-summary{-webkit-line-clamp:2;line-clamp:2;font-size:11px}
+ .dsa-v2 .learning-problem-meta{gap:5px 9px}
+ .dsa-v2 .learning-problem>.learning-check{margin-left:0}
+ .dsa-v2 .learning-problem-arrow{margin:0}
+ .dsa-v2 .learning-problem-link{width:100%;min-width:0}
+ .dsa-v2 .learning-exercises-head h3{font-size:14px}
+ .dsa-v2 .learning-exercises-head small{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.dsa-v2 .learning-problem{transition:none}}
