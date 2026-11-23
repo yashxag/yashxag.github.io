@@ -1,0 +1,2514 @@
+{
+  "updatedAt": "2026-11-23",
+  "solutions": [
+    {
+      "id": "ROAD-075",
+      "slug": "network-delay-time",
+      "title": "Network Delay Time",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/network-delay-time/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Given positive directed edge travel times, return the minimum time until all n nodes receive a signal from source k, or -1.",
+      "example": {
+        "input": "times=[[2,1,1],[2,3,1],[3,4,1]], n=4, k=2",
+        "output": "2",
+        "explanation": "Node 4 is reached via 2->3->4 in 2 time units."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Start source 2 at distance 0",
+        "Relax nodes 1 and 3 to distance 1, then node 4 via node 3 to distance 2",
+        "Maximum of reachable shortest distances is 2"
+      ],
+      "dryRun": [
+        "Start source 2 at distance 0",
+        "Relax nodes 1 and 3 to distance 1, then node 4 via node 3 to distance 2",
+        "Maximum of reachable shortest distances is 2"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int networkDelayTime(int[][] times,int n,int k){\n        List<List<int[]>> g=new ArrayList<>();\n        for(int i=0;i<=n;i++)g.add(new ArrayList<>());\n        for(int[] e:times)g.get(e[0]).add(new int[]{e[1],e[2]});\n        int[] dist=new int[n+1];Arrays.fill(dist,Integer.MAX_VALUE);dist[k]=0;\n        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));\n        pq.offer(new int[]{0,k});\n        while(!pq.isEmpty()){\n            int[] cur=pq.poll();int d=cur[0],u=cur[1];\n            if(d!=dist[u])continue;\n            for(int[] e:g.get(u)){\n                int v=e[0],nd=d+e[1];\n                if(nd<dist[v]){dist[v]=nd;pq.offer(new int[]{nd,v});}\n            }\n        }\n        int best=0;\n        for(int i=1;i<=n;i++){\n            if(dist[i]==Integer.MAX_VALUE)return -1;\n            best=Math.max(best,dist[i]);\n        }\n        return best;\n    }\n}",
+      "timeComplexity": "O((V+E) log V)",
+      "spaceComplexity": "O(V+E)",
+      "interviewTip": "Dijkstra requires nonnegative weights; skip stale heap entries.",
+      "testCases": [
+        {
+          "input": "times=[[2,1,1],[2,3,1],[3,4,1]], n=4, k=2",
+          "expected": "2",
+          "reason": "Node 4 is reached via 2->3->4 in 2 time units."
+        },
+        {
+          "input": "times=[[1,2,1]], n=2, k=2",
+          "expected": "-1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(V·E)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Bellman-Ford relaxes every edge for up to n-1 rounds, even without negative edges."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O((V+E) log V)",
+          "spaceComplexity": "O(V+E)",
+          "explanation": "Start source 2 at distance 0 Relax nodes 1 and 3 to distance 1, then node 4 via node 3 to distance 2 Maximum of reachable shortest distances is 2",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int networkDelayTime(int[][] times,int n,int k){\n        List<List<int[]>> g=new ArrayList<>();\n        for(int i=0;i<=n;i++)g.add(new ArrayList<>());\n        for(int[] e:times)g.get(e[0]).add(new int[]{e[1],e[2]});\n        int[] dist=new int[n+1];Arrays.fill(dist,Integer.MAX_VALUE);dist[k]=0;\n        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));\n        pq.offer(new int[]{0,k});\n        while(!pq.isEmpty()){\n            int[] cur=pq.poll();int d=cur[0],u=cur[1];\n            if(d!=dist[u])continue;\n            for(int[] e:g.get(u)){\n                int v=e[0],nd=d+e[1];\n                if(nd<dist[v]){dist[v]=nd;pq.offer(new int[]{nd,v});}\n            }\n        }\n        int best=0;\n        for(int i=1;i<=n;i++){\n            if(dist[i]==Integer.MAX_VALUE)return -1;\n            best=Math.max(best,dist[i]);\n        }\n        return best;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-076",
+      "slug": "cheapest-flights-within-k-stops",
+      "title": "Cheapest Flights Within K Stops",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Given directed flights [from,to,price], return cheapest price from src to dst using at most k intermediate stops.",
+      "example": {
+        "input": "n=4, flights=[[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src=0, dst=3, k=1",
+        "output": "700",
+        "explanation": "Path 0->1->3 costs 700; 0->1->2->3 exceeds stop limit."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "At iteration 1 allow one edge: 0->1 cost 100",
+        "At iteration 2 allow two edges: 0->1->3 cost 700",
+        "The path through 2 requires three edges and is excluded; return 700"
+      ],
+      "dryRun": [
+        "At iteration 1 allow one edge: 0->1 cost 100",
+        "At iteration 2 allow two edges: 0->1->3 cost 700",
+        "The path through 2 requires three edges and is excluded; return 700"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int findCheapestPrice(int n,int[][] flights,int src,int dst,int k){\n        int INF=1_000_000_000;\n        int[] dist=new int[n];Arrays.fill(dist,INF);dist[src]=0;\n        for(int edges=0;edges<=k;edges++){\n            int[] next=dist.clone();\n            for(int[] f:flights)if(dist[f[0]]!=INF)\n                next[f[1]]=Math.min(next[f[1]],dist[f[0]]+f[2]);\n            dist=next;\n        }\n        return dist[dst]==INF?-1:dist[dst];\n    }\n}",
+      "timeComplexity": "O((k+1)·E)",
+      "spaceComplexity": "O(V)",
+      "interviewTip": "Clone distances per iteration so one round uses exactly one additional edge; in-place updates violate stop constraints.",
+      "testCases": [
+        {
+          "input": "n=4, flights=[[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src=0, dst=3, k=1",
+          "expected": "700",
+          "reason": "Path 0->1->3 costs 700; 0->1->2->3 exceeds stop limit."
+        },
+        {
+          "input": "n=3, flights=[[0,1,100],[1,2,100],[0,2,500]], src=0, dst=2, k=1",
+          "expected": "200",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential in k",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate every path of at most k+1 edges and keep the cheapest valid one."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O((k+1)·E)",
+          "spaceComplexity": "O(V)",
+          "explanation": "At iteration 1 allow one edge: 0->1 cost 100 At iteration 2 allow two edges: 0->1->3 cost 700 The path through 2 requires three edges and is excluded; return 700",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int findCheapestPrice(int n,int[][] flights,int src,int dst,int k){\n        int INF=1_000_000_000;\n        int[] dist=new int[n];Arrays.fill(dist,INF);dist[src]=0;\n        for(int edges=0;edges<=k;edges++){\n            int[] next=dist.clone();\n            for(int[] f:flights)if(dist[f[0]]!=INF)\n                next[f[1]]=Math.min(next[f[1]],dist[f[0]]+f[2]);\n            dist=next;\n        }\n        return dist[dst]==INF?-1:dist[dst];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-077",
+      "slug": "min-cost-to-connect-all-points",
+      "title": "Min Cost To Connect All Points",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/min-cost-to-connect-all-points/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Connect all coordinate points with minimum total Manhattan-distance edge weight.",
+      "example": {
+        "input": "points=[[0,0],[2,2],[3,10],[5,2],[7,0]]",
+        "output": "20",
+        "explanation": "A minimum spanning tree connects all five nodes for cost 20."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Start tree with point 0, best edge to point 1 has cost 4",
+        "From the growing tree choose the cheapest crossing edge each round",
+        "After selecting 4 edges, total cost is 20"
+      ],
+      "dryRun": [
+        "Start tree with point 0, best edge to point 1 has cost 4",
+        "From the growing tree choose the cheapest crossing edge each round",
+        "After selecting 4 edges, total cost is 20"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int minCostConnectPoints(int[][] points){\n        int n=points.length,total=0;\n        boolean[] used=new boolean[n];\n        int[] best=new int[n];Arrays.fill(best,Integer.MAX_VALUE);best[0]=0;\n        for(int step=0;step<n;step++){\n            int u=-1;\n            for(int i=0;i<n;i++)if(!used[i]&&(u==-1||best[i]<best[u]))u=i;\n            used[u]=true;total+=best[u];\n            for(int v=0;v<n;v++)if(!used[v]){\n                int cost=Math.abs(points[u][0]-points[v][0])+Math.abs(points[u][1]-points[v][1]);\n                best[v]=Math.min(best[v],cost);\n            }\n        }\n        return total;\n    }\n}",
+      "timeComplexity": "O(n²)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Prim's dense-graph O(n²) form avoids storing O(n²) edges.",
+      "testCases": [
+        {
+          "input": "points=[[0,0],[2,2],[3,10],[5,2],[7,0]]",
+          "expected": "20",
+          "reason": "A minimum spanning tree connects all five nodes for cost 20."
+        },
+        {
+          "input": "points=[[0,0]]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n² log n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Generate all pair edges, sort O(n² log n), and run Kruskal DSU."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Start tree with point 0, best edge to point 1 has cost 4 From the growing tree choose the cheapest crossing edge each round After selecting 4 edges, total cost is 20",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int minCostConnectPoints(int[][] points){\n        int n=points.length,total=0;\n        boolean[] used=new boolean[n];\n        int[] best=new int[n];Arrays.fill(best,Integer.MAX_VALUE);best[0]=0;\n        for(int step=0;step<n;step++){\n            int u=-1;\n            for(int i=0;i<n;i++)if(!used[i]&&(u==-1||best[i]<best[u]))u=i;\n            used[u]=true;total+=best[u];\n            for(int v=0;v<n;v++)if(!used[v]){\n                int cost=Math.abs(points[u][0]-points[v][0])+Math.abs(points[u][1]-points[v][1]);\n                best[v]=Math.min(best[v],cost);\n            }\n        }\n        return total;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-078",
+      "slug": "path-with-minimum-effort",
+      "title": "Path With Minimum Effort",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/path-with-minimum-effort/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Find a path through adjacent grid cells minimizing the maximum absolute height change along the route.",
+      "example": {
+        "input": "heights=[[1,2,2],[3,8,2],[5,3,5]]",
+        "output": "2",
+        "explanation": "There is a route whose largest step difference is 2."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "From (0,0), reaching (0,1) requires effort 1, (1,0) effort 2",
+        "For each cell, propagate max(previous effort, new edge difference)",
+        "Reach (2,2) via a route whose maximum edge cost is 2"
+      ],
+      "dryRun": [
+        "From (0,0), reaching (0,1) requires effort 1, (1,0) effort 2",
+        "For each cell, propagate max(previous effort, new edge difference)",
+        "Reach (2,2) via a route whose maximum edge cost is 2"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int minimumEffortPath(int[][] heights){\n        int m=heights.length,n=heights[0].length;\n        int[][] dist=new int[m][n];for(int[] row:dist)Arrays.fill(row,Integer.MAX_VALUE);\n        dist[0][0]=0;\n        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));\n        pq.offer(new int[]{0,0,0});\n        int[][] dirs={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!pq.isEmpty()){\n            int[] cur=pq.poll();int effort=cur[0],r=cur[1],c=cur[2];\n            if(effort!=dist[r][c])continue;\n            if(r==m-1&&c==n-1)return effort;\n            for(int[] d:dirs){\n                int x=r+d[0],y=c+d[1];\n                if(x<0||y<0||x>=m||y>=n)continue;\n                int nd=Math.max(effort,Math.abs(heights[r][c]-heights[x][y]));\n                if(nd<dist[x][y]){dist[x][y]=nd;pq.offer(new int[]{nd,x,y});}\n            }\n        }\n        return -1;\n    }\n}",
+      "timeComplexity": "O(R·C log(R·C))",
+      "spaceComplexity": "O(R·C)",
+      "interviewTip": "This is minimax Dijkstra: combine edge costs with max, not addition.",
+      "testCases": [
+        {
+          "input": "heights=[[1,2,2],[3,8,2],[5,3,5]]",
+          "expected": "2",
+          "reason": "There is a route whose largest step difference is 2."
+        },
+        {
+          "input": "heights=[[1]]",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(R·C log H)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try threshold T and BFS to test if any path exists using step differences <=T; binary search T."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(R·C log(R·C))",
+          "spaceComplexity": "O(R·C)",
+          "explanation": "From (0,0), reaching (0,1) requires effort 1, (1,0) effort 2 For each cell, propagate max(previous effort, new edge difference) Reach (2,2) via a route whose maximum edge cost is 2",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int minimumEffortPath(int[][] heights){\n        int m=heights.length,n=heights[0].length;\n        int[][] dist=new int[m][n];for(int[] row:dist)Arrays.fill(row,Integer.MAX_VALUE);\n        dist[0][0]=0;\n        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));\n        pq.offer(new int[]{0,0,0});\n        int[][] dirs={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!pq.isEmpty()){\n            int[] cur=pq.poll();int effort=cur[0],r=cur[1],c=cur[2];\n            if(effort!=dist[r][c])continue;\n            if(r==m-1&&c==n-1)return effort;\n            for(int[] d:dirs){\n                int x=r+d[0],y=c+d[1];\n                if(x<0||y<0||x>=m||y>=n)continue;\n                int nd=Math.max(effort,Math.abs(heights[r][c]-heights[x][y]));\n                if(nd<dist[x][y]){dist[x][y]=nd;pq.offer(new int[]{nd,x,y});}\n            }\n        }\n        return -1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-079",
+      "slug": "reconstruct-itinerary",
+      "title": "Reconstruct Itinerary",
+      "difficulty": "Hard",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/reconstruct-itinerary/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Use every flight ticket exactly once, starting at JFK, to produce the lexicographically smallest valid itinerary.",
+      "example": {
+        "input": "tickets=[[MUC,LHR],[JFK,MUC],[SFO,SJC],[LHR,SFO]]",
+        "output": "[JFK,MUC,LHR,SFO,SJC]",
+        "explanation": "The itinerary consumes every ticket once."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Starting JFK, take its smallest outgoing airport MUC",
+        "Follow MUC->LHR->SFO->SJC until no outgoing tickets remain",
+        "Add airports to front during recursion unwind, producing the correct path"
+      ],
+      "dryRun": [
+        "Starting JFK, take its smallest outgoing airport MUC",
+        "Follow MUC->LHR->SFO->SJC until no outgoing tickets remain",
+        "Add airports to front during recursion unwind, producing the correct path"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<String> findItinerary(List<List<String>> tickets){\n        Map<String,PriorityQueue<String>> g=new HashMap<>();\n        for(List<String> t:tickets)g.computeIfAbsent(t.get(0),k->new PriorityQueue<>()).offer(t.get(1));\n        LinkedList<String> route=new LinkedList<>();\n        dfs(\"JFK\",g,route);\n        return route;\n    }\n    private void dfs(String airport,Map<String,PriorityQueue<String>> g,LinkedList<String> route){\n        PriorityQueue<String> next=g.get(airport);\n        while(next!=null&&!next.isEmpty())dfs(next.poll(),g,route);\n        route.addFirst(airport);\n    }\n}",
+      "timeComplexity": "O(E log E)",
+      "spaceComplexity": "O(E) graph, recursion and itinerary",
+      "interviewTip": "Greedy immediate output is wrong: Hierholzer appends nodes after exhausting outgoing edges.",
+      "testCases": [
+        {
+          "input": "tickets=[[MUC,LHR],[JFK,MUC],[SFO,SJC],[LHR,SFO]]",
+          "expected": "[JFK,MUC,LHR,SFO,SJC]",
+          "reason": "The itinerary consumes every ticket once."
+        },
+        {
+          "input": "tickets=[[JFK,KUL],[JFK,NRT],[NRT,JFK]]",
+          "expected": "[JFK,NRT,JFK,KUL]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(E!)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try permutations of all tickets, keep valid routes, then choose lexicographically smallest."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(E log E)",
+          "spaceComplexity": "O(E) graph, recursion and itinerary",
+          "explanation": "Starting JFK, take its smallest outgoing airport MUC Follow MUC->LHR->SFO->SJC until no outgoing tickets remain Add airports to front during recursion unwind, producing the correct path",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<String> findItinerary(List<List<String>> tickets){\n        Map<String,PriorityQueue<String>> g=new HashMap<>();\n        for(List<String> t:tickets)g.computeIfAbsent(t.get(0),k->new PriorityQueue<>()).offer(t.get(1));\n        LinkedList<String> route=new LinkedList<>();\n        dfs(\"JFK\",g,route);\n        return route;\n    }\n    private void dfs(String airport,Map<String,PriorityQueue<String>> g,LinkedList<String> route){\n        PriorityQueue<String> next=g.get(airport);\n        while(next!=null&&!next.isEmpty())dfs(next.poll(),g,route);\n        route.addFirst(airport);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-081",
+      "slug": "house-robber",
+      "title": "House Robber",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/house-robber/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Given values of houses in a line, maximize stolen money without taking two adjacent houses.",
+      "example": {
+        "input": "nums=[1,2,3,1]",
+        "output": "4",
+        "explanation": "Choose houses 0 and 2 for 1+3=4."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "For house 1, best=1",
+        "For house 2, best=max(1,2)=2",
+        "For house 3, best=max(2,1+3)=4; last house keeps 4"
+      ],
+      "dryRun": [
+        "For house 1, best=1",
+        "For house 2, best=max(1,2)=2",
+        "For house 3, best=max(2,1+3)=4; last house keeps 4"
+      ],
+      "javaCode": "class Solution {\n    public int rob(int[] nums){\n        int prev2=0,prev1=0;\n        for(int value:nums){\n            int best=Math.max(prev1,prev2+value);\n            prev2=prev1;prev1=best;\n        }\n        return prev1;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "State recurrence dp[i]=max(dp[i-1],dp[i-2]+nums[i]).",
+      "testCases": [
+        {
+          "input": "nums=[1,2,3,1]",
+          "expected": "4",
+          "reason": "Choose houses 0 and 2 for 1+3=4."
+        },
+        {
+          "input": "nums=[2,7,9,3,1]",
+          "expected": "12",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively decide rob or skip each house without memoization."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "For house 1, best=1 For house 2, best=max(1,2)=2 For house 3, best=max(2,1+3)=4; last house keeps 4",
+          "javaCode": "class Solution {\n    public int rob(int[] nums){\n        int prev2=0,prev1=0;\n        for(int value:nums){\n            int best=Math.max(prev1,prev2+value);\n            prev2=prev1;prev1=best;\n        }\n        return prev1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-082",
+      "slug": "min-cost-climbing-stairs",
+      "title": "Min Cost Climbing Stairs",
+      "difficulty": "Easy",
+      "stageId": "dp-one",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/min-cost-climbing-stairs/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Each stair has a nonnegative cost. Reach the top (beyond last stair) by taking one or two steps, paying for steps landed on.",
+      "example": {
+        "input": "cost=[10,15,20]",
+        "output": "15",
+        "explanation": "Begin at step 1 costing 15, then jump to top."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Reaching step 2: min(cost[1]=15, cost[0]=10) -> 10",
+        "Reaching top step 3: min(10+15, 0+20)=15",
+        "Return 15"
+      ],
+      "dryRun": [
+        "Reaching step 2: min(cost[1]=15, cost[0]=10) -> 10",
+        "Reaching top step 3: min(10+15, 0+20)=15",
+        "Return 15"
+      ],
+      "javaCode": "class Solution {\n    public int minCostClimbingStairs(int[] cost){\n        int a=0,b=0;\n        for(int i=2;i<=cost.length;i++){\n            int cur=Math.min(b+cost[i-1],a+cost[i-2]);\n            a=b;b=cur;\n        }\n        return b;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Define dp[i] as minimum cost to stand at boundary i, and use i-1/i-2 transitions.",
+      "testCases": [
+        {
+          "input": "cost=[10,15,20]",
+          "expected": "15",
+          "reason": "Begin at step 1 costing 15, then jump to top."
+        },
+        {
+          "input": "cost=[1,100,1,1,1,100,1,1,100,1]",
+          "expected": "6",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate every 1-step/2-step path to the top."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Reaching step 2: min(cost[1]=15, cost[0]=10) -> 10 Reaching top step 3: min(10+15, 0+20)=15 Return 15",
+          "javaCode": "class Solution {\n    public int minCostClimbingStairs(int[] cost){\n        int a=0,b=0;\n        for(int i=2;i<=cost.length;i++){\n            int cur=Math.min(b+cost[i-1],a+cost[i-2]);\n            a=b;b=cur;\n        }\n        return b;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-083",
+      "slug": "decode-ways",
+      "title": "Decode Ways",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/decode-ways/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Count decodings of digit string under 1->A through 26->Z; zero cannot stand alone.",
+      "example": {
+        "input": "s=\"226\"",
+        "output": "3",
+        "explanation": "Valid splits are 2-2-6, 22-6, and 2-26."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "First 2 has one decoding",
+        "At second 2, both 2+2 and 22 valid -> 2 ways",
+        "At final 6, single 6 adds 2 and pair 26 adds 1 -> 3 ways"
+      ],
+      "dryRun": [
+        "First 2 has one decoding",
+        "At second 2, both 2+2 and 22 valid -> 2 ways",
+        "At final 6, single 6 adds 2 and pair 26 adds 1 -> 3 ways"
+      ],
+      "javaCode": "class Solution {\n    public int numDecodings(String s){\n        if(s.isEmpty()||s.charAt(0)=='0')return 0;\n        int prev2=1,prev1=1;\n        for(int i=1;i<s.length();i++){\n            int curr=0;\n            if(s.charAt(i)!='0')curr+=prev1;\n            int pair=(s.charAt(i-1)-'0')*10+s.charAt(i)-'0';\n            if(pair>=10&&pair<=26)curr+=prev2;\n            prev2=prev1;prev1=curr;\n        }\n        return prev1;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Check two-digit pairs are 10..26; '06' is invalid.",
+      "testCases": [
+        {
+          "input": "s=\"226\"",
+          "expected": "3",
+          "reason": "Valid splits are 2-2-6, 22-6, and 2-26."
+        },
+        {
+          "input": "s=\"06\"",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate all one- and two-digit partition possibilities recursively."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "First 2 has one decoding At second 2, both 2+2 and 22 valid -> 2 ways At final 6, single 6 adds 2 and pair 26 adds 1 -> 3 ways",
+          "javaCode": "class Solution {\n    public int numDecodings(String s){\n        if(s.isEmpty()||s.charAt(0)=='0')return 0;\n        int prev2=1,prev1=1;\n        for(int i=1;i<s.length();i++){\n            int curr=0;\n            if(s.charAt(i)!='0')curr+=prev1;\n            int pair=(s.charAt(i-1)-'0')*10+s.charAt(i)-'0';\n            if(pair>=10&&pair<=26)curr+=prev2;\n            prev2=prev1;prev1=curr;\n        }\n        return prev1;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-084",
+      "slug": "coin-change",
+      "title": "Coin Change",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/coin-change/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Given distinct positive coin denominations and target amount, return minimum number of coins (unlimited reuse), or -1.",
+      "example": {
+        "input": "coins=[1,2,5], amount=11",
+        "output": "3",
+        "explanation": "5+5+1 uses three coins."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "dp[0]=0; dp[1]=1, dp[2]=1 (coin 2), dp[5]=1 (coin 5)",
+        "For x=10, dp[10]=2 using two 5s",
+        "For x=11, dp[11]=dp[10]+1=3"
+      ],
+      "dryRun": [
+        "dp[0]=0; dp[1]=1, dp[2]=1 (coin 2), dp[5]=1 (coin 5)",
+        "For x=10, dp[10]=2 using two 5s",
+        "For x=11, dp[11]=dp[10]+1=3"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int coinChange(int[] coins,int amount){\n        int INF=amount+1;\n        int[] dp=new int[amount+1];Arrays.fill(dp,INF);dp[0]=0;\n        for(int x=1;x<=amount;x++)\n            for(int coin:coins)if(coin<=x&&dp[x-coin]!=INF)\n                dp[x]=Math.min(dp[x],dp[x-coin]+1);\n        return dp[amount]==INF?-1:dp[amount];\n    }\n}",
+      "timeComplexity": "O(amount·C), C denominations",
+      "spaceComplexity": "O(amount)",
+      "interviewTip": "Greedy selecting the largest coin is not generally correct; this is unbounded-knapsack DP.",
+      "testCases": [
+        {
+          "input": "coins=[1,2,5], amount=11",
+          "expected": "3",
+          "reason": "5+5+1 uses three coins."
+        },
+        {
+          "input": "coins=[2], amount=3",
+          "expected": "-1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try all possible combinations recursively without caching duplicate amount states."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(amount·C), C denominations",
+          "spaceComplexity": "O(amount)",
+          "explanation": "dp[0]=0; dp[1]=1, dp[2]=1 (coin 2), dp[5]=1 (coin 5) For x=10, dp[10]=2 using two 5s For x=11, dp[11]=dp[10]+1=3",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int coinChange(int[] coins,int amount){\n        int INF=amount+1;\n        int[] dp=new int[amount+1];Arrays.fill(dp,INF);dp[0]=0;\n        for(int x=1;x<=amount;x++)\n            for(int coin:coins)if(coin<=x&&dp[x-coin]!=INF)\n                dp[x]=Math.min(dp[x],dp[x-coin]+1);\n        return dp[amount]==INF?-1:dp[amount];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-085",
+      "slug": "longest-increasing-subsequence",
+      "title": "Longest Increasing Subsequence",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/longest-increasing-subsequence/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Microsoft",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Return the length of the longest strictly increasing subsequence, not necessarily contiguous.",
+      "example": {
+        "input": "nums=[10,9,2,5,3,7,101,18]",
+        "output": "4",
+        "explanation": "[2,3,7,18] is one increasing subsequence of length four."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Process 10 then 9 -> best length-1 tail becomes 9",
+        "Process 2,5,3,7 -> tails represent increasing lengths ending at 2,3,7",
+        "101 grows length to 4; 18 replaces its tail; answer 4"
+      ],
+      "dryRun": [
+        "Process 10 then 9 -> best length-1 tail becomes 9",
+        "Process 2,5,3,7 -> tails represent increasing lengths ending at 2,3,7",
+        "101 grows length to 4; 18 replaces its tail; answer 4"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int lengthOfLIS(int[] nums){\n        int[] tails=new int[nums.length];int len=0;\n        for(int x:nums){\n            int i=Arrays.binarySearch(tails,0,len,x);\n            if(i<0)i=-(i+1);\n            tails[i]=x;\n            if(i==len)len++;\n        }\n        return len;\n    }\n}",
+      "timeComplexity": "O(n log n)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "tails is not necessarily the actual subsequence, only the minimum possible tail at each length.",
+      "testCases": [
+        {
+          "input": "nums=[10,9,2,5,3,7,101,18]",
+          "expected": "4",
+          "reason": "[2,3,7,18] is one increasing subsequence of length four."
+        },
+        {
+          "input": "nums=[7,7,7]",
+          "expected": "1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "DP over every pair: dp[i]=1+max dp[j] for j<i and nums[j]<nums[i]."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Process 10 then 9 -> best length-1 tail becomes 9 Process 2,5,3,7 -> tails represent increasing lengths ending at 2,3,7 101 grows length to 4; 18 replaces its tail; answer 4",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int lengthOfLIS(int[] nums){\n        int[] tails=new int[nums.length];int len=0;\n        for(int x:nums){\n            int i=Arrays.binarySearch(tails,0,len,x);\n            if(i<0)i=-(i+1);\n            tails[i]=x;\n            if(i==len)len++;\n        }\n        return len;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-086",
+      "slug": "unique-paths",
+      "title": "Unique Paths",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/unique-paths/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "A robot moves only down or right on an m×n grid; count paths from upper-left to lower-right.",
+      "example": {
+        "input": "m=3,n=7",
+        "output": "28",
+        "explanation": "Each path chooses positions for two down moves among eight total moves."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "First row has one path to each cell",
+        "Each subsequent cell sums paths from above and left",
+        "At bottom-right of 3×7 grid the count reaches 28"
+      ],
+      "dryRun": [
+        "First row has one path to each cell",
+        "Each subsequent cell sums paths from above and left",
+        "At bottom-right of 3×7 grid the count reaches 28"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int uniquePaths(int m,int n){\n        int[] dp=new int[n];Arrays.fill(dp,1);\n        for(int r=1;r<m;r++)for(int c=1;c<n;c++)dp[c]+=dp[c-1];\n        return dp[n-1];\n    }\n}",
+      "timeComplexity": "O(mn)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Compress 2D DP into one row: dp[c] is old above + new left.",
+      "testCases": [
+        {
+          "input": "m=3,n=7",
+          "expected": "28",
+          "reason": "Each path chooses positions for two down moves among eight total moves."
+        },
+        {
+          "input": "m=1,n=4",
+          "expected": "1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^(m+n))",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively branch at each cell into moving down or right without memoization."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn)",
+          "spaceComplexity": "O(n)",
+          "explanation": "First row has one path to each cell Each subsequent cell sums paths from above and left At bottom-right of 3×7 grid the count reaches 28",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int uniquePaths(int m,int n){\n        int[] dp=new int[n];Arrays.fill(dp,1);\n        for(int r=1;r<m;r++)for(int c=1;c<n;c++)dp[c]+=dp[c-1];\n        return dp[n-1];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-087",
+      "slug": "longest-common-subsequence",
+      "title": "Longest Common Subsequence",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/longest-common-subsequence/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return the length of a longest ordered subsequence appearing in both strings.",
+      "example": {
+        "input": "text1=\"abcde\", text2=\"ace\"",
+        "output": "3",
+        "explanation": "ace appears as a subsequence of both."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Match a with a -> LCS length 1",
+        "Later matching c increases value to 2",
+        "Matching e increases value to 3"
+      ],
+      "dryRun": [
+        "Match a with a -> LCS length 1",
+        "Later matching c increases value to 2",
+        "Matching e increases value to 3"
+      ],
+      "javaCode": "class Solution {\n    public int longestCommonSubsequence(String a,String b){\n        int[] dp=new int[b.length()+1];\n        for(int i=1;i<=a.length();i++){\n            int diagonal=0;\n            for(int j=1;j<=b.length();j++){\n                int above=dp[j];\n                if(a.charAt(i-1)==b.charAt(j-1))dp[j]=diagonal+1;\n                else dp[j]=Math.max(dp[j],dp[j-1]);\n                diagonal=above;\n            }\n        }\n        return dp[b.length()];\n    }\n}",
+      "timeComplexity": "O(mn)",
+      "spaceComplexity": "O(n), n text2 length",
+      "interviewTip": "Keep previous-row diagonal separately when rolling a 2D DP table into one array.",
+      "testCases": [
+        {
+          "input": "text1=\"abcde\", text2=\"ace\"",
+          "expected": "3",
+          "reason": "ace appears as a subsequence of both."
+        },
+        {
+          "input": "text1=\"abc\", text2=\"def\"",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^(m+n))",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively try deleting the last character from either string until a match is found."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn)",
+          "spaceComplexity": "O(n), n text2 length",
+          "explanation": "Match a with a -> LCS length 1 Later matching c increases value to 2 Matching e increases value to 3",
+          "javaCode": "class Solution {\n    public int longestCommonSubsequence(String a,String b){\n        int[] dp=new int[b.length()+1];\n        for(int i=1;i<=a.length();i++){\n            int diagonal=0;\n            for(int j=1;j<=b.length();j++){\n                int above=dp[j];\n                if(a.charAt(i-1)==b.charAt(j-1))dp[j]=diagonal+1;\n                else dp[j]=Math.max(dp[j],dp[j-1]);\n                diagonal=above;\n            }\n        }\n        return dp[b.length()];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-088",
+      "slug": "partition-equal-subset-sum",
+      "title": "Partition Equal Subset Sum",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/partition-equal-subset-sum/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "For positive numbers, determine whether elements can be split into two subsets of equal total sum.",
+      "example": {
+        "input": "nums=[1,5,11,5]",
+        "output": "true",
+        "explanation": "Subset [11] and [1,5,5] both sum to 11."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Total sum 22, target 11",
+        "Process 1 and 5; attainable sums include 0,1,5,6",
+        "Process 11; target 11 becomes attainable -> true"
+      ],
+      "dryRun": [
+        "Total sum 22, target 11",
+        "Process 1 and 5; attainable sums include 0,1,5,6",
+        "Process 11; target 11 becomes attainable -> true"
+      ],
+      "javaCode": "class Solution {\n    public boolean canPartition(int[] nums){\n        int sum=0;for(int x:nums)sum+=x;\n        if((sum&1)!=0)return false;\n        int target=sum/2;boolean[] dp=new boolean[target+1];dp[0]=true;\n        for(int x:nums)for(int s=target;s>=x;s--)dp[s]|=dp[s-x];\n        return dp[target];\n    }\n}",
+      "timeComplexity": "O(n·target)",
+      "spaceComplexity": "O(target)",
+      "interviewTip": "Iterate capacity backwards so each input value is used at most once.",
+      "testCases": [
+        {
+          "input": "nums=[1,5,11,5]",
+          "expected": "true",
+          "reason": "Subset [11] and [1,5,5] both sum to 11."
+        },
+        {
+          "input": "nums=[1,2,3,5]",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Backtrack over take/skip choices for every element and test target sum."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n·target)",
+          "spaceComplexity": "O(target)",
+          "explanation": "Total sum 22, target 11 Process 1 and 5; attainable sums include 0,1,5,6 Process 11; target 11 becomes attainable -> true",
+          "javaCode": "class Solution {\n    public boolean canPartition(int[] nums){\n        int sum=0;for(int x:nums)sum+=x;\n        if((sum&1)!=0)return false;\n        int target=sum/2;boolean[] dp=new boolean[target+1];dp[0]=true;\n        for(int x:nums)for(int s=target;s>=x;s--)dp[s]|=dp[s-x];\n        return dp[target];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-089",
+      "slug": "target-sum",
+      "title": "Target Sum",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/target-sum/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Assign + or - to each array value and count sign assignments yielding target.",
+      "example": {
+        "input": "nums=[1,1,1,1,1], target=3",
+        "output": "5",
+        "explanation": "Choose one of five 1s to be negative; the other four positive."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "After first 1, sums +1 and -1 each have one way",
+        "After each next 1, aggregate counts of identical sums",
+        "After five values, target +3 appears in five sign assignments"
+      ],
+      "dryRun": [
+        "After first 1, sums +1 and -1 each have one way",
+        "After each next 1, aggregate counts of identical sums",
+        "After five values, target +3 appears in five sign assignments"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int findTargetSumWays(int[] nums,int target){\n        Map<Integer,Integer> ways=new HashMap<>();ways.put(0,1);\n        for(int x:nums){\n            Map<Integer,Integer> next=new HashMap<>();\n            for(Map.Entry<Integer,Integer> e:ways.entrySet()){\n                next.merge(e.getKey()+x,e.getValue(),Integer::sum);\n                next.merge(e.getKey()-x,e.getValue(),Integer::sum);\n            }\n            ways=next;\n        }\n        return ways.getOrDefault(target,0);\n    }\n}",
+      "timeComplexity": "O(n·S), S reachable distinct sums",
+      "spaceComplexity": "O(S)",
+      "interviewTip": "Zeros double the number of assignments; sum-count map correctly counts both +0 and -0.",
+      "testCases": [
+        {
+          "input": "nums=[1,1,1,1,1], target=3",
+          "expected": "5",
+          "reason": "Choose one of five 1s to be negative; the other four positive."
+        },
+        {
+          "input": "nums=[0], target=0",
+          "expected": "2",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Generate all 2^n +/- assignments explicitly, then count matches."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n·S), S reachable distinct sums",
+          "spaceComplexity": "O(S)",
+          "explanation": "After first 1, sums +1 and -1 each have one way After each next 1, aggregate counts of identical sums After five values, target +3 appears in five sign assignments",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int findTargetSumWays(int[] nums,int target){\n        Map<Integer,Integer> ways=new HashMap<>();ways.put(0,1);\n        for(int x:nums){\n            Map<Integer,Integer> next=new HashMap<>();\n            for(Map.Entry<Integer,Integer> e:ways.entrySet()){\n                next.merge(e.getKey()+x,e.getValue(),Integer::sum);\n                next.merge(e.getKey()-x,e.getValue(),Integer::sum);\n            }\n            ways=next;\n        }\n        return ways.getOrDefault(target,0);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-090",
+      "slug": "edit-distance",
+      "title": "Edit Distance",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/edit-distance/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return fewest single-character insertions, deletions or replacements to transform word1 into word2.",
+      "example": {
+        "input": "word1=\"horse\", word2=\"ros\"",
+        "output": "3",
+        "explanation": "horse->rorse->rose->ros takes three edits."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Initialize transforms between empty prefixes: 0,1,2,3 for ros",
+        "When letters match, carry diagonal cost; otherwise add 1 to best edit predecessor",
+        "Final DP cell for horse->ros is 3"
+      ],
+      "dryRun": [
+        "Initialize transforms between empty prefixes: 0,1,2,3 for ros",
+        "When letters match, carry diagonal cost; otherwise add 1 to best edit predecessor",
+        "Final DP cell for horse->ros is 3"
+      ],
+      "javaCode": "class Solution {\n    public int minDistance(String a,String b){\n        int[] dp=new int[b.length()+1];\n        for(int j=0;j<=b.length();j++)dp[j]=j;\n        for(int i=1;i<=a.length();i++){\n            int diagonal=dp[0];dp[0]=i;\n            for(int j=1;j<=b.length();j++){\n                int above=dp[j];\n                if(a.charAt(i-1)==b.charAt(j-1))dp[j]=diagonal;\n                else dp[j]=1+Math.min(diagonal,Math.min(above,dp[j-1]));\n                diagonal=above;\n            }\n        }\n        return dp[b.length()];\n    }\n}",
+      "timeComplexity": "O(mn)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "At each dp[i][j], consider insert, delete, replace, and no-op for equal characters.",
+      "testCases": [
+        {
+          "input": "word1=\"horse\", word2=\"ros\"",
+          "expected": "3",
+          "reason": "horse->rorse->rose->ros takes three edits."
+        },
+        {
+          "input": "word1=\"\", word2=\"abc\"",
+          "expected": "3",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively try all three possible edit operations whenever characters differ."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Initialize transforms between empty prefixes: 0,1,2,3 for ros When letters match, carry diagonal cost; otherwise add 1 to best edit predecessor Final DP cell for horse->ros is 3",
+          "javaCode": "class Solution {\n    public int minDistance(String a,String b){\n        int[] dp=new int[b.length()+1];\n        for(int j=0;j<=b.length();j++)dp[j]=j;\n        for(int i=1;i<=a.length();i++){\n            int diagonal=dp[0];dp[0]=i;\n            for(int j=1;j<=b.length();j++){\n                int above=dp[j];\n                if(a.charAt(i-1)==b.charAt(j-1))dp[j]=diagonal;\n                else dp[j]=1+Math.min(diagonal,Math.min(above,dp[j-1]));\n                diagonal=above;\n            }\n        }\n        return dp[b.length()];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-091",
+      "slug": "interleaving-string",
+      "title": "Interleaving String",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/interleaving-string/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Determine whether s3 interleaves s1 and s2 preserving each source string's own character order.",
+      "example": {
+        "input": "s1=\"aabcc\", s2=\"dbbca\", s3=\"aadbbcbcac\"",
+        "output": "true",
+        "explanation": "Each character of s3 can be taken in sequence from either source."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Compare prefix of s3 against prefixes of s1 and s2",
+        "A DP cell is true if either matching source predecessor can reach it",
+        "The final cell at (5,5) is true -> valid interleave"
+      ],
+      "dryRun": [
+        "Compare prefix of s3 against prefixes of s1 and s2",
+        "A DP cell is true if either matching source predecessor can reach it",
+        "The final cell at (5,5) is true -> valid interleave"
+      ],
+      "javaCode": "class Solution {\n    public boolean isInterleave(String a,String b,String c){\n        int m=a.length(),n=b.length();\n        if(m+n!=c.length())return false;\n        boolean[] dp=new boolean[n+1];dp[0]=true;\n        for(int j=1;j<=n;j++)dp[j]=dp[j-1]&&b.charAt(j-1)==c.charAt(j-1);\n        for(int i=1;i<=m;i++){\n            dp[0]=dp[0]&&a.charAt(i-1)==c.charAt(i-1);\n            for(int j=1;j<=n;j++){\n                char ch=c.charAt(i+j-1);\n                dp[j]=(dp[j]&&a.charAt(i-1)==ch)||(dp[j-1]&&b.charAt(j-1)==ch);\n            }\n        }\n        return dp[n];\n    }\n}",
+      "timeComplexity": "O(mn)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Length check saves work; DP state (i,j) means first i+j characters of s3 can be built.",
+      "testCases": [
+        {
+          "input": "s1=\"aabcc\", s2=\"dbbca\", s3=\"aadbbcbcac\"",
+          "expected": "true",
+          "reason": "Each character of s3 can be taken in sequence from either source."
+        },
+        {
+          "input": "s1=\"a\",s2=\"b\",s3=\"aa\"",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(2^(m+n))",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively choose whether the next output character comes from s1 or s2."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Compare prefix of s3 against prefixes of s1 and s2 A DP cell is true if either matching source predecessor can reach it The final cell at (5,5) is true -> valid interleave",
+          "javaCode": "class Solution {\n    public boolean isInterleave(String a,String b,String c){\n        int m=a.length(),n=b.length();\n        if(m+n!=c.length())return false;\n        boolean[] dp=new boolean[n+1];dp[0]=true;\n        for(int j=1;j<=n;j++)dp[j]=dp[j-1]&&b.charAt(j-1)==c.charAt(j-1);\n        for(int i=1;i<=m;i++){\n            dp[0]=dp[0]&&a.charAt(i-1)==c.charAt(i-1);\n            for(int j=1;j<=n;j++){\n                char ch=c.charAt(i+j-1);\n                dp[j]=(dp[j]&&a.charAt(i-1)==ch)||(dp[j-1]&&b.charAt(j-1)==ch);\n            }\n        }\n        return dp[n];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-092",
+      "slug": "regular-expression-matching",
+      "title": "Regular Expression Matching",
+      "difficulty": "Hard",
+      "stageId": "dp-two",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/regular-expression-matching/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Match the entire input string against pattern supporting '.' for any character and '*' for zero or more of the preceding element.",
+      "example": {
+        "input": "s=\"aab\", p=\"c*a*b\"",
+        "output": "true",
+        "explanation": "Zero c's, two a's, then one b match."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Pattern c* can match zero c characters",
+        "a* consumes the two a characters",
+        "Final b matches b, so dp[3][5] is true"
+      ],
+      "dryRun": [
+        "Pattern c* can match zero c characters",
+        "a* consumes the two a characters",
+        "Final b matches b, so dp[3][5] is true"
+      ],
+      "javaCode": "class Solution {\n    public boolean isMatch(String s,String p){\n        int m=s.length(),n=p.length();\n        boolean[][] dp=new boolean[m+1][n+1];dp[0][0]=true;\n        for(int j=2;j<=n;j++)if(p.charAt(j-1)=='*')dp[0][j]=dp[0][j-2];\n        for(int i=1;i<=m;i++)for(int j=1;j<=n;j++){\n            char x=p.charAt(j-1);\n            if(x=='*'){\n                if(j>=2){\n                    dp[i][j]=dp[i][j-2];\n                    char prev=p.charAt(j-2);\n                    if(prev=='.'||prev==s.charAt(i-1))dp[i][j]|=dp[i-1][j];\n                }\n            }else if(x=='.'||x==s.charAt(i-1))dp[i][j]=dp[i-1][j-1];\n        }\n        return dp[m][n];\n    }\n}",
+      "timeComplexity": "O(mn)",
+      "spaceComplexity": "O(mn)",
+      "interviewTip": "A '*' transition is either zero copies (j-2) or consume one matching char (i-1,j).",
+      "testCases": [
+        {
+          "input": "s=\"aab\", p=\"c*a*b\"",
+          "expected": "true",
+          "reason": "Zero c's, two a's, then one b match."
+        },
+        {
+          "input": "s=\"aa\",p=\"a\"",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Backtrack every possible expansion of each '*' token."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn)",
+          "spaceComplexity": "O(mn)",
+          "explanation": "Pattern c* can match zero c characters a* consumes the two a characters Final b matches b, so dp[3][5] is true",
+          "javaCode": "class Solution {\n    public boolean isMatch(String s,String p){\n        int m=s.length(),n=p.length();\n        boolean[][] dp=new boolean[m+1][n+1];dp[0][0]=true;\n        for(int j=2;j<=n;j++)if(p.charAt(j-1)=='*')dp[0][j]=dp[0][j-2];\n        for(int i=1;i<=m;i++)for(int j=1;j<=n;j++){\n            char x=p.charAt(j-1);\n            if(x=='*'){\n                if(j>=2){\n                    dp[i][j]=dp[i][j-2];\n                    char prev=p.charAt(j-2);\n                    if(prev=='.'||prev==s.charAt(i-1))dp[i][j]|=dp[i-1][j];\n                }\n            }else if(x=='.'||x==s.charAt(i-1))dp[i][j]=dp[i-1][j-1];\n        }\n        return dp[m][n];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-093",
+      "slug": "number-of-1-bits",
+      "title": "Number Of 1 Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/number-of-1-bits/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Count one-bits in a 32-bit integer bit pattern.",
+      "example": {
+        "input": "n=11 (binary 1011)",
+        "output": "3",
+        "explanation": "1011 has three set bits."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "1011 & 1010 -> 1010, count 1",
+        "1010 & 1001 -> 1000, count 2",
+        "1000 & 0111 -> 0, count 3"
+      ],
+      "dryRun": [
+        "1011 & 1010 -> 1010, count 1",
+        "1010 & 1001 -> 1000, count 2",
+        "1000 & 0111 -> 0, count 3"
+      ],
+      "javaCode": "class Solution {\n    public int hammingWeight(int n){\n        int count=0;\n        while(n!=0){n&=n-1;count++;}\n        return count;\n    }\n}",
+      "timeComplexity": "O(number of set bits), at most 32",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "n & (n-1) clears the lowest set bit even for signed Java int representations.",
+      "testCases": [
+        {
+          "input": "n=11 (binary 1011)",
+          "expected": "3",
+          "reason": "1011 has three set bits."
+        },
+        {
+          "input": "n=0",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(32)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Check each of the 32 bit positions using shift and mask."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(number of set bits), at most 32",
+          "spaceComplexity": "O(1)",
+          "explanation": "1011 & 1010 -> 1010, count 1 1010 & 1001 -> 1000, count 2 1000 & 0111 -> 0, count 3",
+          "javaCode": "class Solution {\n    public int hammingWeight(int n){\n        int count=0;\n        while(n!=0){n&=n-1;count++;}\n        return count;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-094",
+      "slug": "counting-bits",
+      "title": "Counting Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/counting-bits/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "For each i from 0 through n, return the number of one-bits in i.",
+      "example": {
+        "input": "n=5",
+        "output": "[0,1,1,2,1,2]",
+        "explanation": "Counts correspond to 0,1,10,11,100,101 in binary."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "ans[0]=0, ans[1]=ans[0]+1=1",
+        "ans[3]=ans[1]+1=2",
+        "ans[5]=ans[2]+1=2"
+      ],
+      "dryRun": [
+        "ans[0]=0, ans[1]=ans[0]+1=1",
+        "ans[3]=ans[1]+1=2",
+        "ans[5]=ans[2]+1=2"
+      ],
+      "javaCode": "class Solution {\n    public int[] countBits(int n){\n        int[] ans=new int[n+1];\n        for(int i=1;i<=n;i++)ans[i]=ans[i>>1]+(i&1);\n        return ans;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n) output",
+      "interviewTip": "Shifting right discards the final bit, yielding a strictly smaller precomputed subproblem.",
+      "testCases": [
+        {
+          "input": "n=5",
+          "expected": "[0,1,1,2,1,2]",
+          "reason": "Counts correspond to 0,1,10,11,100,101 in binary."
+        },
+        {
+          "input": "n=0",
+          "expected": "[0]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(32n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Call a 32-step popcount routine separately for each number."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n) output",
+          "explanation": "ans[0]=0, ans[1]=ans[0]+1=1 ans[3]=ans[1]+1=2 ans[5]=ans[2]+1=2",
+          "javaCode": "class Solution {\n    public int[] countBits(int n){\n        int[] ans=new int[n+1];\n        for(int i=1;i<=n;i++)ans[i]=ans[i>>1]+(i&1);\n        return ans;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-095",
+      "slug": "reverse-bits",
+      "title": "Reverse Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/reverse-bits/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Reverse the order of all 32 bits in a signed Java int and return the resulting bit pattern.",
+      "example": {
+        "input": "n=43261596 (00000010100101000001111010011100)",
+        "output": "964176192",
+        "explanation": "Bit-reversal produces 00111001011110000010100101000000."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Read lowest input bit, append to left-shifted output",
+        "Repeat exactly 32 iterations while unsigned-shifting input",
+        "After 32 steps, all original bits have exchanged positions"
+      ],
+      "dryRun": [
+        "Read lowest input bit, append to left-shifted output",
+        "Repeat exactly 32 iterations while unsigned-shifting input",
+        "After 32 steps, all original bits have exchanged positions"
+      ],
+      "javaCode": "class Solution {\n    public int reverseBits(int n){\n        int out=0;\n        for(int i=0;i<32;i++){\n            out=(out<<1)|(n&1);\n            n>>>=1;\n        }\n        return out;\n    }\n}",
+      "timeComplexity": "O(32) = O(1)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Use >>> for logical right shift; >> fills the high bit with the sign bit.",
+      "testCases": [
+        {
+          "input": "n=43261596 (00000010100101000001111010011100)",
+          "expected": "964176192",
+          "reason": "Bit-reversal produces 00111001011110000010100101000000."
+        },
+        {
+          "input": "n=0",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(32)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Extract bits into a list then rebuild the integer in reverse bit order."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(32) = O(1)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Read lowest input bit, append to left-shifted output Repeat exactly 32 iterations while unsigned-shifting input After 32 steps, all original bits have exchanged positions",
+          "javaCode": "class Solution {\n    public int reverseBits(int n){\n        int out=0;\n        for(int i=0;i<32;i++){\n            out=(out<<1)|(n&1);\n            n>>>=1;\n        }\n        return out;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-096",
+      "slug": "sum-of-two-integers",
+      "title": "Sum Of Two Integers",
+      "difficulty": "Medium",
+      "stageId": "bit-math",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/sum-of-two-integers/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Compute a+b without using the + or - arithmetic operators.",
+      "example": {
+        "input": "a=1,b=2",
+        "output": "3",
+        "explanation": "Binary XOR sums without carries; AND captures carries."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "a=01, b=10 have no overlapping bits, carry=00",
+        "XOR gives 11 (decimal 3)",
+        "b becomes 0, return 3"
+      ],
+      "dryRun": [
+        "a=01, b=10 have no overlapping bits, carry=00",
+        "XOR gives 11 (decimal 3)",
+        "b becomes 0, return 3"
+      ],
+      "javaCode": "class Solution {\n    public int getSum(int a,int b){\n        while(b!=0){\n            int carry=(a&b)<<1;\n            a=a^b;\n            b=carry;\n        }\n        return a;\n    }\n}",
+      "timeComplexity": "O(32) = O(1)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Java int wraps at 32 bits exactly as expected by the linked problem.",
+      "testCases": [
+        {
+          "input": "a=1,b=2",
+          "expected": "3",
+          "reason": "Binary XOR sums without carries; AND captures carries."
+        },
+        {
+          "input": "a=-2,b=3",
+          "expected": "1",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(32)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Add bit-by-bit manually, carrying to the next position."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(32) = O(1)",
+          "spaceComplexity": "O(1)",
+          "explanation": "a=01, b=10 have no overlapping bits, carry=00 XOR gives 11 (decimal 3) b becomes 0, return 3",
+          "javaCode": "class Solution {\n    public int getSum(int a,int b){\n        while(b!=0){\n            int carry=(a&b)<<1;\n            a=a^b;\n            b=carry;\n        }\n        return a;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-097",
+      "slug": "powx-n",
+      "title": "Powx N",
+      "difficulty": "Medium",
+      "stageId": "bit-math",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/powx-n/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Compute x raised to the signed integer exponent n, handling negative powers.",
+      "example": {
+        "input": "x=2.0,n=10",
+        "output": "1024.0",
+        "explanation": "2^10 equals 1024."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Start ans=1, base=2, exponent=10 (binary 1010)",
+        "Square base each iteration, multiply ans only for set exponent bits",
+        "Selected powers 2^2 and 2^8 yield 1024"
+      ],
+      "dryRun": [
+        "Start ans=1, base=2, exponent=10 (binary 1010)",
+        "Square base each iteration, multiply ans only for set exponent bits",
+        "Selected powers 2^2 and 2^8 yield 1024"
+      ],
+      "javaCode": "class Solution {\n    public double myPow(double x,int n){\n        long exp=n;\n        if(exp<0){x=1.0/x;exp=-exp;}\n        double ans=1.0;\n        while(exp>0){\n            if((exp&1)!=0)ans*=x;\n            x*=x;exp>>=1;\n        }\n        return ans;\n    }\n}",
+      "timeComplexity": "O(log |n|)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Cast n to long before negating to handle Integer.MIN_VALUE safely.",
+      "testCases": [
+        {
+          "input": "x=2.0,n=10",
+          "expected": "1024.0",
+          "reason": "2^10 equals 1024."
+        },
+        {
+          "input": "x=2.0,n=-2",
+          "expected": "0.25",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(|n|)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Multiply x by itself |n| times, inverting if exponent is negative."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log |n|)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Start ans=1, base=2, exponent=10 (binary 1010) Square base each iteration, multiply ans only for set exponent bits Selected powers 2^2 and 2^8 yield 1024",
+          "javaCode": "class Solution {\n    public double myPow(double x,int n){\n        long exp=n;\n        if(exp<0){x=1.0/x;exp=-exp;}\n        double ans=1.0;\n        while(exp>0){\n            if((exp&1)!=0)ans*=x;\n            x*=x;exp>>=1;\n        }\n        return ans;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-098",
+      "slug": "happy-number",
+      "title": "Happy Number",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/happy-number/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Repeatedly replace n by the sum of squares of its decimal digits. Return true if sequence reaches 1.",
+      "example": {
+        "input": "n=19",
+        "output": "true",
+        "explanation": "19->82->68->100->1."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "19 transforms to 82 then 68",
+        "Continue through 100",
+        "Next value 1 ends the process -> true"
+      ],
+      "dryRun": [
+        "19 transforms to 82 then 68",
+        "Continue through 100",
+        "Next value 1 ends the process -> true"
+      ],
+      "javaCode": "class Solution {\n    public boolean isHappy(int n){\n        int slow=n,fast=next(n);\n        while(fast!=1&&slow!=fast){\n            slow=next(slow);fast=next(next(fast));\n        }\n        return fast==1;\n    }\n    private int next(int x){\n        int sum=0;while(x>0){int digit=x%10;sum+=digit*digit;x/=10;}return sum;\n    }\n}",
+      "timeComplexity": "O(log n) arithmetic per digit-step; finite-state cycle",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Floyd's cycle detection uses constant storage because unhappy sequences eventually repeat.",
+      "testCases": [
+        {
+          "input": "n=19",
+          "expected": "true",
+          "reason": "19->82->68->100->1."
+        },
+        {
+          "input": "n=2",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(number of visited states)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Store all seen values in HashSet and stop when a value repeats or 1 appears."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log n) arithmetic per digit-step; finite-state cycle",
+          "spaceComplexity": "O(1)",
+          "explanation": "19 transforms to 82 then 68 Continue through 100 Next value 1 ends the process -> true",
+          "javaCode": "class Solution {\n    public boolean isHappy(int n){\n        int slow=n,fast=next(n);\n        while(fast!=1&&slow!=fast){\n            slow=next(slow);fast=next(next(fast));\n        }\n        return fast==1;\n    }\n    private int next(int x){\n        int sum=0;while(x>0){int digit=x%10;sum+=digit*digit;x/=10;}return sum;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-099",
+      "slug": "range-sum-query-mutable",
+      "title": "Range Sum Query Mutable",
+      "difficulty": "Medium",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/range-sum-query-mutable/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Build NumArray with update(index,value) and sumRange(left,right) over a mutable integer array.",
+      "example": {
+        "input": "nums=[1,3,5]; sumRange(0,2); update(1,2); sumRange(0,2)",
+        "output": "[9,8]",
+        "explanation": "Changing index 1 from 3 to 2 decreases total by 1."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Build Fenwick prefix contributions from [1,3,5]",
+        "sumRange 0..2 = prefix(3)-prefix(0)=9",
+        "Change index 1 by -1, update Fenwick ancestors; new sum is 8"
+      ],
+      "dryRun": [
+        "Build Fenwick prefix contributions from [1,3,5]",
+        "sumRange 0..2 = prefix(3)-prefix(0)=9",
+        "Change index 1 by -1, update Fenwick ancestors; new sum is 8"
+      ],
+      "javaCode": "class NumArray {\n    private final int[] bit,values;\n    public NumArray(int[] nums){\n        values=nums.clone();bit=new int[nums.length+1];\n        for(int i=0;i<nums.length;i++)add(i+1,nums[i]);\n    }\n    private void add(int i,int delta){\n        for(;i<bit.length;i+=i&-i)bit[i]+=delta;\n    }\n    private int prefix(int end){\n        int sum=0;\n        for(int i=end;i>0;i-=i&-i)sum+=bit[i];\n        return sum;\n    }\n    public void update(int index,int val){\n        int delta=val-values[index];values[index]=val;add(index+1,delta);\n    }\n    public int sumRange(int left,int right){return prefix(right+1)-prefix(left);}\n}",
+      "timeComplexity": "O(log n) per update/query; O(n log n) build",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Fenwick indices are one-based and i&-i isolates the lowest set bit.",
+      "testCases": [
+        {
+          "input": "nums=[1,3,5]; sumRange(0,2); update(1,2); sumRange(0,2)",
+          "expected": "[9,8]",
+          "reason": "Changing index 1 from 3 to 2 decreases total by 1."
+        },
+        {
+          "input": "nums=[2]; sumRange(0,0); update(0,4); sumRange(0,0)",
+          "expected": "[2,4]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n) per query",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recompute all elements in requested range per query, with O(1) point updates."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log n) per update/query; O(n log n) build",
+          "spaceComplexity": "O(n)",
+          "explanation": "Build Fenwick prefix contributions from [1,3,5] sumRange 0..2 = prefix(3)-prefix(0)=9 Change index 1 by -1, update Fenwick ancestors; new sum is 8",
+          "javaCode": "class NumArray {\n    private final int[] bit,values;\n    public NumArray(int[] nums){\n        values=nums.clone();bit=new int[nums.length+1];\n        for(int i=0;i<nums.length;i++)add(i+1,nums[i]);\n    }\n    private void add(int i,int delta){\n        for(;i<bit.length;i+=i&-i)bit[i]+=delta;\n    }\n    private int prefix(int end){\n        int sum=0;\n        for(int i=end;i>0;i-=i&-i)sum+=bit[i];\n        return sum;\n    }\n    public void update(int index,int val){\n        int delta=val-values[index];values[index]=val;add(index+1,delta);\n    }\n    public int sumRange(int left,int right){return prefix(right+1)-prefix(left);}\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-100",
+      "slug": "range-sum-query-2d-immutable",
+      "title": "Range Sum Query 2d Immutable",
+      "difficulty": "Medium",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/range-sum-query-2d-immutable/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Precompute rectangle sums for immutable matrix and answer inclusive row/column sumRegion queries.",
+      "example": {
+        "input": "matrix=[[3,0,1,4,2],[5,6,3,2,1],[1,2,0,1,5],[4,1,0,1,7],[1,0,3,0,5]], sumRegion(2,1,4,3)",
+        "output": "8",
+        "explanation": "The selected 3x3 rectangle sums to eight."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Build 2D prefix table with one extra zero row and column",
+        "Select sum for bottom-right (4,3), subtract regions above and left",
+        "Add overlapped top-left back; result 8"
+      ],
+      "dryRun": [
+        "Build 2D prefix table with one extra zero row and column",
+        "Select sum for bottom-right (4,3), subtract regions above and left",
+        "Add overlapped top-left back; result 8"
+      ],
+      "javaCode": "class NumMatrix {\n    private final int[][] sum;\n    public NumMatrix(int[][] matrix){\n        int m=matrix.length,n=m==0?0:matrix[0].length;\n        sum=new int[m+1][n+1];\n        for(int r=1;r<=m;r++)for(int c=1;c<=n;c++)\n            sum[r][c]=matrix[r-1][c-1]+sum[r-1][c]+sum[r][c-1]-sum[r-1][c-1];\n    }\n    public int sumRegion(int r1,int c1,int r2,int c2){\n        return sum[r2+1][c2+1]-sum[r1][c2+1]-sum[r2+1][c1]+sum[r1][c1];\n    }\n}",
+      "timeComplexity": "O(mn) preprocessing, O(1) query",
+      "spaceComplexity": "O(mn)",
+      "interviewTip": "Inclusion-exclusion subtracts top and left once each and adds their overlap back.",
+      "testCases": [
+        {
+          "input": "matrix=[[3,0,1,4,2],[5,6,3,2,1],[1,2,0,1,5],[4,1,0,1,7],[1,0,3,0,5]], sumRegion(2,1,4,3)",
+          "expected": "8",
+          "reason": "The selected 3x3 rectangle sums to eight."
+        },
+        {
+          "input": "matrix=[[5]], sumRegion(0,0,0,0)",
+          "expected": "5",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(area) per query",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Visit every cell inside each requested rectangle and add its value."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(mn) preprocessing, O(1) query",
+          "spaceComplexity": "O(mn)",
+          "explanation": "Build 2D prefix table with one extra zero row and column Select sum for bottom-right (4,3), subtract regions above and left Add overlapped top-left back; result 8",
+          "javaCode": "class NumMatrix {\n    private final int[][] sum;\n    public NumMatrix(int[][] matrix){\n        int m=matrix.length,n=m==0?0:matrix[0].length;\n        sum=new int[m+1][n+1];\n        for(int r=1;r<=m;r++)for(int c=1;c<=n;c++)\n            sum[r][c]=matrix[r-1][c-1]+sum[r-1][c]+sum[r][c-1]-sum[r-1][c-1];\n    }\n    public int sumRegion(int r1,int c1,int r2,int c2){\n        return sum[r2+1][c2+1]-sum[r1][c2+1]-sum[r2+1][c1]+sum[r1][c1];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-101",
+      "slug": "count-of-smaller-numbers-after-self",
+      "title": "Count Of Smaller Numbers After Self",
+      "difficulty": "Hard",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/count-of-smaller-numbers-after-self/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "For each index, count strictly smaller values to its right.",
+      "example": {
+        "input": "nums=[5,2,6,1]",
+        "output": "[2,1,1,0]",
+        "explanation": "5 has smaller 2,1; 2 has 1; 6 has 1."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Split [5,2,6,1] into halves and recursively sort",
+        "When merging, each right-half value moved before a left value increases that left value's count",
+        "Final counts indexed by original positions are [2,1,1,0]"
+      ],
+      "dryRun": [
+        "Split [5,2,6,1] into halves and recursively sort",
+        "When merging, each right-half value moved before a left value increases that left value's count",
+        "Final counts indexed by original positions are [2,1,1,0]"
+      ],
+      "javaCode": "class Solution {\n    private static class Pair {\n        int value,index;\n        Pair(int v,int i){value=v;index=i;}\n    }\n    public java.util.List<Integer> countSmaller(int[] nums){\n        int n=nums.length;\n        Pair[] a=new Pair[n],tmp=new Pair[n];int[] count=new int[n];\n        for(int i=0;i<n;i++)a[i]=new Pair(nums[i],i);\n        merge(a,tmp,count,0,n);\n        java.util.List<Integer> ans=new java.util.ArrayList<>();\n        for(int v:count)ans.add(v);\n        return ans;\n    }\n    private void merge(Pair[] a,Pair[] tmp,int[] count,int l,int r){\n        if(r-l<=1)return;\n        int mid=l+(r-l)/2;merge(a,tmp,count,l,mid);merge(a,tmp,count,mid,r);\n        int i=l,j=mid,k=l;\n        while(i<mid&&j<r){\n            if(a[i].value<=a[j].value){\n                count[a[i].index]+=j-mid;tmp[k++]=a[i++];\n            }else tmp[k++]=a[j++];\n        }\n        while(i<mid){count[a[i].index]+=j-mid;tmp[k++]=a[i++];}\n        while(j<r)tmp[k++]=a[j++];\n        for(int x=l;x<r;x++)a[x]=tmp[x];\n    }\n}",
+      "timeComplexity": "O(n log n)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Use <= while merging to avoid treating equal values as strictly smaller.",
+      "testCases": [
+        {
+          "input": "nums=[5,2,6,1]",
+          "expected": "[2,1,1,0]",
+          "reason": "5 has smaller 2,1; 2 has 1; 6 has 1."
+        },
+        {
+          "input": "nums=[-1,-1]",
+          "expected": "[0,0]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "For each index, scan every element to its right and count strict smaller comparisons."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Split [5,2,6,1] into halves and recursively sort When merging, each right-half value moved before a left value increases that left value's count Final counts indexed by original positions are [2,1,1,0]",
+          "javaCode": "class Solution {\n    private static class Pair {\n        int value,index;\n        Pair(int v,int i){value=v;index=i;}\n    }\n    public java.util.List<Integer> countSmaller(int[] nums){\n        int n=nums.length;\n        Pair[] a=new Pair[n],tmp=new Pair[n];int[] count=new int[n];\n        for(int i=0;i<n;i++)a[i]=new Pair(nums[i],i);\n        merge(a,tmp,count,0,n);\n        java.util.List<Integer> ans=new java.util.ArrayList<>();\n        for(int v:count)ans.add(v);\n        return ans;\n    }\n    private void merge(Pair[] a,Pair[] tmp,int[] count,int l,int r){\n        if(r-l<=1)return;\n        int mid=l+(r-l)/2;merge(a,tmp,count,l,mid);merge(a,tmp,count,mid,r);\n        int i=l,j=mid,k=l;\n        while(i<mid&&j<r){\n            if(a[i].value<=a[j].value){\n                count[a[i].index]+=j-mid;tmp[k++]=a[i++];\n            }else tmp[k++]=a[j++];\n        }\n        while(i<mid){count[a[i].index]+=j-mid;tmp[k++]=a[i++];}\n        while(j<r)tmp[k++]=a[j++];\n        for(int x=l;x<r;x++)a[x]=tmp[x];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-102",
+      "slug": "my-calendar-iii",
+      "title": "My Calendar III",
+      "difficulty": "Hard",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/my-calendar-iii/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "After each half-open booking [start,end), return the highest number of simultaneous active bookings so far.",
+      "example": {
+        "input": "book(10,20); book(50,60); book(10,40); book(5,15)",
+        "output": "[1,1,2,3]",
+        "explanation": "After the fourth booking, three intervals overlap from 10 to 15."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "After (10,20) maximum overlap 1",
+        "After (10,40), times 10..19 have two bookings",
+        "Add (5,15), times 10..14 have three, so answer becomes 3"
+      ],
+      "dryRun": [
+        "After (10,20) maximum overlap 1",
+        "After (10,40), times 10..19 have two bookings",
+        "Add (5,15), times 10..14 have three, so answer becomes 3"
+      ],
+      "javaCode": "class MyCalendarThree {\n    private static class Node {Node left,right;int add,best;}\n    private final Node root=new Node();\n    public int book(int start,int end){\n        update(root,0,1_000_000_000,start,end-1);\n        return root.best;\n    }\n    private void update(Node node,int lo,int hi,int ql,int qr){\n        if(ql<=lo&&hi<=qr){node.add++;node.best++;return;}\n        int mid=lo+(hi-lo)/2;\n        if(ql<=mid){\n            if(node.left==null)node.left=new Node();\n            update(node.left,lo,mid,ql,qr);\n        }\n        if(qr>mid){\n            if(node.right==null)node.right=new Node();\n            update(node.right,mid+1,hi,ql,qr);\n        }\n        int a=node.left==null?0:node.left.best;\n        int b=node.right==null?0:node.right.best;\n        node.best=node.add+Math.max(a,b);\n    }\n}",
+      "timeComplexity": "O(log U) per booking, U=10^9",
+      "spaceComplexity": "O(B log U) dynamic nodes after B bookings",
+      "interviewTip": "Half-open intervals do not overlap at an endpoint; convert [start,end) to inclusive [start,end-1] for the segment tree.",
+      "testCases": [
+        {
+          "input": "book(10,20); book(50,60); book(10,40); book(5,15)",
+          "expected": "[1,1,2,3]",
+          "reason": "After the fourth booking, three intervals overlap from 10 to 15."
+        },
+        {
+          "input": "book(10,20); book(20,30)",
+          "expected": "[1,1]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(B log B) per booking",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Maintain a sorted sweep-line delta map and rescan every key after each booking."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log U) per booking, U=10^9",
+          "spaceComplexity": "O(B log U) dynamic nodes after B bookings",
+          "explanation": "After (10,20) maximum overlap 1 After (10,40), times 10..19 have two bookings Add (5,15), times 10..14 have three, so answer becomes 3",
+          "javaCode": "class MyCalendarThree {\n    private static class Node {Node left,right;int add,best;}\n    private final Node root=new Node();\n    public int book(int start,int end){\n        update(root,0,1_000_000_000,start,end-1);\n        return root.best;\n    }\n    private void update(Node node,int lo,int hi,int ql,int qr){\n        if(ql<=lo&&hi<=qr){node.add++;node.best++;return;}\n        int mid=lo+(hi-lo)/2;\n        if(ql<=mid){\n            if(node.left==null)node.left=new Node();\n            update(node.left,lo,mid,ql,qr);\n        }\n        if(qr>mid){\n            if(node.right==null)node.right=new Node();\n            update(node.right,mid+1,hi,ql,qr);\n        }\n        int a=node.left==null?0:node.left.best;\n        int b=node.right==null?0:node.right.best;\n        node.best=node.add+Math.max(a,b);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-103",
+      "slug": "lru-cache",
+      "title": "Lru Cache",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/lru-cache/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Implement get and put with least-recently-used eviction at fixed positive capacity; each operation should be O(1) expected.",
+      "example": {
+        "input": "capacity=2; put(1,1); put(2,2); get(1); put(3,3); get(2)",
+        "output": "[1,-1]",
+        "explanation": "Reading 1 makes 2 least recent, so inserting 3 evicts 2."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Insert 1 then 2: recency order oldest 1, newest 2",
+        "get(1) moves 1 to newest, leaving 2 oldest",
+        "Insert 3, size exceeds capacity, evict 2; get(2) returns -1"
+      ],
+      "dryRun": [
+        "Insert 1 then 2: recency order oldest 1, newest 2",
+        "get(1) moves 1 to newest, leaving 2 oldest",
+        "Insert 3, size exceeds capacity, evict 2; get(2) returns -1"
+      ],
+      "javaCode": "import java.util.*;\nclass LRUCache extends LinkedHashMap<Integer,Integer> {\n    private final int capacity;\n    public LRUCache(int capacity){super(capacity,0.75f,true);this.capacity=capacity;}\n    public int get(int key){return super.getOrDefault(key,-1);}\n    public void put(int key,int value){super.put(key,value);}\n    @Override protected boolean removeEldestEntry(Map.Entry<Integer,Integer> eldest){\n        return size()>capacity;\n    }\n}",
+      "timeComplexity": "O(1) expected get/put",
+      "spaceComplexity": "O(capacity)",
+      "interviewTip": "LinkedHashMap accessOrder=true updates recency on get; in systems interviews also know hashmap+doubly-linked-list.",
+      "testCases": [
+        {
+          "input": "capacity=2; put(1,1); put(2,2); get(1); put(3,3); get(2)",
+          "expected": "[1,-1]",
+          "reason": "Reading 1 makes 2 least recent, so inserting 3 evicts 2."
+        },
+        {
+          "input": "capacity=1; put(7,9); get(7); put(8,4); get(7)",
+          "expected": "[9,-1]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(capacity) per access",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Keep unsorted pairs and linearly search/update recency after every access."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(1) expected get/put",
+          "spaceComplexity": "O(capacity)",
+          "explanation": "Insert 1 then 2: recency order oldest 1, newest 2 get(1) moves 1 to newest, leaving 2 oldest Insert 3, size exceeds capacity, evict 2; get(2) returns -1",
+          "javaCode": "import java.util.*;\nclass LRUCache extends LinkedHashMap<Integer,Integer> {\n    private final int capacity;\n    public LRUCache(int capacity){super(capacity,0.75f,true);this.capacity=capacity;}\n    public int get(int key){return super.getOrDefault(key,-1);}\n    public void put(int key,int value){super.put(key,value);}\n    @Override protected boolean removeEldestEntry(Map.Entry<Integer,Integer> eldest){\n        return size()>capacity;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-104",
+      "slug": "time-based-key-value-store",
+      "title": "Time Based Key Value Store",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/time-based-key-value-store/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Store values of keys at increasing timestamps and retrieve the latest value at or before a query timestamp.",
+      "example": {
+        "input": "set(foo,bar,1); get(foo,1); get(foo,3); set(foo,bar2,4); get(foo,4)",
+        "output": "[bar,bar,bar2]",
+        "explanation": "The floor timestamp is used for each retrieval."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Set foo->bar at t1",
+        "get foo at t3 returns floor entry t1, giving bar",
+        "Set foo->bar2 at t4; get at t4 returns bar2"
+      ],
+      "dryRun": [
+        "Set foo->bar at t1",
+        "get foo at t3 returns floor entry t1, giving bar",
+        "Set foo->bar2 at t4; get at t4 returns bar2"
+      ],
+      "javaCode": "import java.util.*;\nclass TimeMap {\n    private final Map<String,TreeMap<Integer,String>> map=new HashMap<>();\n    public void set(String key,String value,int timestamp){\n        map.computeIfAbsent(key,k->new TreeMap<>()).put(timestamp,value);\n    }\n    public String get(String key,int timestamp){\n        TreeMap<Integer,String> history=map.get(key);\n        if(history==null)return \"\";\n        Map.Entry<Integer,String> entry=history.floorEntry(timestamp);\n        return entry==null?\"\":entry.getValue();\n    }\n}",
+      "timeComplexity": "O(log T) set/get for T timestamps per key",
+      "spaceComplexity": "O(total entries)",
+      "interviewTip": "TreeMap.floorEntry handles historical queries; an append-only sorted array can reduce insert cost when timestamps strictly increase.",
+      "testCases": [
+        {
+          "input": "set(foo,bar,1); get(foo,1); get(foo,3); set(foo,bar2,4); get(foo,4)",
+          "expected": "[bar,bar,bar2]",
+          "reason": "The floor timestamp is used for each retrieval."
+        },
+        {
+          "input": "get(missing,100)",
+          "expected": "\"\"",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(T) per get",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Keep every (timestamp,value) in a list and scan all records to find the largest valid timestamp."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log T) set/get for T timestamps per key",
+          "spaceComplexity": "O(total entries)",
+          "explanation": "Set foo->bar at t1 get foo at t3 returns floor entry t1, giving bar Set foo->bar2 at t4; get at t4 returns bar2",
+          "javaCode": "import java.util.*;\nclass TimeMap {\n    private final Map<String,TreeMap<Integer,String>> map=new HashMap<>();\n    public void set(String key,String value,int timestamp){\n        map.computeIfAbsent(key,k->new TreeMap<>()).put(timestamp,value);\n    }\n    public String get(String key,int timestamp){\n        TreeMap<Integer,String> history=map.get(key);\n        if(history==null)return \"\";\n        Map.Entry<Integer,String> entry=history.floorEntry(timestamp);\n        return entry==null?\"\":entry.getValue();\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-105",
+      "slug": "design-twitter",
+      "title": "Design Twitter",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/design-twitter/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Support posting tweets, following/unfollowing, and retrieving the latest 10 tweet IDs from self and followed users.",
+      "example": {
+        "input": "postTweet(1,5); getNewsFeed(1); follow(1,2); postTweet(2,6); getNewsFeed(1)",
+        "output": "[[5],[6,5]]",
+        "explanation": "Newer tweet 6 appears before tweet 5 after following user 2."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "User 1 posts tweet 5 at time 0 -> feed [5]",
+        "Follow user 2; user 2 posts tweet 6 at time 1",
+        "Heap merges latest cursor per user; feed [6,5]"
+      ],
+      "dryRun": [
+        "User 1 posts tweet 5 at time 0 -> feed [5]",
+        "Follow user 2; user 2 posts tweet 6 at time 1",
+        "Heap merges latest cursor per user; feed [6,5]"
+      ],
+      "javaCode": "import java.util.*;\nclass Twitter {\n    private static class Tweet {int id,t;Tweet(int id,int t){this.id=id;this.t=t;}}\n    private static class Cursor {int user,index,time;Cursor(int u,int i,int t){user=u;index=i;time=t;}}\n    private int clock=0;\n    private final Map<Integer,Set<Integer>> follows=new HashMap<>();\n    private final Map<Integer,List<Tweet>> tweets=new HashMap<>();\n    public void postTweet(int userId,int tweetId){\n        tweets.computeIfAbsent(userId,k->new ArrayList<>()).add(new Tweet(tweetId,clock++));\n    }\n    public List<Integer> getNewsFeed(int userId){\n        Set<Integer> users=new HashSet<>(follows.getOrDefault(userId,Collections.emptySet()));users.add(userId);\n        PriorityQueue<Cursor> pq=new PriorityQueue<>((a,b)->Integer.compare(b.time,a.time));\n        for(int user:users){\n            List<Tweet> list=tweets.get(user);\n            if(list!=null&&!list.isEmpty()){\n                int i=list.size()-1;pq.offer(new Cursor(user,i,list.get(i).t));\n            }\n        }\n        List<Integer> ans=new ArrayList<>();\n        while(ans.size()<10&&!pq.isEmpty()){\n            Cursor cur=pq.poll();List<Tweet> list=tweets.get(cur.user);\n            ans.add(list.get(cur.index).id);\n            int i=cur.index-1;\n            if(i>=0)pq.offer(new Cursor(cur.user,i,list.get(i).t));\n        }\n        return ans;\n    }\n    public void follow(int followerId,int followeeId){\n        if(followerId!=followeeId)follows.computeIfAbsent(followerId,k->new HashSet<>()).add(followeeId);\n    }\n    public void unfollow(int followerId,int followeeId){\n        Set<Integer> set=follows.get(followerId);if(set!=null)set.remove(followeeId);\n    }\n}",
+      "timeComplexity": "O(F log F + 10 log F) per feed for F followed accounts",
+      "spaceComplexity": "O(total tweets + follows), O(F) temporary heap",
+      "interviewTip": "Merge chronological per-user streams with a max-heap; only pull ten newest tweets.",
+      "testCases": [
+        {
+          "input": "postTweet(1,5); getNewsFeed(1); follow(1,2); postTweet(2,6); getNewsFeed(1)",
+          "expected": "[[5],[6,5]]",
+          "reason": "Newer tweet 6 appears before tweet 5 after following user 2."
+        },
+        {
+          "input": "postTweet(1,1); getNewsFeed(2)",
+          "expected": "[]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(T log T) per feed",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Collect and sort every historical tweet by all followed users on each feed request."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(F log F + 10 log F) per feed for F followed accounts",
+          "spaceComplexity": "O(total tweets + follows), O(F) temporary heap",
+          "explanation": "User 1 posts tweet 5 at time 0 -> feed [5] Follow user 2; user 2 posts tweet 6 at time 1 Heap merges latest cursor per user; feed [6,5]",
+          "javaCode": "import java.util.*;\nclass Twitter {\n    private static class Tweet {int id,t;Tweet(int id,int t){this.id=id;this.t=t;}}\n    private static class Cursor {int user,index,time;Cursor(int u,int i,int t){user=u;index=i;time=t;}}\n    private int clock=0;\n    private final Map<Integer,Set<Integer>> follows=new HashMap<>();\n    private final Map<Integer,List<Tweet>> tweets=new HashMap<>();\n    public void postTweet(int userId,int tweetId){\n        tweets.computeIfAbsent(userId,k->new ArrayList<>()).add(new Tweet(tweetId,clock++));\n    }\n    public List<Integer> getNewsFeed(int userId){\n        Set<Integer> users=new HashSet<>(follows.getOrDefault(userId,Collections.emptySet()));users.add(userId);\n        PriorityQueue<Cursor> pq=new PriorityQueue<>((a,b)->Integer.compare(b.time,a.time));\n        for(int user:users){\n            List<Tweet> list=tweets.get(user);\n            if(list!=null&&!list.isEmpty()){\n                int i=list.size()-1;pq.offer(new Cursor(user,i,list.get(i).t));\n            }\n        }\n        List<Integer> ans=new ArrayList<>();\n        while(ans.size()<10&&!pq.isEmpty()){\n            Cursor cur=pq.poll();List<Tweet> list=tweets.get(cur.user);\n            ans.add(list.get(cur.index).id);\n            int i=cur.index-1;\n            if(i>=0)pq.offer(new Cursor(cur.user,i,list.get(i).t));\n        }\n        return ans;\n    }\n    public void follow(int followerId,int followeeId){\n        if(followerId!=followeeId)follows.computeIfAbsent(followerId,k->new HashSet<>()).add(followeeId);\n    }\n    public void unfollow(int followerId,int followeeId){\n        Set<Integer> set=follows.get(followerId);if(set!=null)set.remove(followeeId);\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-106",
+      "slug": "design-median-from-data-stream",
+      "title": "Design Median From Data Stream",
+      "difficulty": "Hard",
+      "stageId": "design",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Design MedianFinder with addNum and findMedian; return middle of sorted stream (mean of two middles if even).",
+      "example": {
+        "input": "addNum(1);addNum(2);findMedian();addNum(3);findMedian()",
+        "output": "[1.5,2.0]",
+        "explanation": "With two values median 1.5; with three values median 2."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Add 1 then 2: max-heap low has 1, min-heap high has 2",
+        "Median of even count is (1+2)/2.0=1.5",
+        "Add 3, low rebalances to hold 2 as its maximum -> median 2"
+      ],
+      "dryRun": [
+        "Add 1 then 2: max-heap low has 1, min-heap high has 2",
+        "Median of even count is (1+2)/2.0=1.5",
+        "Add 3, low rebalances to hold 2 as its maximum -> median 2"
+      ],
+      "javaCode": "import java.util.*;\nclass MedianFinder {\n    private final PriorityQueue<Integer> low=new PriorityQueue<>(Comparator.reverseOrder());\n    private final PriorityQueue<Integer> high=new PriorityQueue<>();\n    public void addNum(int num){\n        low.offer(num);high.offer(low.poll());\n        if(high.size()>low.size())low.offer(high.poll());\n    }\n    public double findMedian(){\n        if(low.size()>high.size())return low.peek();\n        return ((long)low.peek()+high.peek())/2.0;\n    }\n}",
+      "timeComplexity": "O(log n) add, O(1) find",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Keep halves balanced and every element in lower heap <= every element in upper heap.",
+      "testCases": [
+        {
+          "input": "addNum(1);addNum(2);findMedian();addNum(3);findMedian()",
+          "expected": "[1.5,2.0]",
+          "reason": "With two values median 1.5; with three values median 2."
+        },
+        {
+          "input": "addNum(-1);findMedian()",
+          "expected": "-1.0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n log n) find",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Maintain a list and sort it on each median query."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log n) add, O(1) find",
+          "spaceComplexity": "O(n)",
+          "explanation": "Add 1 then 2: max-heap low has 1, min-heap high has 2 Median of even count is (1+2)/2.0=1.5 Add 3, low rebalances to hold 2 as its maximum -> median 2",
+          "javaCode": "import java.util.*;\nclass MedianFinder {\n    private final PriorityQueue<Integer> low=new PriorityQueue<>(Comparator.reverseOrder());\n    private final PriorityQueue<Integer> high=new PriorityQueue<>();\n    public void addNum(int num){\n        low.offer(num);high.offer(low.poll());\n        if(high.size()>low.size())low.offer(high.poll());\n    }\n    public double findMedian(){\n        if(low.size()>high.size())return low.peek();\n        return ((long)low.peek()+high.peek())/2.0;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-107",
+      "slug": "insert-delete-getrandom-o1",
+      "title": "Insert Delete Getrandom O1",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/insert-delete-getrandom-o1/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Design RandomizedSet with insert, remove, getRandom, each expected O(1), and no duplicate entries.",
+      "example": {
+        "input": "insert(1); remove(2); insert(2); getRandom(); remove(1); insert(2)",
+        "output": "[true,false,true,1 or 2,true,false]",
+        "explanation": "getRandom uniformly picks an existing value; duplicate insertion returns false."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Insert 1 then 2; values [1,2] and map holds their positions",
+        "Removing 1 swaps the last element into its slot, then pops the tail",
+        "Remaining array [2], so getRandom samples 2 uniformly"
+      ],
+      "dryRun": [
+        "Insert 1 then 2; values [1,2] and map holds their positions",
+        "Removing 1 swaps the last element into its slot, then pops the tail",
+        "Remaining array [2], so getRandom samples 2 uniformly"
+      ],
+      "javaCode": "import java.util.*;\nclass RandomizedSet {\n    private final List<Integer> values=new ArrayList<>();\n    private final Map<Integer,Integer> index=new HashMap<>();\n    private final Random random=new Random();\n    public boolean insert(int val){\n        if(index.containsKey(val))return false;\n        index.put(val,values.size());values.add(val);return true;\n    }\n    public boolean remove(int val){\n        Integer pos=index.get(val);\n        if(pos==null)return false;\n        int last=values.get(values.size()-1);\n        values.set(pos,last);index.put(last,pos);\n        values.remove(values.size()-1);index.remove(val);\n        return true;\n    }\n    public int getRandom(){return values.get(random.nextInt(values.size()));}\n}",
+      "timeComplexity": "O(1) expected per operation",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Swap-with-last deletion keeps the array dense, enabling uniform constant-time random indexing.",
+      "testCases": [
+        {
+          "input": "insert(1); remove(2); insert(2); getRandom(); remove(1); insert(2)",
+          "expected": "[true,false,true,1 or 2,true,false]",
+          "reason": "getRandom uniformly picks an existing value; duplicate insertion returns false."
+        },
+        {
+          "input": "insert(9);insert(9);remove(9)",
+          "expected": "[true,false,true]",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n) remove",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Use an ArrayList for uniform sampling and perform linear scans to find/remove a value."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(1) expected per operation",
+          "spaceComplexity": "O(n)",
+          "explanation": "Insert 1 then 2; values [1,2] and map holds their positions Removing 1 swaps the last element into its slot, then pops the tail Remaining array [2], so getRandom samples 2 uniformly",
+          "javaCode": "import java.util.*;\nclass RandomizedSet {\n    private final List<Integer> values=new ArrayList<>();\n    private final Map<Integer,Integer> index=new HashMap<>();\n    private final Random random=new Random();\n    public boolean insert(int val){\n        if(index.containsKey(val))return false;\n        index.put(val,values.size());values.add(val);return true;\n    }\n    public boolean remove(int val){\n        Integer pos=index.get(val);\n        if(pos==null)return false;\n        int last=values.get(values.size()-1);\n        values.set(pos,last);index.put(last,pos);\n        values.remove(values.size()-1);index.remove(val);\n        return true;\n    }\n    public int getRandom(){return values.get(random.nextInt(values.size()));}\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-108",
+      "slug": "trapping-rain-water",
+      "title": "Trapping Rain Water",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/trapping-rain-water/",
+      "format": "worked",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ],
+      "statement": "Given nonnegative bar heights of unit width, return total trapped water after rainfall.",
+      "example": {
+        "input": "height=[0,1,0,2,1,0,1,3,2,1,2,1]",
+        "output": "6",
+        "explanation": "Water is bounded by taller bars on both sides and totals six units."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "At every position, water is min(maxLeft,maxRight)-height if positive",
+        "Two pointers maintain left and right maxima while moving the lower side",
+        "Accumulated water over valleys of sample is 6"
+      ],
+      "dryRun": [
+        "At every position, water is min(maxLeft,maxRight)-height if positive",
+        "Two pointers maintain left and right maxima while moving the lower side",
+        "Accumulated water over valleys of sample is 6"
+      ],
+      "javaCode": "class Solution {\n    public int trap(int[] h){\n        int l=0,r=h.length-1,leftMax=0,rightMax=0,total=0;\n        while(l<r){\n            if(h[l]<=h[r]){\n                leftMax=Math.max(leftMax,h[l]);\n                total+=leftMax-h[l];l++;\n            }else{\n                rightMax=Math.max(rightMax,h[r]);\n                total+=rightMax-h[r];r--;\n            }\n        }\n        return total;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "When h[left] <= h[right], the right side already supplies a sufficient boundary for the current left height.",
+      "testCases": [
+        {
+          "input": "height=[0,1,0,2,1,0,1,3,2,1,2,1]",
+          "expected": "6",
+          "reason": "Water is bounded by taller bars on both sides and totals six units."
+        },
+        {
+          "input": "height=[4,2,0,3,2,5]",
+          "expected": "9",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "At each bar, scan all left and right bars to find max boundaries and trapped depth."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "At every position, water is min(maxLeft,maxRight)-height if positive Two pointers maintain left and right maxima while moving the lower side Accumulated water over valleys of sample is 6",
+          "javaCode": "class Solution {\n    public int trap(int[] h){\n        int l=0,r=h.length-1,leftMax=0,rightMax=0,total=0;\n        while(l<r){\n            if(h[l]<=h[r]){\n                leftMax=Math.max(leftMax,h[l]);\n                total+=leftMax-h[l];l++;\n            }else{\n                rightMax=Math.max(rightMax,h[r]);\n                total+=rightMax-h[r];r--;\n            }\n        }\n        return total;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-109",
+      "slug": "median-of-two-sorted-arrays",
+      "title": "Median Of Two Sorted Arrays",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Return median of the merged multiset of two sorted arrays in O(log(min(m,n))) time.",
+      "example": {
+        "input": "nums1=[1,3], nums2=[2]",
+        "output": "2.0",
+        "explanation": "Sorted merge [1,2,3] has middle element 2."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Choose binary-search partition in shorter [1,3] and complementary partition in [2]",
+        "Adjust i until max(left halves) <= min(right halves)",
+        "Total count odd, max of left partition = 2 -> median 2"
+      ],
+      "dryRun": [
+        "Choose binary-search partition in shorter [1,3] and complementary partition in [2]",
+        "Adjust i until max(left halves) <= min(right halves)",
+        "Total count odd, max of left partition = 2 -> median 2"
+      ],
+      "javaCode": "class Solution {\n    public double findMedianSortedArrays(int[] a,int[] b){\n        if(a.length>b.length)return findMedianSortedArrays(b,a);\n        int m=a.length,n=b.length,left=(m+n+1)/2,lo=0,hi=m;\n        while(lo<=hi){\n            int i=lo+(hi-lo)/2,j=left-i;\n            int al=i==0?Integer.MIN_VALUE:a[i-1];\n            int ar=i==m?Integer.MAX_VALUE:a[i];\n            int bl=j==0?Integer.MIN_VALUE:b[j-1];\n            int br=j==n?Integer.MAX_VALUE:b[j];\n            if(al<=br&&bl<=ar){\n                int maxLeft=Math.max(al,bl);\n                if(((m+n)&1)==1)return maxLeft;\n                return ((long)maxLeft+Math.min(ar,br))/2.0;\n            }\n            if(al>br)hi=i-1;\n            else lo=i+1;\n        }\n        throw new IllegalArgumentException(\"Unsorted input\");\n    }\n}",
+      "timeComplexity": "O(log(min(m,n)+1))",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Sentinels handle empty partitions; cast before adding middle values to prevent overflow.",
+      "testCases": [
+        {
+          "input": "nums1=[1,3], nums2=[2]",
+          "expected": "2.0",
+          "reason": "Sorted merge [1,2,3] has middle element 2."
+        },
+        {
+          "input": "nums1=[1,2], nums2=[3,4]",
+          "expected": "2.5",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(m+n)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Merge the two sorted arrays, then take the middle element(s)."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(log(min(m,n)+1))",
+          "spaceComplexity": "O(1)",
+          "explanation": "Choose binary-search partition in shorter [1,3] and complementary partition in [2] Adjust i until max(left halves) <= min(right halves) Total count odd, max of left partition = 2 -> median 2",
+          "javaCode": "class Solution {\n    public double findMedianSortedArrays(int[] a,int[] b){\n        if(a.length>b.length)return findMedianSortedArrays(b,a);\n        int m=a.length,n=b.length,left=(m+n+1)/2,lo=0,hi=m;\n        while(lo<=hi){\n            int i=lo+(hi-lo)/2,j=left-i;\n            int al=i==0?Integer.MIN_VALUE:a[i-1];\n            int ar=i==m?Integer.MAX_VALUE:a[i];\n            int bl=j==0?Integer.MIN_VALUE:b[j-1];\n            int br=j==n?Integer.MAX_VALUE:b[j];\n            if(al<=br&&bl<=ar){\n                int maxLeft=Math.max(al,bl);\n                if(((m+n)&1)==1)return maxLeft;\n                return ((long)maxLeft+Math.min(ar,br))/2.0;\n            }\n            if(al>br)hi=i-1;\n            else lo=i+1;\n        }\n        throw new IllegalArgumentException(\"Unsorted input\");\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-110",
+      "slug": "word-break",
+      "title": "Word Break",
+      "difficulty": "Medium",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/word-break/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Determine whether a string can be segmented entirely into one or more words from a reusable dictionary.",
+      "example": {
+        "input": "s=\"leetcode\", wordDict=[\"leet\",\"code\"]",
+        "output": "true",
+        "explanation": "Split as leet + code."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "At offset 0, word leet matches -> mark offset 4 reachable",
+        "At offset 4, code matches -> mark offset 8 reachable",
+        "End offset equals string length -> true"
+      ],
+      "dryRun": [
+        "At offset 0, word leet matches -> mark offset 4 reachable",
+        "At offset 4, code matches -> mark offset 8 reachable",
+        "End offset equals string length -> true"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public boolean wordBreak(String s,List<String> wordDict){\n        boolean[] reachable=new boolean[s.length()+1];reachable[0]=true;\n        for(int i=0;i<s.length();i++)if(reachable[i]){\n            for(String w:wordDict)if(s.startsWith(w,i))reachable[i+w.length()]=true;\n        }\n        return reachable[s.length()];\n    }\n}",
+      "timeComplexity": "O(n·sum word lengths) in worst case",
+      "spaceComplexity": "O(n) auxiliary, excluding dictionary",
+      "interviewTip": "The reachable[i] DP state is true exactly when prefix s[0..i) can be segmented.",
+      "testCases": [
+        {
+          "input": "s=\"leetcode\", wordDict=[\"leet\",\"code\"]",
+          "expected": "true",
+          "reason": "Split as leet + code."
+        },
+        {
+          "input": "s=\"catsandog\", wordDict=[\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]",
+          "expected": "false",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "Exponential",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Recursively try every dictionary word at each offset with no memoization."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n·sum word lengths) in worst case",
+          "spaceComplexity": "O(n) auxiliary, excluding dictionary",
+          "explanation": "At offset 0, word leet matches -> mark offset 4 reachable At offset 4, code matches -> mark offset 8 reachable End offset equals string length -> true",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public boolean wordBreak(String s,List<String> wordDict){\n        boolean[] reachable=new boolean[s.length()+1];reachable[0]=true;\n        for(int i=0;i<s.length();i++)if(reachable[i]){\n            for(String w:wordDict)if(s.startsWith(w,i))reachable[i+w.length()]=true;\n        }\n        return reachable[s.length()];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-111",
+      "slug": "burst-balloons",
+      "title": "Burst Balloons",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/burst-balloons/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Pop balloons to maximize total coins; popping index k yields left-neighbor × value[k] × right-neighbor at that moment.",
+      "example": {
+        "input": "nums=[3,1,5,8]",
+        "output": "167",
+        "explanation": "Optimal pop order yields 167 coins."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "Pad array with 1 on both ends",
+        "For each interval, try each balloon as the LAST one popped, using fixed outer neighbors",
+        "Combine left and right optimal intervals; final dp[1][4] = 167"
+      ],
+      "dryRun": [
+        "Pad array with 1 on both ends",
+        "For each interval, try each balloon as the LAST one popped, using fixed outer neighbors",
+        "Combine left and right optimal intervals; final dp[1][4] = 167"
+      ],
+      "javaCode": "class Solution {\n    public int maxCoins(int[] nums){\n        int n=nums.length;int[] a=new int[n+2];\n        a[0]=a[n+1]=1;\n        for(int i=0;i<n;i++)a[i+1]=nums[i];\n        int[][] dp=new int[n+2][n+2];\n        for(int len=1;len<=n;len++){\n            for(int left=1;left+len-1<=n;left++){\n                int right=left+len-1;\n                for(int last=left;last<=right;last++){\n                    int gain=a[left-1]*a[last]*a[right+1];\n                    dp[left][right]=Math.max(dp[left][right],dp[left][last-1]+gain+dp[last+1][right]);\n                }\n            }\n        }\n        return dp[1][n];\n    }\n}",
+      "timeComplexity": "O(n³)",
+      "spaceComplexity": "O(n²)",
+      "interviewTip": "Choosing the last balloon creates independent subproblems; choosing the first does not.",
+      "testCases": [
+        {
+          "input": "nums=[3,1,5,8]",
+          "expected": "167",
+          "reason": "Optimal pop order yields 167 coins."
+        },
+        {
+          "input": "nums=[1,5]",
+          "expected": "10",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n!)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Try all balloon-pop permutations and calculate resulting neighbors dynamically."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n³)",
+          "spaceComplexity": "O(n²)",
+          "explanation": "Pad array with 1 on both ends For each interval, try each balloon as the LAST one popped, using fixed outer neighbors Combine left and right optimal intervals; final dp[1][4] = 167",
+          "javaCode": "class Solution {\n    public int maxCoins(int[] nums){\n        int n=nums.length;int[] a=new int[n+2];\n        a[0]=a[n+1]=1;\n        for(int i=0;i<n;i++)a[i+1]=nums[i];\n        int[][] dp=new int[n+2][n+2];\n        for(int len=1;len<=n;len++){\n            for(int left=1;left+len-1<=n;left++){\n                int right=left+len-1;\n                for(int last=left;last<=right;last++){\n                    int gain=a[left-1]*a[last]*a[right+1];\n                    dp[left][right]=Math.max(dp[left][right],dp[left][last-1]+gain+dp[last+1][right]);\n                }\n            }\n        }\n        return dp[1][n];\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    },
+    {
+      "id": "ROAD-112",
+      "slug": "longest-valid-parentheses",
+      "title": "Longest Valid Parentheses",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/longest-valid-parentheses/",
+      "format": "worked",
+      "companyEvidence": [],
+      "statement": "Find length of longest contiguous substring that forms correctly balanced parentheses.",
+      "example": {
+        "input": "s=\")()())\"",
+        "output": "4",
+        "explanation": "Substring ()() has length 4."
+      },
+      "constraints": [
+        "Check the linked exercise's precise numeric bounds and return conventions before implementation."
+      ],
+      "approach": "State assumptions, compare baseline against an invariant-based optimized method",
+      "steps": [
+        "At index 0 unmatched ')' resets base index to 0",
+        "Pairs at indices 1..4 produce length 4 using index difference from stack base",
+        "Final unmatched ')' resets base, so best stays 4"
+      ],
+      "dryRun": [
+        "At index 0 unmatched ')' resets base index to 0",
+        "Pairs at indices 1..4 produce length 4 using index difference from stack base",
+        "Final unmatched ')' resets base, so best stays 4"
+      ],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int longestValidParentheses(String s){\n        Deque<Integer> stack=new ArrayDeque<>();stack.push(-1);\n        int best=0;\n        for(int i=0;i<s.length();i++){\n            if(s.charAt(i)=='(')stack.push(i);\n            else{\n                stack.pop();\n                if(stack.isEmpty())stack.push(i);\n                else best=Math.max(best,i-stack.peek());\n            }\n        }\n        return best;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "interviewTip": "Stack stores indices, not characters: the top unmatched index determines the valid span boundary.",
+      "testCases": [
+        {
+          "input": "s=\")()())\"",
+          "expected": "4",
+          "reason": "Substring ()() has length 4."
+        },
+        {
+          "input": "s=\"\"",
+          "expected": "0",
+          "reason": "Boundary or contrasting case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Baseline idea",
+          "type": "Baseline",
+          "timeComplexity": "O(n³)",
+          "spaceComplexity": "Problem-dependent",
+          "explanation": "Enumerate every substring and verify whether it has balanced parentheses."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "At index 0 unmatched ')' resets base index to 0 Pairs at indices 1..4 produce length 4 using index difference from stack base Final unmatched ')' resets base, so best stays 4",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int longestValidParentheses(String s){\n        Deque<Integer> stack=new ArrayDeque<>();stack.push(-1);\n        int best=0;\n        for(int i=0;i<s.length();i++){\n            if(s.charAt(i)=='(')stack.push(i);\n            else{\n                stack.pop();\n                if(stack.isEmpty())stack.push(i);\n                else best=Math.max(best,i-stack.peek());\n            }\n        }\n        return best;\n    }\n}"
+        }
+      ],
+      "contentStatus": "worked",
+      "dateAdded": "2026-11-23",
+      "source": "Original Java implementation of linked interview problem"
+    }
+  ]
+}
