@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "npm run validate:data && vite build && node scripts/copy404.mjs",
     "preview": "vite preview",
-    "validate:data": "node scripts/validate-jobs.mjs"
+    "validate:data": "node scripts/validate-jobs.mjs && node scripts/validate-dsa.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
