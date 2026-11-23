@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22",
+  "updatedAt": "2026-11-23",
   "problems": [
     {
       "id": "DSA-001",
@@ -378,6 +378,137 @@
       "timeComplexity": "O(n + u log k + k log k), where u is the number of distinct values",
       "spaceComplexity": "O(u + k)",
       "interviewTip": "Explain the min-heap ordering carefully: on ties, the larger value must be removed first so the smaller value remains.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-013",
+      "slug": "single-occurring-number",
+      "title": "Find the Number That Appears Once",
+      "difficulty": "Easy",
+      "topic": "Bit Manipulation",
+      "dateAdded": "2026-11-23",
+      "estimatedMinutes": 15,
+      "statement": "An integer array contains exactly one value that appears once; every other value appears exactly twice. Return the value that appears once without using extra collections.",
+      "example": {
+        "input": "nums = [6, 3, 6, -2, 3]",
+        "output": "-2",
+        "explanation": "The repeated values cancel in XOR, leaving -2."
+      },
+      "constraints": [
+        "1 <= nums.length <= 100,001",
+        "nums.length is odd",
+        "-1,000,000 <= nums[i] <= 1,000,000",
+        "Exactly one value occurs once; all others occur twice."
+      ],
+      "approach": "Use XOR to cancel equal pairs",
+      "steps": [
+        "Start an accumulator at zero.",
+        "XOR each array value into the accumulator. XOR of identical numbers is zero, and XOR with zero leaves a number unchanged.",
+        "Because XOR is associative and commutative, every duplicate pair cancels regardless of order.",
+        "Return the accumulator, which is the single unpaired number."
+      ],
+      "javaCode": "class Solution {\n    public int singleNumber(int[] nums) {\n        int result = 0;\n        for (int value : nums) {\n            result ^= value;\n        }\n        return result;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Demonstrate x ^ x = 0 and x ^ 0 = x. This works for negative integers too.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-014",
+      "slug": "first-nonrepeating-character-index",
+      "title": "Find the First Non-Repeating Character",
+      "difficulty": "Easy",
+      "topic": "Strings & Counting",
+      "dateAdded": "2026-11-23",
+      "estimatedMinutes": 15,
+      "statement": "Given a string containing only lowercase English letters, return the zero-based index of its first character that occurs exactly once in the entire string. Return -1 if every character repeats.",
+      "example": {
+        "input": "s = \"swiss\"",
+        "output": "1",
+        "explanation": "The character 'w' at index 1 occurs once, and every earlier character repeats."
+      },
+      "constraints": [
+        "0 <= s.length <= 100,000",
+        "s contains only lowercase English letters a through z."
+      ],
+      "approach": "Two passes with a fixed-size frequency array",
+      "steps": [
+        "Create an integer array of 26 zeros, one counter for each lowercase letter.",
+        "Scan the string once, increasing the count for each character.",
+        "Scan the string again from left to right, returning the first index whose character has frequency one.",
+        "If no such character exists, return -1. An empty string also returns -1."
+      ],
+      "javaCode": "class Solution {\n    public int firstUniqueChar(String s) {\n        int[] frequency = new int[26];\n        for (int i = 0; i < s.length(); i++) {\n            frequency[s.charAt(i) - 'a']++;\n        }\n        for (int i = 0; i < s.length(); i++) {\n            if (frequency[s.charAt(i) - 'a'] == 1) {\n                return i;\n            }\n        }\n        return -1;\n    }\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1) (26 counters)",
+      "interviewTip": "Counting alone is not enough: the second pass preserves the original order and identifies the first unique character.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-015",
+      "slug": "search-rotated-sorted-array",
+      "title": "Search in a Rotated Sorted Array",
+      "difficulty": "Medium",
+      "topic": "Modified Binary Search",
+      "dateAdded": "2026-11-23",
+      "estimatedMinutes": 25,
+      "statement": "An ascending array of distinct integers was rotated at an unknown pivot. Given a target, return its index, or -1 if absent. Aim for logarithmic time.",
+      "example": {
+        "input": "nums = [8, 10, 13, 1, 3, 5], target = 3",
+        "output": "4",
+        "explanation": "The target 3 is at index 4. One side of each search interval remains sorted."
+      },
+      "constraints": [
+        "0 <= nums.length <= 100,000",
+        "All array elements are distinct integers.",
+        "-1,000,000 <= nums[i], target <= 1,000,000"
+      ],
+      "approach": "Binary search while identifying the sorted half",
+      "steps": [
+        "Initialize left at zero and right at the last index.",
+        "While left is not past right, find the middle index and return it if the middle element equals target.",
+        "If nums[left] <= nums[mid], the left half is sorted. Keep it when target lies between nums[left] inclusive and nums[mid] exclusive; otherwise search right.",
+        "Otherwise the right half is sorted. Keep it when target is greater than nums[mid] and at most nums[right]; otherwise search left.",
+        "Each iteration discards at least half of the remaining range. Return -1 if no match is found."
+      ],
+      "javaCode": "class Solution {\n    public int search(int[] nums, int target) {\n        int left = 0, right = nums.length - 1;\n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            if (nums[mid] == target) return mid;\n            if (nums[left] <= nums[mid]) {\n                if (nums[left] <= target && target < nums[mid]) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            } else {\n                if (nums[mid] < target && target <= nums[right]) {\n                    left = mid + 1;\n                } else {\n                    right = mid - 1;\n                }\n            }\n        }\n        return -1;\n    }\n}",
+      "timeComplexity": "O(log n)",
+      "spaceComplexity": "O(1)",
+      "interviewTip": "Explain why at least one half is sorted when all values are distinct. Check empty and single-element arrays.",
+      "source": "Original interview-style formulation"
+    },
+    {
+      "id": "DSA-016",
+      "slug": "count-islands-grid",
+      "title": "Count Islands in a Binary Grid",
+      "difficulty": "Medium",
+      "topic": "Graphs & BFS",
+      "dateAdded": "2026-11-23",
+      "estimatedMinutes": 30,
+      "statement": "Given a rectangular grid of characters '1' (land) and '0' (water), count the number of separate islands. Land cells connect only vertically or horizontally, not diagonally. The method may modify the input grid.",
+      "example": {
+        "input": "grid = [[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]]",
+        "output": "2",
+        "explanation": "The top-left three land cells form one island; the bottom-right land cell forms another."
+      },
+      "constraints": [
+        "1 <= grid.length <= 300",
+        "1 <= grid[0].length <= 300",
+        "All rows have equal length.",
+        "Every cell is either '0' or '1'."
+      ],
+      "approach": "Breadth-first search to flood-fill each discovered island",
+      "steps": [
+        "Scan each grid cell row by row. Skip water cells.",
+        "When an unvisited land cell is found, increment the island count, mark that cell as water, and enqueue its coordinates.",
+        "Process the queue: for each cell, inspect its four neighbors. For every in-bounds land neighbor, mark it as water immediately and enqueue it.",
+        "When the queue empties, the whole connected island has been visited. Continue scanning for other land cells.",
+        "Return the island count. Marking before enqueueing avoids adding the same cell repeatedly."
+      ],
+      "javaCode": "import java.util.ArrayDeque;\nimport java.util.Queue;\n\nclass Solution {\n    public int numIslands(char[][] grid) {\n        int rows = grid.length, cols = grid[0].length;\n        int islands = 0;\n        int[] dr = {1, -1, 0, 0};\n        int[] dc = {0, 0, 1, -1};\n        Queue<Integer> queue = new ArrayDeque<>();\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (grid[r][c] != '1') continue;\n                islands++;\n                grid[r][c] = '0';\n                queue.offer(r * cols + c);\n                while (!queue.isEmpty()) {\n                    int cell = queue.poll();\n                    int row = cell / cols, col = cell % cols;\n                    for (int k = 0; k < 4; k++) {\n                        int nr = row + dr[k], nc = col + dc[k];\n                        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || grid[nr][nc] != '1') continue;\n                        grid[nr][nc] = '0';\n                        queue.offer(nr * cols + nc);\n                    }\n                }\n            }\n        }\n        return islands;\n    }\n}",
+      "timeComplexity": "O(rows * cols)",
+      "spaceComplexity": "O(rows * cols) worst-case BFS queue",
+      "interviewTip": "Call out that this modifies the grid. If mutation is forbidden, use a separate visited matrix.",
       "source": "Original interview-style formulation"
     }
   ]
