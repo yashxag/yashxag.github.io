@@ -3,6 +3,7 @@ import {Link,useParams} from 'react-router-dom';
 import {Alert,Button,Chip,TextField,MenuItem,InputAdornment} from '@mui/material';
 import {ArrowBack,CheckCircleOutline,ContentCopy,Search,ExpandMore,ExpandLess,OpenInNew,School,Code} from '@mui/icons-material';
 import ProfolioLoader from './ProfolioLoader.jsx';
+import './dsa-roadmap.css';
 
 const progressKey='careerboard-dsa-progress-v2';
 const oldKey='careerboard-dsa-solved-v1';
