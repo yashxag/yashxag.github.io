@@ -1,0 +1,657 @@
+{
+  "updatedAt": "2026-11-23",
+  "solutions": [
+    {
+      "id": "DSA-025",
+      "slug": "merge-two-sorted-lists",
+      "title": "Merge Two Sorted Linked Lists",
+      "stageId": "linked-lists",
+      "topic": "linked-lists",
+      "difficulty": "Easy",
+      "statement": "Merge two already sorted singly linked lists by relinking nodes, returning their sorted head.",
+      "example": {
+        "input": "a=[1,2,4], b=[1,3,4]",
+        "output": "[1,1,2,3,4,4]",
+        "explanation": "Append smaller current node and attach remainder."
+      },
+      "constraints": [],
+      "javaCode": "class Solution {\n    public ListNode mergeTwoLists(ListNode a,ListNode b){\n        ListNode dummy=new ListNode(0),tail=dummy;\n        while(a!=null && b!=null){\n            if(a.val<=b.val){tail.next=a;a=a.next;}\n            else{tail.next=b;b=b.next;}\n            tail=tail.next;\n        }\n        tail.next=a!=null?a:b;\n        return dummy.next;\n    }\n}\n// Judge supplies ListNode(int val) with fields val,next",
+      "approach": "Optimal Java",
+      "steps": [
+        "Start with dummy, a=1 and b=1",
+        "Append a1, then b1, then a2",
+        "Continue b3,a4,b4; attach remainder"
+      ],
+      "dryRun": [
+        "Start with dummy, a=1 and b=1",
+        "Append a1, then b1, then a2",
+        "Continue b3,a4,b4; attach remainder"
+      ],
+      "timeComplexity": "O(n+m)",
+      "spaceComplexity": "O(1) auxiliary",
+      "testCases": [
+        {
+          "input": "a=[1,2,4], b=[1,3,4]",
+          "expected": "[1,1,2,3,4,4]",
+          "reason": "Append smaller current node and attach remainder."
+        },
+        {
+          "input": "a=[],b=[0]",
+          "expected": "[0]",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Copy all values and sort",
+          "type": "Baseline",
+          "timeComplexity": "O((n+m)log(n+m))",
+          "spaceComplexity": "O(n+m)",
+          "explanation": "A simpler approach, but it allocates new nodes and loses in-place benefits."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n+m)",
+          "spaceComplexity": "O(1) auxiliary",
+          "explanation": "Start with dummy, a=1 and b=1 Append a1, then b1, then a2 Continue b3,a4,b4; attach remainder",
+          "javaCode": "class Solution {\n    public ListNode mergeTwoLists(ListNode a,ListNode b){\n        ListNode dummy=new ListNode(0),tail=dummy;\n        while(a!=null && b!=null){\n            if(a.val<=b.val){tail.next=a;a=a.next;}\n            else{tail.next=b;b=b.next;}\n            tail=tail.next;\n        }\n        tail.next=a!=null?a:b;\n        return dummy.next;\n    }\n}\n// Judge supplies ListNode(int val) with fields val,next"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 18,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-026",
+      "slug": "min-stack",
+      "title": "Min Stack",
+      "stageId": "stacks-queues",
+      "topic": "stacks-queues",
+      "difficulty": "Medium",
+      "statement": "Implement push, pop, top, getMin; each operation must run in O(1). Calls to pop/top/getMin occur only when nonempty.",
+      "example": {
+        "input": "push(-2),push(0),push(-3),getMin(),pop(),top(),getMin()",
+        "output": "[-3,0,-2]",
+        "explanation": "Store value and minimum of the entire prefix for each stack entry."
+      },
+      "constraints": [],
+      "javaCode": "import java.util.*;\nclass MinStack {\n    private final Deque<int[]> values=new ArrayDeque<>();\n    public void push(int val){\n        int min=values.isEmpty()?val:Math.min(val,values.peek()[1]);\n        values.push(new int[]{val,min});\n    }\n    public void pop(){values.pop();}\n    public int top(){return values.peek()[0];}\n    public int getMin(){return values.peek()[1];}\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "Push -2 with min=-2, then 0 with min=-2",
+        "Push -3 with min=-3; getMin() returns -3",
+        "Pop -3: top() returns 0, getMin() returns -2"
+      ],
+      "dryRun": [
+        "Push -2 with min=-2, then 0 with min=-2",
+        "Push -3 with min=-3; getMin() returns -3",
+        "Pop -3: top() returns 0, getMin() returns -2"
+      ],
+      "timeComplexity": "O(1) each operation",
+      "spaceComplexity": "O(n) total",
+      "testCases": [
+        {
+          "input": "push(-2),push(0),push(-3),getMin(),pop(),top(),getMin()",
+          "expected": "[-3,0,-2]",
+          "reason": "Store value and minimum of the entire prefix for each stack entry."
+        },
+        {
+          "input": "push(5),push(3),getMin()",
+          "expected": "3",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Scan for minimum when requested",
+          "type": "Baseline",
+          "timeComplexity": "O(n) per getMin",
+          "spaceComplexity": "O(n)",
+          "explanation": "A plain stack makes finding the current minimum expensive."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(1) each operation",
+          "spaceComplexity": "O(n) total",
+          "explanation": "Push -2 with min=-2, then 0 with min=-2 Push -3 with min=-3; getMin() returns -3 Pop -3: top() returns 0, getMin() returns -2",
+          "javaCode": "import java.util.*;\nclass MinStack {\n    private final Deque<int[]> values=new ArrayDeque<>();\n    public void push(int val){\n        int min=values.isEmpty()?val:Math.min(val,values.peek()[1]);\n        values.push(new int[]{val,min});\n    }\n    public void pop(){values.pop();}\n    public int top(){return values.peek()[0];}\n    public int getMin(){return values.peek()[1];}\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-027",
+      "slug": "daily-temperatures",
+      "title": "Daily Temperatures",
+      "stageId": "stacks-queues",
+      "topic": "stacks-queues",
+      "difficulty": "Medium",
+      "statement": "For each temperature, find how many following days until a strictly warmer day, otherwise zero.",
+      "example": {
+        "input": "temps=[73,74,75,71,69,72,76,73]",
+        "output": "[1,1,4,2,1,1,0,0]",
+        "explanation": "Keep indices of days that have not yet found warmer temperatures."
+      },
+      "constraints": [],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int[] dailyTemperatures(int[] t) {\n        int[] result=new int[t.length];\n        Deque<Integer> stack=new ArrayDeque<>();\n        for(int i=0;i<t.length;i++){\n            while(!stack.isEmpty() && t[i]>t[stack.peek()]){\n                int j=stack.pop();\n                result[j]=i-j;\n            }\n            stack.push(i);\n        }\n        return result;\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "At 74 pop index0 and write wait1",
+        "At 72 pop days 69 and 71",
+        "At 76 resolve 75 and 72; remaining indices have zero"
+      ],
+      "dryRun": [
+        "At 74 pop index0 and write wait1",
+        "At 72 pop days 69 and 71",
+        "At 76 resolve 75 and 72; remaining indices have zero"
+      ],
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)",
+      "testCases": [
+        {
+          "input": "temps=[73,74,75,71,69,72,76,73]",
+          "expected": "[1,1,4,2,1,1,0,0]",
+          "reason": "Keep indices of days that have not yet found warmer temperatures."
+        },
+        {
+          "input": "temps=[30,20,10]",
+          "expected": "[0,0,0]",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Scan all future days per index",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(1) auxiliary",
+          "explanation": "For each day, find its first future warmer temperature."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "At 74 pop index0 and write wait1 At 72 pop days 69 and 71 At 76 resolve 75 and 72; remaining indices have zero",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int[] dailyTemperatures(int[] t) {\n        int[] result=new int[t.length];\n        Deque<Integer> stack=new ArrayDeque<>();\n        for(int i=0;i<t.length;i++){\n            while(!stack.isEmpty() && t[i]>t[stack.peek()]){\n                int j=stack.pop();\n                result[j]=i-j;\n            }\n            stack.push(i);\n        }\n        return result;\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-028",
+      "slug": "subsets",
+      "title": "Generate All Subsets",
+      "stageId": "recursion",
+      "topic": "recursion",
+      "difficulty": "Medium",
+      "statement": "Return every subset of an integer array containing distinct values.",
+      "example": {
+        "input": "nums=[1,2]",
+        "output": "[[],[1],[1,2],[2]]",
+        "explanation": "Use choose/explore/undo recursion."
+      },
+      "constraints": [],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> subsets(int[] nums){\n        List<List<Integer>> out=new ArrayList<>();\n        dfs(0,nums,new ArrayList<>(),out);\n        return out;\n    }\n    private void dfs(int i,int[] nums,List<Integer> path,List<List<Integer>> out){\n        out.add(new ArrayList<>(path));\n        for(int j=i;j<nums.length;j++){\n            path.add(nums[j]);\n            dfs(j+1,nums,path,out);\n            path.remove(path.size()-1);\n        }\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "Emit empty subset",
+        "Choose 1 => [1], then 2 => [1,2]",
+        "Backtrack and choose 2 alone => [2]"
+      ],
+      "dryRun": [
+        "Emit empty subset",
+        "Choose 1 => [1], then 2 => [1,2]",
+        "Backtrack and choose 2 alone => [2]"
+      ],
+      "timeComplexity": "O(n×2^n) including output copying",
+      "spaceComplexity": "O(n) auxiliary, excluding output",
+      "testCases": [
+        {
+          "input": "nums=[1,2]",
+          "expected": "[[],[1],[1,2],[2]]",
+          "reason": "Use choose/explore/undo recursion."
+        },
+        {
+          "input": "nums=[]",
+          "expected": "[[]]",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Enumerate masks from 0 to 2^n-1",
+          "type": "Baseline",
+          "timeComplexity": "O(n×2^n)",
+          "spaceComplexity": "O(1) auxiliary excluding output",
+          "explanation": "Use bits to choose inclusion instead of recursion."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n×2^n) including output copying",
+          "spaceComplexity": "O(n) auxiliary, excluding output",
+          "explanation": "Emit empty subset Choose 1 => [1], then 2 => [1,2] Backtrack and choose 2 alone => [2]",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> subsets(int[] nums){\n        List<List<Integer>> out=new ArrayList<>();\n        dfs(0,nums,new ArrayList<>(),out);\n        return out;\n    }\n    private void dfs(int i,int[] nums,List<Integer> path,List<List<Integer>> out){\n        out.add(new ArrayList<>(path));\n        for(int j=i;j<nums.length;j++){\n            path.add(nums[j]);\n            dfs(j+1,nums,path,out);\n            path.remove(path.size()-1);\n        }\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-029",
+      "slug": "permutations",
+      "title": "Permutations",
+      "stageId": "recursion",
+      "topic": "recursion",
+      "difficulty": "Medium",
+      "statement": "Return all orderings of distinct integer values.",
+      "example": {
+        "input": "nums=[1,2,3]",
+        "output": "6 permutations",
+        "explanation": "There are 3! = 6 distinct arrangements."
+      },
+      "constraints": [],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> permute(int[] a){\n        List<List<Integer>> out=new ArrayList<>();\n        dfs(a,new boolean[a.length],new ArrayList<>(),out);\n        return out;\n    }\n    private void dfs(int[] a,boolean[] used,List<Integer> cur,List<List<Integer>> out){\n        if(cur.size()==a.length){out.add(new ArrayList<>(cur));return;}\n        for(int i=0;i<a.length;i++)if(!used[i]){\n            used[i]=true;cur.add(a[i]);\n            dfs(a,used,cur,out);\n            cur.remove(cur.size()-1);used[i]=false;\n        }\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "Choose 1,2,3 => [1,2,3]",
+        "Backtrack and choose 1,3,2",
+        "Repeat with leading 2 and leading 3"
+      ],
+      "dryRun": [
+        "Choose 1,2,3 => [1,2,3]",
+        "Backtrack and choose 1,3,2",
+        "Repeat with leading 2 and leading 3"
+      ],
+      "timeComplexity": "O(n×n!) including output copying",
+      "spaceComplexity": "O(n) auxiliary excluding output",
+      "testCases": [
+        {
+          "input": "nums=[1,2,3]",
+          "expected": "6 permutations",
+          "reason": "There are 3! = 6 distinct arrangements."
+        },
+        {
+          "input": "nums=[1]",
+          "expected": "[[1]]",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Swap-in-place recursion",
+          "type": "Baseline",
+          "timeComplexity": "O(n×n!)",
+          "spaceComplexity": "O(n) recursion",
+          "explanation": "Swap the next element into each position then undo."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n×n!) including output copying",
+          "spaceComplexity": "O(n) auxiliary excluding output",
+          "explanation": "Choose 1,2,3 => [1,2,3] Backtrack and choose 1,3,2 Repeat with leading 2 and leading 3",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public List<List<Integer>> permute(int[] a){\n        List<List<Integer>> out=new ArrayList<>();\n        dfs(a,new boolean[a.length],new ArrayList<>(),out);\n        return out;\n    }\n    private void dfs(int[] a,boolean[] used,List<Integer> cur,List<List<Integer>> out){\n        if(cur.size()==a.length){out.add(new ArrayList<>(cur));return;}\n        for(int i=0;i<a.length;i++)if(!used[i]){\n            used[i]=true;cur.add(a[i]);\n            dfs(a,used,cur,out);\n            cur.remove(cur.size()-1);used[i]=false;\n        }\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-030",
+      "slug": "invert-binary-tree",
+      "title": "Invert Binary Tree",
+      "stageId": "trees",
+      "topic": "trees",
+      "difficulty": "Easy",
+      "statement": "Swap every node's left and right child and return the modified tree root.",
+      "example": {
+        "input": "root=[4,2,7,1,3,6,9]",
+        "output": "[4,7,2,9,6,3,1]",
+        "explanation": "Mirror each subtree."
+      },
+      "constraints": [],
+      "javaCode": "class Solution {\n    public TreeNode invertTree(TreeNode root){\n        if(root==null) return null;\n        TreeNode old=root.left;\n        root.left=root.right;\n        root.right=old;\n        invertTree(root.left);\n        invertTree(root.right);\n        return root;\n    }\n}\n// Judge supplies TreeNode with left,right",
+      "approach": "Optimal Java",
+      "steps": [
+        "At root 4 swap children 2 and7",
+        "Recursively swap children under 7",
+        "Recursively swap children under 2"
+      ],
+      "dryRun": [
+        "At root 4 swap children 2 and7",
+        "Recursively swap children under 7",
+        "Recursively swap children under 2"
+      ],
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(h) call stack",
+      "testCases": [
+        {
+          "input": "root=[4,2,7,1,3,6,9]",
+          "expected": "[4,7,2,9,6,3,1]",
+          "reason": "Mirror each subtree."
+        },
+        {
+          "input": "root=null",
+          "expected": "null",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Breadth-first queue inversion",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(w) queue",
+          "explanation": "Swap children for every dequeued node."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h) call stack",
+          "explanation": "At root 4 swap children 2 and7 Recursively swap children under 7 Recursively swap children under 2",
+          "javaCode": "class Solution {\n    public TreeNode invertTree(TreeNode root){\n        if(root==null) return null;\n        TreeNode old=root.left;\n        root.left=root.right;\n        root.right=old;\n        invertTree(root.left);\n        invertTree(root.right);\n        return root;\n    }\n}\n// Judge supplies TreeNode with left,right"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 18,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-031",
+      "slug": "validate-binary-search-tree",
+      "title": "Validate Binary Search Tree",
+      "stageId": "bst-heap",
+      "topic": "bst-heap",
+      "difficulty": "Medium",
+      "statement": "Decide whether every subtree satisfies strict BST ordering; duplicate keys are not allowed.",
+      "example": {
+        "input": "root=[2,1,3]",
+        "output": "true",
+        "explanation": "Every descendant obeys its ancestors' bounds."
+      },
+      "constraints": [],
+      "javaCode": "class Solution {\n    public boolean isValidBST(TreeNode root) {\n        return valid(root,Long.MIN_VALUE,Long.MAX_VALUE);\n    }\n    private boolean valid(TreeNode node,long lo,long hi){\n        if(node==null) return true;\n        if(node.val<=lo || node.val>=hi) return false;\n        return valid(node.left,lo,node.val)&&valid(node.right,node.val,hi);\n    }\n}\n// Judge supplies TreeNode with int val and left,right",
+      "approach": "Optimal Java",
+      "steps": [
+        "Root 2 passes (-inf,+inf)",
+        "Left child 1 is below bound2",
+        "Right child 3 is above bound2; both valid"
+      ],
+      "dryRun": [
+        "Root 2 passes (-inf,+inf)",
+        "Left child 1 is below bound2",
+        "Right child 3 is above bound2; both valid"
+      ],
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(h) call stack",
+      "testCases": [
+        {
+          "input": "root=[2,1,3]",
+          "expected": "true",
+          "reason": "Every descendant obeys its ancestors' bounds."
+        },
+        {
+          "input": "root=[5,1,4,null,null,3,6]",
+          "expected": "false",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Collect inorder values then check increase",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Inorder traversal of a strict BST is increasing."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h) call stack",
+          "explanation": "Root 2 passes (-inf,+inf) Left child 1 is below bound2 Right child 3 is above bound2; both valid",
+          "javaCode": "class Solution {\n    public boolean isValidBST(TreeNode root) {\n        return valid(root,Long.MIN_VALUE,Long.MAX_VALUE);\n    }\n    private boolean valid(TreeNode node,long lo,long hi){\n        if(node==null) return true;\n        if(node.val<=lo || node.val>=hi) return false;\n        return valid(node.left,lo,node.val)&&valid(node.right,node.val,hi);\n    }\n}\n// Judge supplies TreeNode with int val and left,right"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-032",
+      "slug": "kth-largest-element-in-an-array",
+      "title": "Kth Largest Array Value",
+      "stageId": "bst-heap",
+      "topic": "bst-heap",
+      "difficulty": "Medium",
+      "statement": "Return the kth largest number including duplicates. 1≤k≤array length.",
+      "example": {
+        "input": "nums=[3,2,1,5,6,4],k=2",
+        "output": "5",
+        "explanation": "After sorting descending, the second value is 5."
+      },
+      "constraints": [],
+      "javaCode": "import java.util.*;\nclass Solution {\n    public int findKthLargest(int[] nums,int k){\n        PriorityQueue<Integer> heap=new PriorityQueue<>();\n        for(int x:nums){\n            heap.offer(x);\n            if(heap.size()>k) heap.poll();\n        }\n        return heap.peek();\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "Push 3,2; heap holds two best",
+        "When 5 and6 arrive, remove smaller values",
+        "Final heap holds 5 and6, minimum is 5"
+      ],
+      "dryRun": [
+        "Push 3,2; heap holds two best",
+        "When 5 and6 arrive, remove smaller values",
+        "Final heap holds 5 and6, minimum is 5"
+      ],
+      "timeComplexity": "O(n log k)",
+      "spaceComplexity": "O(k)",
+      "testCases": [
+        {
+          "input": "nums=[3,2,1,5,6,4],k=2",
+          "expected": "5",
+          "reason": "After sorting descending, the second value is 5."
+        },
+        {
+          "input": "nums=[1],k=1",
+          "expected": "1",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Sort all numbers",
+          "type": "Baseline",
+          "timeComplexity": "O(n log n)",
+          "spaceComplexity": "O(log n) to O(n) sorting overhead",
+          "explanation": "Sort descending and select the kth entry."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n log k)",
+          "spaceComplexity": "O(k)",
+          "explanation": "Push 3,2; heap holds two best When 5 and6 arrive, remove smaller values Final heap holds 5 and6, minimum is 5",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int findKthLargest(int[] nums,int k){\n        PriorityQueue<Integer> heap=new PriorityQueue<>();\n        for(int x:nums){\n            heap.offer(x);\n            if(heap.size()>k) heap.poll();\n        }\n        return heap.peek();\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-033",
+      "slug": "jump-game",
+      "title": "Jump Game",
+      "stageId": "intervals-greedy",
+      "topic": "intervals-greedy",
+      "difficulty": "Medium",
+      "statement": "Given nonnegative maximum jump lengths, decide whether the final index can be reached from index zero.",
+      "example": {
+        "input": "nums=[2,3,1,1,4]",
+        "output": "true",
+        "explanation": "From index0 reach index1, then jump to the end."
+      },
+      "constraints": [],
+      "javaCode": "class Solution {\n    public boolean canJump(int[] nums) {\n        int farthest=0;\n        for(int i=0;i<nums.length;i++){\n            if(i>farthest) return false;\n            farthest=Math.max(farthest,i+nums[i]);\n            if(farthest>=nums.length-1) return true;\n        }\n        return true;\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "At index0, farthest=2",
+        "At index1, farthest becomes4",
+        "Final index4 is covered; return true"
+      ],
+      "dryRun": [
+        "At index0, farthest=2",
+        "At index1, farthest becomes4",
+        "Final index4 is covered; return true"
+      ],
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "testCases": [
+        {
+          "input": "nums=[2,3,1,1,4]",
+          "expected": "true",
+          "reason": "From index0 reach index1, then jump to the end."
+        },
+        {
+          "input": "nums=[3,2,1,0,4]",
+          "expected": "false",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "DFS trying every jump length",
+          "type": "Baseline",
+          "timeComplexity": "O(2^n) worst-case naive search",
+          "spaceComplexity": "O(n) recursion",
+          "explanation": "Repeatedly explore every possible next index."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "At index0, farthest=2 At index1, farthest becomes4 Final index4 is covered; return true",
+          "javaCode": "class Solution {\n    public boolean canJump(int[] nums) {\n        int farthest=0;\n        for(int i=0;i<nums.length;i++){\n            if(i>farthest) return false;\n            farthest=Math.max(farthest,i+nums[i]);\n            if(farthest>=nums.length-1) return true;\n        }\n        return true;\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 30,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [
+        {
+          "company": "Adobe",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview compilation, not official employer confirmation"
+        }
+      ],
+      "source": "Original concise formulation with authored Java implementation"
+    },
+    {
+      "id": "DSA-034",
+      "slug": "climbing-stairs",
+      "title": "Climbing Stairs",
+      "stageId": "dp-one",
+      "topic": "dp-one",
+      "difficulty": "Easy",
+      "statement": "Count ways to reach step n using jumps of exactly 1 or 2. Assume n≥1 and result fits a signed int.",
+      "example": {
+        "input": "n=4",
+        "output": "5",
+        "explanation": "Sequences: 1111,112,121,211,22."
+      },
+      "constraints": [],
+      "javaCode": "class Solution {\n    public int climbStairs(int n){\n        if(n<=2) return n;\n        int a=1,b=2;\n        for(int i=3;i<=n;i++){\n            int next=a+b;\n            a=b;b=next;\n        }\n        return b;\n    }\n}",
+      "approach": "Optimal Java",
+      "steps": [
+        "ways(1)=1, ways(2)=2",
+        "ways(3)=3",
+        "ways(4)=5"
+      ],
+      "dryRun": [
+        "ways(1)=1, ways(2)=2",
+        "ways(3)=3",
+        "ways(4)=5"
+      ],
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(1)",
+      "testCases": [
+        {
+          "input": "n=4",
+          "expected": "5",
+          "reason": "Sequences: 1111,112,121,211,22."
+        },
+        {
+          "input": "n=1",
+          "expected": "1",
+          "reason": "Boundary case"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Plain recursion f(n)=f(n-1)+f(n-2)",
+          "type": "Baseline",
+          "timeComplexity": "O(φ^n) time",
+          "spaceComplexity": "O(n) call stack",
+          "explanation": "Repeated subproblems grow exponentially without memoization."
+        },
+        {
+          "name": "Optimized Java",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "ways(1)=1, ways(2)=2 ways(3)=3 ways(4)=5",
+          "javaCode": "class Solution {\n    public int climbStairs(int n){\n        if(n<=2) return n;\n        int a=1,b=2;\n        for(int i=3;i<=n;i++){\n            int next=a+b;\n            a=b;b=next;\n        }\n        return b;\n    }\n}"
+        }
+      ],
+      "interviewTip": "Explain why the invariant is preserved and compare baseline versus optimized bounds. Test edge cases.",
+      "contentStatus": "worked",
+      "estimatedMinutes": 18,
+      "dateAdded": "2026-11-23",
+      "companyEvidence": [
+        {
+          "company": "Adobe",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview compilation, not official employer confirmation"
+        }
+      ],
+      "source": "Original concise formulation with authored Java implementation"
+    }
+  ]
+}
