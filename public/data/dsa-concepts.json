@@ -1214,15 +1214,15 @@
       "commonMistakes": "Repeated shifting gives O(n²) on reverse-sorted arrays.",
       "operations": "O(n²)",
       "realWorld": "Practice and implement the linked example, then adapt the same invariant to new inputs.",
-      "example": "[3,1,2] -> [1,3,2] -> [1,2,3]",
+      "example": "Insertion sort: take the next unsorted number and shift larger sorted-prefix items right.",
       "linkedSlug": "sort-colors",
       "linkedTitle": "Sort Colors",
       "javaCode": "class SortAlgorithms {\n    static void insertionSort(int[] a) {\n        for (int i=1;i<a.length;i++) {\n            int value=a[i],j=i-1;\n            while(j>=0&&a[j]>value){a[j+1]=a[j];j--;}\n            a[j+1]=value;\n        }\n    }\n}",
       "codeLabel": "Insertion sort Java implementation",
       "exampleDetail": {
-        "input": "nums=[2,0,2,1,1,0]",
-        "output": "[0,0,1,1,2,2]",
-        "explanation": "Zeros move left and twos move right."
+        "input": "a=[5,2,4,1]",
+        "output": "a=[1,2,4,5]",
+        "explanation": "Each pass extends the sorted prefix by inserting one element."
       },
       "timeComplexity": "O(n²)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -1232,23 +1232,24 @@
         "Continue until low contains 0s, center 1s, high 2s"
       ],
       "dryRun": [
-        "At i=0 see 2, swap with high end 0; do not advance i",
-        "At i=0 see 0, swap into low and advance",
-        "Continue until low contains 0s, center 1s, high 2s"
+        "Prefix [5] is sorted; insert 2 before 5 -> [2,5,4,1]",
+        "Insert 4 between 2 and 5 -> [2,4,5,1]",
+        "Shift 5,4,2 and insert 1 -> [1,2,4,5]"
       ],
       "testCases": [
         {
-          "input": "nums=[2,0,2,1,1,0]",
-          "expected": "[0,0,1,1,2,2]",
-          "reason": "Zeros move left and twos move right."
+          "input": "a=[5,2,4,1]",
+          "expected": "[1,2,4,5]",
+          "reason": "Unsorted example"
         },
         {
-          "input": "nums=[2,0,1]",
-          "expected": "[0,1,2]",
-          "reason": "Boundary or contrasting case"
+          "input": "a=[1,2,3]",
+          "expected": "[1,2,3]",
+          "reason": "Already sorted"
         }
       ],
-      "practiceUrl": "/dsa/sort-colors"
+      "practiceUrl": "https://leetcode.com/problems/sort-an-array/",
+      "practiceLabel": "Practise sorting an array"
     },
     {
       "stageId": "two-pointers",
@@ -1268,9 +1269,9 @@
       "javaCode": "class SortAlgorithms {\n    static void mergeSort(int[] a) { sort(a,new int[a.length],0,a.length); }\n    private static void sort(int[] a,int[] tmp,int lo,int hi) {\n        if(hi-lo<=1)return;\n        int mid=lo+(hi-lo)/2;\n        sort(a,tmp,lo,mid);sort(a,tmp,mid,hi);\n        int i=lo,j=mid,k=lo;\n        while(i<mid&&j<hi)tmp[k++]=a[i]<=a[j]?a[i++]:a[j++];\n        while(i<mid)tmp[k++]=a[i++];\n        while(j<hi)tmp[k++]=a[j++];\n        for(int x=lo;x<hi;x++)a[x]=tmp[x];\n    }\n}",
       "codeLabel": "Merge sort Java implementation",
       "exampleDetail": {
-        "input": "a = [1, 3, 6], b = [2, 3, 5]",
-        "output": "[1, 2, 3, 3, 5, 6]",
-        "explanation": "Compare the front elements and append the smaller one. Both occurrences of 3 are retained."
+        "input": "a=[5,2,4,1]",
+        "output": "[1,2,4,5]",
+        "explanation": "Sort halves then merge them in linear time."
       },
       "timeComplexity": "O(n log n)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -1281,9 +1282,9 @@
         "Return the result. Empty inputs and duplicates work without special handling."
       ],
       "dryRun": [
-        "Compare 1 vs 2 -> take 1",
-        "Compare 3 vs 2 -> take 2",
-        "Compare 3 vs 3 -> take 3; then merge remaining [3,5,6]"
+        "Divide [5,2,4,1] into [5,2] and [4,1]",
+        "Sort halves into [2,5] and [1,4]",
+        "Merge by smallest front value -> [1,2,4,5]"
       ],
       "testCases": [
         {
@@ -1302,7 +1303,8 @@
           "reason": "Duplicates"
         }
       ],
-      "practiceUrl": "/dsa/merge-two-sorted-arrays"
+      "practiceUrl": "https://leetcode.com/problems/sort-an-array/",
+      "practiceLabel": "Practise merge-sort-compatible array sorting"
     },
     {
       "stageId": "two-pointers",
@@ -1322,9 +1324,9 @@
       "javaCode": "class SortAlgorithms {\n    static void quickSort(int[] a) { sort(a,0,a.length-1); }\n    private static void sort(int[] a,int lo,int hi) {\n        if(lo>=hi)return;\n        int pivot=a[hi],boundary=lo;\n        for(int i=lo;i<hi;i++)if(a[i]<=pivot){\n            int t=a[i];a[i]=a[boundary];a[boundary]=t;boundary++;\n        }\n        a[hi]=a[boundary];a[boundary]=pivot;\n        sort(a,lo,boundary-1);sort(a,boundary+1,hi);\n    }\n}",
       "codeLabel": "Quicksort Java implementation",
       "exampleDetail": {
-        "input": "nums=[2,0,2,1,1,0]",
-        "output": "[0,0,1,1,2,2]",
-        "explanation": "Zeros move left and twos move right."
+        "input": "a=[5,2,4,1]",
+        "output": "[1,2,4,5]",
+        "explanation": "Partition around a pivot, then sort the subsegments."
       },
       "timeComplexity": "O(n log n) average; O(n²) worst",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -1334,9 +1336,9 @@
         "Continue until low contains 0s, center 1s, high 2s"
       ],
       "dryRun": [
-        "At i=0 see 2, swap with high end 0; do not advance i",
-        "At i=0 see 0, swap into low and advance",
-        "Continue until low contains 0s, center 1s, high 2s"
+        "Select last value 1 as pivot; partition into [] + [1] + [5,2,4]",
+        "Sort right segment around pivot 4 -> [2,4,5]",
+        "Combine pivot and sorted partition -> [1,2,4,5]"
       ],
       "testCases": [
         {
@@ -1350,7 +1352,8 @@
           "reason": "Boundary or contrasting case"
         }
       ],
-      "practiceUrl": "/dsa/sort-colors"
+      "practiceUrl": "https://leetcode.com/problems/sort-an-array/",
+      "practiceLabel": "Practise quick-sort-compatible array sorting"
     },
     {
       "stageId": "two-pointers",
@@ -1904,9 +1907,9 @@
       "javaCode": "class DivideAndConquer {\n    static long sum(int[] a,int left,int right) {\n        if(left>=right)return 0;\n        if(right-left==1)return a[left];\n        int mid=left+(right-left)/2;\n        return sum(a,left,mid)+sum(a,mid,right);\n    }\n}",
       "codeLabel": "Divide and conquer Java implementation",
       "exampleDetail": {
-        "input": "candidates=[2,3,6,7], target=7",
-        "output": "[[2,2,3],[7]]",
-        "explanation": "The two combinations reach 7 without changing combination order."
+        "input": "a=[1,2,3,4], left=0, right=4",
+        "output": "10",
+        "explanation": "Two disjoint halves sum to 3 and 7, combined to 10."
       },
       "timeComplexity": "varies",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -1916,20 +1919,20 @@
         "Backtrack to root; choosing 7 saves [7]"
       ],
       "dryRun": [
-        "Start with 2, remaining 5; choose 2, remaining 3",
-        "Choose 3, remaining 0, save [2,2,3]",
-        "Backtrack to root; choosing 7 saves [7]"
+        "Split [0,4) into [0,2) and [2,4)",
+        "Base calls return 1, 2, 3 and 4; left half totals 3, right totals 7",
+        "Combine subresults 3+7=10"
       ],
       "testCases": [
         {
-          "input": "candidates=[2,3,6,7], target=7",
-          "expected": "[[2,2,3],[7]]",
-          "reason": "The two combinations reach 7 without changing combination order."
+          "input": "a=[1,2,3,4]",
+          "expected": "10",
+          "reason": "Even number of elements"
         },
         {
-          "input": "candidates=[2], target=1",
-          "expected": "[]",
-          "reason": "Boundary or contrasting case"
+          "input": "a=[]",
+          "expected": "0",
+          "reason": "Empty range"
         }
       ],
       "practiceUrl": "/dsa/combination-sum"
@@ -2649,9 +2652,9 @@
       "javaCode": "import java.util.*;\nclass KruskalMST {\n    static int minCost(int n,int[][] edges) {\n        Arrays.sort(edges,(a,b)->Integer.compare(a[2],b[2]));\n        int[] parent=new int[n],size=new int[n];\n        for(int i=0;i<n;i++){parent[i]=i;size[i]=1;}\n        int cost=0,used=0;\n        for(int[] e:edges) {\n            int a=find(parent,e[0]),b=find(parent,e[1]);\n            if(a==b)continue;\n            if(size[a]<size[b]){int t=a;a=b;b=t;}\n            parent[b]=a;size[a]+=size[b];\n            cost+=e[2];used++;\n            if(used==n-1)return cost;\n        }\n        return n<=1?0:-1;\n    }\n    private static int find(int[] p,int x) {\n        if(p[x]!=x)p[x]=find(p,p[x]);\n        return p[x];\n    }\n}",
       "codeLabel": "Kruskal MST Java implementation",
       "exampleDetail": {
-        "input": "points=[[0,0],[2,2],[3,10],[5,2],[7,0]]",
-        "output": "20",
-        "explanation": "A minimum spanning tree connects all five nodes for cost 20."
+        "input": "n=4, edges=[[0,1,1],[1,2,2],[2,3,3],[0,3,10],[0,2,5]]",
+        "output": "6",
+        "explanation": "Choose edge weights 1,2,3 while avoiding more expensive cycle edges."
       },
       "timeComplexity": "O(E log E)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -2661,20 +2664,20 @@
         "After selecting 4 edges, total cost is 20"
       ],
       "dryRun": [
-        "Start tree with point 0, best edge to point 1 has cost 4",
-        "From the growing tree choose the cheapest crossing edge each round",
-        "After selecting 4 edges, total cost is 20"
+        "Sort by ascending weight: 1,2,3,5,10",
+        "Union 0-1 cost 1, 1-2 cost 2 and 2-3 cost 3",
+        "All 4 nodes connected with 3 edges, MST cost 6"
       ],
       "testCases": [
         {
-          "input": "points=[[0,0],[2,2],[3,10],[5,2],[7,0]]",
-          "expected": "20",
-          "reason": "A minimum spanning tree connects all five nodes for cost 20."
+          "input": "n=4, edges=[[0,1,1],[1,2,2],[2,3,3],[0,3,10],[0,2,5]]",
+          "expected": "6",
+          "reason": "One MST connects all vertices"
         },
         {
-          "input": "points=[[0,0]]",
-          "expected": "0",
-          "reason": "Boundary or contrasting case"
+          "input": "n=2, edges=[]",
+          "expected": "-1",
+          "reason": "Disconnected graph"
         }
       ],
       "practiceUrl": "/dsa/min-cost-to-connect-all-points"
@@ -2697,9 +2700,9 @@
       "javaCode": "import java.util.*;\nclass MemoExample {\n    static long fibonacci(int n) {\n        long[] memo=new long[n+1];\n        Arrays.fill(memo,-1L);\n        return solve(n,memo);\n    }\n    private static long solve(int n,long[] memo){\n        if(n<=1)return n;\n        if(memo[n]!=-1)return memo[n];\n        return memo[n]=solve(n-1,memo)+solve(n-2,memo);\n    }\n}",
       "codeLabel": "Memoization Java implementation",
       "exampleDetail": {
-        "input": "n=4",
-        "output": "5",
-        "explanation": "Sequences: 1111,112,121,211,22."
+        "input": "n=6",
+        "output": "8",
+        "explanation": "F(6)=F(5)+F(4)=5+3."
       },
       "timeComplexity": "O(states × transitions)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -2709,23 +2712,24 @@
         "ways(4)=5"
       ],
       "dryRun": [
-        "ways(1)=1, ways(2)=2",
-        "ways(3)=3",
-        "ways(4)=5"
+        "Compute F(6), which needs F(5) and F(4)",
+        "Cache F(4)=3 while computing F(5)=5",
+        "Reuse cached F(4) rather than recursively recomputing; return 8"
       ],
       "testCases": [
         {
-          "input": "n=4",
-          "expected": "5",
-          "reason": "Sequences: 1111,112,121,211,22."
+          "input": "n=6",
+          "expected": "8",
+          "reason": "Standard Fibonacci"
         },
         {
-          "input": "n=1",
-          "expected": "1",
-          "reason": "Boundary case"
+          "input": "n=0",
+          "expected": "0",
+          "reason": "Base case"
         }
       ],
-      "practiceUrl": "/dsa/climbing-stairs"
+      "practiceUrl": "https://leetcode.com/problems/fibonacci-number/",
+      "practiceLabel": "Practise memoized Fibonacci"
     },
     {
       "stageId": "dp-one",
@@ -2991,9 +2995,9 @@
       "javaCode": "class NumberTheory {\n    static int gcd(int a,int b) {\n        a=Math.abs(a);b=Math.abs(b);\n        while(b!=0){int remainder=a%b;a=b;b=remainder;}\n        return a;\n    }\n}",
       "codeLabel": "Euclid GCD Java implementation",
       "exampleDetail": {
-        "input": "nums = [6, 3, 6, -2, 3]",
-        "output": "-2",
-        "explanation": "The repeated values cancel in XOR, leaving -2."
+        "input": "a=48,b=18",
+        "output": "6",
+        "explanation": "48 % 18 = 12; 18 % 12 = 6; 12 % 6 = 0."
       },
       "timeComplexity": "O(log min(a,b))",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -3004,28 +3008,24 @@
         "Return the accumulator, which is the single unpaired number."
       ],
       "dryRun": [
-        "Start XOR=0",
-        "XOR 6,3,6: both 6 cancel, leaves 3",
-        "XOR -2 then 3: 3 cancels, leaves -2"
+        "gcd(48,18) reduces to gcd(18,12)",
+        "Then gcd(18,12) reduces to gcd(12,6)",
+        "Remainder becomes 0, return final nonzero divisor 6"
       ],
       "testCases": [
         {
-          "input": "nums = [6, 3, 6, -2, 3]",
-          "expected": "-2",
-          "reason": "Main walkthrough example"
+          "input": "a=48,b=18",
+          "expected": "6",
+          "reason": "Common divisor 6"
         },
         {
-          "input": "nums=[5]",
-          "expected": "5",
-          "reason": "Single"
-        },
-        {
-          "input": "nums=[0,1,0]",
-          "expected": "1",
-          "reason": "Zero repeats"
+          "input": "a=8,b=0",
+          "expected": "8",
+          "reason": "Zero-second-argument base case"
         }
       ],
-      "practiceUrl": "/dsa/single-occurring-number"
+      "practiceUrl": "https://www.geeksforgeeks.org/problems/gcd-of-two-numbers3459/1",
+      "practiceLabel": "Practise Euclid's GCD"
     },
     {
       "stageId": "bit-math",
@@ -3045,9 +3045,9 @@
       "javaCode": "import java.util.*;\nclass NumberTheory {\n    static List<Integer> primesUpTo(int n) {\n        boolean[] composite=new boolean[n+1];\n        for(int p=2;(long)p*p<=n;p++)if(!composite[p])\n            for(int multiple=p*p;multiple<=n;multiple+=p)composite[multiple]=true;\n        List<Integer> primes=new ArrayList<>();\n        for(int i=2;i<=n;i++)if(!composite[i])primes.add(i);\n        return primes;\n    }\n}",
       "codeLabel": "Sieve of Eratosthenes Java implementation",
       "exampleDetail": {
-        "input": "n=5",
-        "output": "[0,1,1,2,1,2]",
-        "explanation": "Counts correspond to 0,1,10,11,100,101 in binary."
+        "input": "n=12",
+        "output": "[2,3,5,7,11]",
+        "explanation": "Composite 4,6,8,9,10,12 are removed."
       },
       "timeComplexity": "O(n log log n)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -3057,23 +3057,24 @@
         "ans[5]=ans[2]+1=2"
       ],
       "dryRun": [
-        "ans[0]=0, ans[1]=ans[0]+1=1",
-        "ans[3]=ans[1]+1=2",
-        "ans[5]=ans[2]+1=2"
+        "Initialize candidate flags for integers 2..12",
+        "Mark multiples of prime 2 starting 4, then multiples of prime 3 starting 9",
+        "Unmarked values 2,3,5,7,11 are prime"
       ],
       "testCases": [
         {
-          "input": "n=5",
-          "expected": "[0,1,1,2,1,2]",
-          "reason": "Counts correspond to 0,1,10,11,100,101 in binary."
+          "input": "n=12",
+          "expected": "[2,3,5,7,11]",
+          "reason": "Prime numbers up to 12"
         },
         {
-          "input": "n=0",
-          "expected": "[0]",
-          "reason": "Boundary or contrasting case"
+          "input": "n=1",
+          "expected": "[]",
+          "reason": "No primes below 2"
         }
       ],
-      "practiceUrl": "/dsa/counting-bits"
+      "practiceUrl": "https://www.geeksforgeeks.org/problems/sieve-of-eratosthenes5242/1",
+      "practiceLabel": "Practise the sieve"
     },
     {
       "stageId": "advanced-ds",
@@ -3333,9 +3334,9 @@
       "javaCode": "import java.util.*;\nclass SweepLineExample {\n    static int maxSimultaneous(int[][] halfOpenIntervals) {\n        TreeMap<Integer,Integer> change=new TreeMap<>();\n        for(int[] interval:halfOpenIntervals) {\n            change.merge(interval[0],1,Integer::sum);\n            change.merge(interval[1],-1,Integer::sum);\n        }\n        int active=0,best=0;\n        for(int delta:change.values()){\n            active+=delta;best=Math.max(best,active);\n        }\n        return best;\n    }\n}",
       "codeLabel": "Sweep line Java implementation",
       "exampleDetail": {
-        "input": "book(10,20); book(50,60); book(10,40); book(5,15)",
-        "output": "[1,1,2,3]",
-        "explanation": "After the fourth booking, three intervals overlap from 10 to 15."
+        "input": "intervals=[[10,20],[10,40],[5,15]]",
+        "output": "3",
+        "explanation": "All three are active over [10,15)."
       },
       "timeComplexity": "O(n log n)",
       "spaceComplexity": "See code; recursion or auxiliary storage depends on operation",
@@ -3345,20 +3346,20 @@
         "Add (5,15), times 10..14 have three, so answer becomes 3"
       ],
       "dryRun": [
-        "After (10,20) maximum overlap 1",
-        "After (10,40), times 10..19 have two bookings",
-        "Add (5,15), times 10..14 have three, so answer becomes 3"
+        "Create +1 at 5, +2 at 10, -1 at 15, -1 at 20, -1 at 40",
+        "Sweep coordinates in sorted order, tracking active count",
+        "At time 10 active becomes 3, which is the maximum"
       ],
       "testCases": [
         {
-          "input": "book(10,20); book(50,60); book(10,40); book(5,15)",
-          "expected": "[1,1,2,3]",
-          "reason": "After the fourth booking, three intervals overlap from 10 to 15."
+          "input": "intervals=[[10,20],[10,40],[5,15]]",
+          "expected": "3",
+          "reason": "Three-way overlap"
         },
         {
-          "input": "book(10,20); book(20,30)",
-          "expected": "[1,1]",
-          "reason": "Boundary or contrasting case"
+          "input": "intervals=[[1,2],[2,3]]",
+          "expected": "1",
+          "reason": "Half-open touching intervals do not overlap"
         }
       ],
       "practiceUrl": "/dsa/my-calendar-iii"
