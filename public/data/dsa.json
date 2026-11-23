@@ -31,7 +31,55 @@
       "timeComplexity": "O(n) expected",
       "spaceComplexity": "O(n)",
       "interviewTip": "Explain why you check for the complement before inserting the current element. HashMap operations are O(1) on average.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "hashing",
+      "dryRun": [
+        "i=0 x=2, needed=7, map={} -> insert 2:0",
+        "i=1 x=7, needed=2, map contains 2:0 -> return [0,1]"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [2, 7, 11, 15], target = 9",
+          "expected": "[0, 1]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[3,3], target=6",
+          "expected": "[0,1]",
+          "reason": "Duplicates still use different indices"
+        },
+        {
+          "input": "nums=[-3,4,3,90], target=0",
+          "expected": "[0,2]",
+          "reason": "Negative complement"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Nested loops",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(1)",
+          "explanation": "For each i, inspect all j>i. Simpler but checks up to n(n-1)/2 pairs.",
+          "javaCode": "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        for (int i=0;i<nums.length;i++)\n            for (int j=i+1;j<nums.length;j++)\n                if (nums[i]+nums[j]==target) return new int[]{i,j};\n        throw new IllegalArgumentException(\"No pair\");\n    }\n}"
+        },
+        {
+          "name": "Hash map of previously seen numbers",
+          "type": "Optimized",
+          "timeComplexity": "O(n) expected",
+          "spaceComplexity": "O(n)",
+          "explanation": "Create a HashMap from number to its index. Scan the array from left to right. For each number x, compute complement = target - x. If the complement is already in the map, return its stored index and the current index. Otherwise record x and its index, then continue. Store only after checking to avoid using the current element twice.",
+          "javaCode": "import java.util.HashMap;\nimport java.util.Map;\n\nclass Solution {\n    public int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> seen = new HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            int needed = target - nums[i];\n            if (seen.containsKey(needed)) {\n                return new int[] {seen.get(needed), i};\n            }\n            seen.put(nums[i], i);\n        }\n        throw new IllegalArgumentException(\"No solution\");\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/interview-experiences/amazon-topics-interview-preparation/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-002",
@@ -62,7 +110,61 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(n)",
       "interviewTip": "Mention why a counter cannot handle mixed bracket types or nesting order.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "stacks-queues",
+      "dryRun": [
+        "Read '(' -> expect ')'",
+        "Read '{' -> expect '}', read '[' -> expect ']'",
+        "Read ']', then '}', then ')' -> stack empty: true"
+      ],
+      "testCases": [
+        {
+          "input": "s = \"({[]})\"",
+          "expected": "true",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "s=\"\"",
+          "expected": "true",
+          "reason": "Empty sequence is balanced"
+        },
+        {
+          "input": "s=\"([)]\"",
+          "expected": "false",
+          "reason": "Crossed nesting"
+        },
+        {
+          "input": "s=\"(\"",
+          "expected": "false",
+          "reason": "Unclosed bracket"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Repeated adjacent-pair removal",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Keep removing (), [] and {}; an empty final string is balanced. Inefficient due to repeated scans.",
+          "javaCode": "class Solution {\n    public boolean isValid(String s) {\n        while (true) {\n            String next=s.replace(\"()\",\"\").replace(\"[]\",\"\").replace(\"{}\",\"\");\n            if (next.length()==s.length()) return s.isEmpty();\n            s=next;\n        }\n    }\n}"
+        },
+        {
+          "name": "Stack of expected closing brackets",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Create an empty stack of characters. For an opening bracket, push its matching closing bracket onto the stack. For a closing bracket, the stack must be nonempty and its top must equal that character; otherwise return false. After the entire string, return true only if the stack is empty.",
+          "javaCode": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\nclass Solution {\n    public boolean isValid(String s) {\n        Deque<Character> expected = new ArrayDeque<>();\n        for (char c : s.toCharArray()) {\n            if (c == '(') expected.push(')');\n            else if (c == '[') expected.push(']');\n            else if (c == '{') expected.push('}');\n            else if (expected.isEmpty() || expected.pop() != c) return false;\n        }\n        return expected.isEmpty();\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Oracle",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-003",
@@ -93,7 +195,50 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(1)",
       "interviewTip": "Be ready to explain why initializing to zero would give the wrong answer for an all-negative input.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "dp-one",
+      "dryRun": [
+        "At 4, restart current sum at 4",
+        "Then -1 ->3, +2 ->5, +1 ->6",
+        "Best stays 6 even after -5 and +4"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+          "expected": "6",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[-3,-2,-5]",
+          "expected": "-2",
+          "reason": "All negative"
+        },
+        {
+          "input": "nums=[7]",
+          "expected": "7",
+          "reason": "Single value"
+        }
+      ],
+      "variants": [
+        {
+          "name": "All subarrays",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Fix start, extend end and accumulate the segment sum.",
+          "javaCode": "class Solution {\n    public int maxSubArray(int[] a) {\n        int best=Integer.MIN_VALUE;\n        for(int i=0;i<a.length;i++){\n            int sum=0;\n            for(int j=i;j<a.length;j++) {sum+=a[j];best=Math.max(best,sum);}\n        }\n        return best;\n    }\n}"
+        },
+        {
+          "name": "Kadane's algorithm",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Initialize currentSum and bestSum to the first element, which handles all-negative arrays. For each subsequent element x, decide whether to start a new subarray at x or extend the previous one: currentSum = max(x, currentSum + x). Update bestSum = max(bestSum, currentSum). Return bestSum after processing every element.",
+          "javaCode": "class Solution {\n    public int maxSubArray(int[] nums) {\n        int currentSum = nums[0];\n        int bestSum = nums[0];\n        for (int i = 1; i < nums.length; i++) {\n            currentSum = Math.max(nums[i], currentSum + nums[i]);\n            bestSum = Math.max(bestSum, currentSum);\n        }\n        return bestSum;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-004",
@@ -124,11 +269,65 @@
       "timeComplexity": "O(n) expected",
       "spaceComplexity": "O(min(n, character set size))",
       "interviewTip": "Why use max when moving left? A previously seen character may be outside the current window.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "sliding-window",
+      "dryRun": [
+        "Window grows a,b,c -> best=3",
+        "Next 'a' repeats index 0: move left to 1",
+        "Continue shrinking past duplicates; best remains 3"
+      ],
+      "testCases": [
+        {
+          "input": "s = \"abcabcbb\"",
+          "expected": "3",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "s=\"\"",
+          "expected": "0",
+          "reason": "Empty"
+        },
+        {
+          "input": "s=\"bbbbb\"",
+          "expected": "1",
+          "reason": "All same"
+        },
+        {
+          "input": "s=\"pwwkew\"",
+          "expected": "3",
+          "reason": "Window shift"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Restart a unique set at each index",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(min(n,alphabet))",
+          "explanation": "For every start index, add characters until one repeats.",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int lengthOfLongestSubstring(String s) {\n        int best=0;\n        for(int i=0;i<s.length();i++){\n            Set<Character> set=new HashSet<>();\n            for(int j=i;j<s.length() && set.add(s.charAt(j));j++) best=Math.max(best,j-i+1);\n        }\n        return best;\n    }\n}"
+        },
+        {
+          "name": "Sliding window and last-seen positions",
+          "type": "Optimized",
+          "timeComplexity": "O(n) expected",
+          "spaceComplexity": "O(min(n, character set size))",
+          "explanation": "Start a window at left = 0 and maintain a map from character to its latest index. Move right across the string. If the current character was seen within the current window, move left just past its previous index. Update the character's latest index to right. Update best with the window length right - left + 1; return best after the scan.",
+          "javaCode": "import java.util.HashMap;\nimport java.util.Map;\n\nclass Solution {\n    public int lengthOfLongestSubstring(String s) {\n        Map<Character, Integer> lastSeen = new HashMap<>();\n        int left = 0, best = 0;\n        for (int right = 0; right < s.length(); right++) {\n            char c = s.charAt(right);\n            if (lastSeen.containsKey(c)) {\n                left = Math.max(left, lastSeen.get(c) + 1);\n            }\n            lastSeen.put(c, right);\n            best = Math.max(best, right - left + 1);\n        }\n        return best;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Morgan Stanley",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "dateAdded": "2026-11-21",
-      "source": "Original interview-style formulation",
+      "source": "Original practice problem statement and authored Java implementation",
       "id": "DSA-005",
       "slug": "merge-two-sorted-arrays",
       "title": "Merge Two Sorted Arrays into One",
@@ -156,11 +355,54 @@
       "javaCode": "class Solution {\n    public int[] mergeSorted(int[] a, int[] b) {\n        int[] result = new int[a.length + b.length];\n        int i = 0, j = 0, k = 0;\n        while (i < a.length && j < b.length) {\n            if (a[i] <= b[j]) result[k++] = a[i++];\n            else result[k++] = b[j++];\n        }\n        while (i < a.length) result[k++] = a[i++];\n        while (j < b.length) result[k++] = b[j++];\n        return result;\n    }\n}",
       "timeComplexity": "O(n + m)",
       "spaceComplexity": "O(n + m) for the output",
-      "interviewTip": "Explain the loop invariant: the result prefix is always sorted and contains the smallest elements processed so far."
+      "interviewTip": "Explain the loop invariant: the result prefix is always sorted and contains the smallest elements processed so far.",
+      "stageId": "two-pointers",
+      "dryRun": [
+        "Compare 1 vs 2 -> take 1",
+        "Compare 3 vs 2 -> take 2",
+        "Compare 3 vs 3 -> take 3; then merge remaining [3,5,6]"
+      ],
+      "testCases": [
+        {
+          "input": "a = [1, 3, 6], b = [2, 3, 5]",
+          "expected": "[1, 2, 3, 3, 5, 6]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "a=[], b=[1,2]",
+          "expected": "[1,2]",
+          "reason": "Empty array"
+        },
+        {
+          "input": "a=[1,1], b=[1]",
+          "expected": "[1,1,1]",
+          "reason": "Duplicates"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Concatenate and sort",
+          "type": "Baseline",
+          "timeComplexity": "O((n+m) log(n+m))",
+          "spaceComplexity": "O(n+m) output",
+          "explanation": "Copy all values into one array and sort it.",
+          "javaCode": "import java.util.*;\nclass Solution {\n    public int[] mergeSorted(int[] a,int[] b){\n        int[] out=Arrays.copyOf(a,a.length+b.length);\n        System.arraycopy(b,0,out,a.length,b.length);\n        Arrays.sort(out);\n        return out;\n    }\n}"
+        },
+        {
+          "name": "Walk both sorted arrays with two indices",
+          "type": "Optimized",
+          "timeComplexity": "O(n + m)",
+          "spaceComplexity": "O(n + m) for the output",
+          "explanation": "Create a result array of length a.length + b.length, and start pointers i and j at zero. While both pointers are in range, compare a[i] and b[j]. Copy the smaller value into the next result position and advance its pointer. After one array is exhausted, copy all remaining values from the other array. Return the result. Empty inputs and duplicates work without special handling.",
+          "javaCode": "class Solution {\n    public int[] mergeSorted(int[] a, int[] b) {\n        int[] result = new int[a.length + b.length];\n        int i = 0, j = 0, k = 0;\n        while (i < a.length && j < b.length) {\n            if (a[i] <= b[j]) result[k++] = a[i++];\n            else result[k++] = b[j++];\n        }\n        while (i < a.length) result[k++] = a[i++];\n        while (j < b.length) result[k++] = b[j++];\n        return result;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "dateAdded": "2026-11-21",
-      "source": "Original interview-style formulation",
+      "source": "Original practice problem statement and authored Java implementation",
       "id": "DSA-006",
       "slug": "first-position-of-target",
       "title": "Find the First Position of a Target",
@@ -188,11 +430,54 @@
       "javaCode": "class Solution {\n    public int firstOccurrence(int[] nums, int target) {\n        int left = 0, right = nums.length;\n        while (left < right) {\n            int mid = left + (right - left) / 2;\n            if (nums[mid] < target) left = mid + 1;\n            else right = mid;\n        }\n        return left < nums.length && nums[left] == target ? left : -1;\n    }\n}",
       "timeComplexity": "O(log n)",
       "spaceComplexity": "O(1)",
-      "interviewTip": "Ordinary binary search finds any match; the lower-bound variation deliberately continues searching left for duplicates."
+      "interviewTip": "Ordinary binary search finds any match; the lower-bound variation deliberately continues searching left for duplicates.",
+      "stageId": "binary-search",
+      "dryRun": [
+        "Search [0,5): mid=2 value=2 -> high=2",
+        "Search [0,2): mid=1 value=2 -> high=1",
+        "Search [0,1): mid=0 value=1 -> low=1; return 1"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [1, 2, 2, 2, 5], target = 2",
+          "expected": "1",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[1,2,2], target=5",
+          "expected": "-1",
+          "reason": "Absent"
+        },
+        {
+          "input": "nums=[], target=1",
+          "expected": "-1",
+          "reason": "Empty array"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Linear scan",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Return the first matching index as you scan.",
+          "javaCode": "class Solution {\n    public int firstOccurrence(int[] a,int target){\n        for(int i=0;i<a.length;i++) if(a[i]==target)return i;\n        return -1;\n    }\n}"
+        },
+        {
+          "name": "Lower-bound binary search",
+          "type": "Optimized",
+          "timeComplexity": "O(log n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Set left to 0 and right to nums.length, representing a half-open search interval. While left is smaller than right, compute mid without adding left and right directly. If nums[mid] is smaller than target, discard the left half including mid; otherwise keep mid and the left half. When the interval closes, left is the first index whose value is at least target. Return it only if it is in range and equals target; otherwise return -1.",
+          "javaCode": "class Solution {\n    public int firstOccurrence(int[] nums, int target) {\n        int left = 0, right = nums.length;\n        while (left < right) {\n            int mid = left + (right - left) / 2;\n            if (nums[mid] < target) left = mid + 1;\n            else right = mid;\n        }\n        return left < nums.length && nums[left] == target ? left : -1;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "dateAdded": "2026-11-21",
-      "source": "Original interview-style formulation",
+      "source": "Original practice problem statement and authored Java implementation",
       "id": "DSA-007",
       "slug": "binary-tree-level-order",
       "title": "List Binary Tree Values Level by Level",
@@ -219,11 +504,59 @@
       "javaCode": "import java.util.ArrayDeque;\nimport java.util.ArrayList;\nimport java.util.Deque;\nimport java.util.List;\n\nclass Solution {\n    static class TreeNode {\n        int val;\n        TreeNode left, right;\n        TreeNode(int val) { this.val = val; }\n    }\n\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n        Deque<TreeNode> queue = new ArrayDeque<>();\n        queue.offer(root);\n        while (!queue.isEmpty()) {\n            int levelSize = queue.size();\n            List<Integer> level = new ArrayList<>();\n            for (int i = 0; i < levelSize; i++) {\n                TreeNode node = queue.poll();\n                level.add(node.val);\n                if (node.left != null) queue.offer(node.left);\n                if (node.right != null) queue.offer(node.right);\n            }\n            result.add(level);\n        }\n        return result;\n    }\n}",
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(n) including the output and BFS queue",
-      "interviewTip": "The saved queue size separates levels. Without it, newly enqueued children would be mixed into their parent's level."
+      "interviewTip": "The saved queue size separates levels. Without it, newly enqueued children would be mixed into their parent's level.",
+      "stageId": "trees",
+      "dryRun": [
+        "Queue [3] -> read one level: [3]",
+        "Queue [9,20] -> next level [9,20]",
+        "Queue [15,7] -> final level [15,7]"
+      ],
+      "testCases": [
+        {
+          "input": "root = [3, 9, 20, null, null, 15, 7] (level-order representation)",
+          "expected": "[[3], [9, 20], [15, 7]]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "root=null",
+          "expected": "[]",
+          "reason": "Empty tree"
+        },
+        {
+          "input": "root=[1]",
+          "expected": "[[1]]",
+          "reason": "Singleton"
+        }
+      ],
+      "variants": [
+        {
+          "name": "DFS by level buckets",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h) recursion plus output",
+          "explanation": "Use recursive DFS with depth and append values to output.get(depth) before descending."
+        },
+        {
+          "name": "Breadth-first traversal using a queue",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n) including the output and BFS queue",
+          "explanation": "Return an empty result if root is null; otherwise put root into a queue. At the start of each level, save the queue size. Exactly that many nodes belong to the current level. Remove each of those nodes, append its value to the current level, and enqueue its non-null left and right children in that order. Append the completed level to the result, then repeat until the queue is empty.",
+          "javaCode": "import java.util.ArrayDeque;\nimport java.util.ArrayList;\nimport java.util.Deque;\nimport java.util.List;\n\nclass Solution {\n    static class TreeNode {\n        int val;\n        TreeNode left, right;\n        TreeNode(int val) { this.val = val; }\n    }\n\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n        Deque<TreeNode> queue = new ArrayDeque<>();\n        queue.offer(root);\n        while (!queue.isEmpty()) {\n            int levelSize = queue.size();\n            List<Integer> level = new ArrayList<>();\n            for (int i = 0; i < levelSize; i++) {\n                TreeNode node = queue.poll();\n                level.add(node.val);\n                if (node.left != null) queue.offer(node.left);\n                if (node.right != null) queue.offer(node.right);\n            }\n            result.add(level);\n        }\n        return result;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Microsoft",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "dateAdded": "2026-11-21",
-      "source": "Original interview-style formulation",
+      "source": "Original practice problem statement and authored Java implementation",
       "id": "DSA-008",
       "slug": "minimum-coins-for-amount",
       "title": "Minimum Coins Needed for an Amount",
@@ -252,7 +585,49 @@
       "javaCode": "import java.util.Arrays;\n\nclass Solution {\n    public int coinChange(int[] coins, int amount) {\n        int unreachable = amount + 1;\n        int[] dp = new int[amount + 1];\n        Arrays.fill(dp, unreachable);\n        dp[0] = 0;\n        for (int x = 1; x <= amount; x++) {\n            for (int coin : coins) {\n                if (coin <= x && dp[x - coin] != unreachable) {\n                    dp[x] = Math.min(dp[x], dp[x - coin] + 1);\n                }\n            }\n        }\n        return dp[amount] == unreachable ? -1 : dp[amount];\n    }\n}",
       "timeComplexity": "O(amount × number of coin types)",
       "spaceComplexity": "O(amount)",
-      "interviewTip": "Explain why choosing the largest available coin greedily can fail: for [1, 3, 4] and amount 6, greedy uses 4+1+1, while optimal uses 3+3."
+      "interviewTip": "Explain why choosing the largest available coin greedily can fail: for [1, 3, 4] and amount 6, greedy uses 4+1+1, while optimal uses 3+3.",
+      "stageId": "dp-one",
+      "dryRun": [
+        "dp[0]=0; dp[1]=1; dp[2]=2",
+        "dp[3]=1 via coin 3, dp[4]=1 via coin 4",
+        "dp[6]=min(dp[5]+1,dp[3]+1,dp[2]+1)=2"
+      ],
+      "testCases": [
+        {
+          "input": "coins = [1, 3, 4], amount = 6",
+          "expected": "2",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "coins=[2], amount=3",
+          "expected": "-1",
+          "reason": "Unreachable"
+        },
+        {
+          "input": "coins=[1], amount=0",
+          "expected": "0",
+          "reason": "Zero amount"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Top-down memoized recursion",
+          "type": "Baseline",
+          "timeComplexity": "O(amount × coins)",
+          "spaceComplexity": "O(amount) memo + recursion",
+          "explanation": "Compute minCoins(x) from minCoins(x-coin), cache each amount; same asymptotic work but recursive."
+        },
+        {
+          "name": "Bottom-up dynamic programming over amounts",
+          "type": "Optimized",
+          "timeComplexity": "O(amount × number of coin types)",
+          "spaceComplexity": "O(amount)",
+          "explanation": "Let dp[x] mean the minimum number of coins needed for amount x. Set dp[0] to zero and every other entry to an unreachable sentinel amount + 1. For each amount x from 1 to the target, try every coin whose value is at most x. If dp[x - coin] is reachable, consider dp[x - coin] + 1 and keep the smallest candidate for dp[x]. Return dp[amount] if it is reachable, otherwise -1. The zero-amount case correctly returns zero.",
+          "javaCode": "import java.util.Arrays;\n\nclass Solution {\n    public int coinChange(int[] coins, int amount) {\n        int unreachable = amount + 1;\n        int[] dp = new int[amount + 1];\n        Arrays.fill(dp, unreachable);\n        dp[0] = 0;\n        for (int x = 1; x <= amount; x++) {\n            for (int coin : coins) {\n                if (coin <= x && dp[x - coin] != unreachable) {\n                    dp[x] = Math.min(dp[x], dp[x - coin] + 1);\n                }\n            }\n        }\n        return dp[amount] == unreachable ? -1 : dp[amount];\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-009",
@@ -283,7 +658,49 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(1)",
       "interviewTip": "Draw the three pointers and explain why saving next before changing curr.next prevents losing the remaining list.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "linked-lists",
+      "dryRun": [
+        "prev=null, cur=1: point 1->null",
+        "prev=1,cur=2: point 2->1; repeat for 3,4",
+        "Return prev=4: 4->3->2->1"
+      ],
+      "testCases": [
+        {
+          "input": "head = [1, 2, 3, 4]",
+          "expected": "[4, 3, 2, 1]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "head=[]",
+          "expected": "[]",
+          "reason": "Empty"
+        },
+        {
+          "input": "head=[8]",
+          "expected": "[8]",
+          "reason": "Single"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Copy values into an array, then rewrite nodes",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n)",
+          "explanation": "Store every value and write them back in reverse. Changes node values, unlike true pointer reversal."
+        },
+        {
+          "name": "Iterative pointer reversal with three references",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Initialize prev to null and curr to the head. The reversed portion is initially empty. Save curr.next in next before modifying the current node. Point curr.next to prev, then advance prev to curr and curr to next. Repeat until curr is null. Return prev, which now points to the new head. An empty list returns null.",
+          "javaCode": "class Solution {\n    static class ListNode {\n        int val;\n        ListNode next;\n        ListNode(int val) { this.val = val; }\n    }\n\n    public ListNode reverseList(ListNode head) {\n        ListNode prev = null;\n        ListNode curr = head;\n        while (curr != null) {\n            ListNode next = curr.next;\n            curr.next = prev;\n            prev = curr;\n            curr = next;\n        }\n        return prev;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-010",
@@ -314,7 +731,49 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(n) worst case for the explicit stack",
       "interviewTip": "Contrast DFS with BFS and mention that a skewed tree can be 10,000 nodes deep, so iterative traversal is safer than recursion in Java.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "trees",
+      "dryRun": [
+        "Start with root 3; children 9 and 20",
+        "9 is leaf depth 2, children 15 and 7 under 20 have depth 3",
+        "Maximum observed root-to-leaf depth is 3"
+      ],
+      "testCases": [
+        {
+          "input": "root = [3, 9, 20, null, null, 15, 7] (level-order)",
+          "expected": "3",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "root=null",
+          "expected": "0",
+          "reason": "Empty"
+        },
+        {
+          "input": "root=[1]",
+          "expected": "1",
+          "reason": "Singleton"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Recursive depth",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(h) recursion",
+          "explanation": "Depth = 1 + max(leftDepth,rightDepth), and null depth = 0."
+        },
+        {
+          "name": "Iterative depth-first traversal with an explicit stack",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(n) worst case for the explicit stack",
+          "explanation": "If root is null, return zero immediately. Push the root with depth one onto a stack. Pop a node and its depth, update the maximum, then push each non-null child with depth plus one. Continue until the stack is empty and return the maximum. Using an explicit stack avoids recursion-stack overflow for very deep trees.",
+          "javaCode": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\nclass Solution {\n    static class TreeNode {\n        int val;\n        TreeNode left, right;\n        TreeNode(int val) { this.val = val; }\n    }\n    static class Entry {\n        TreeNode node;\n        int depth;\n        Entry(TreeNode node, int depth) { this.node = node; this.depth = depth; }\n    }\n\n    public int maxDepth(TreeNode root) {\n        if (root == null) return 0;\n        Deque<Entry> stack = new ArrayDeque<>();\n        stack.push(new Entry(root, 1));\n        int max = 0;\n        while (!stack.isEmpty()) {\n            Entry current = stack.pop();\n            max = Math.max(max, current.depth);\n            if (current.node.left != null)\n                stack.push(new Entry(current.node.left, current.depth + 1));\n            if (current.node.right != null)\n                stack.push(new Entry(current.node.right, current.depth + 1));\n        }\n        return max;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-011",
@@ -346,7 +805,55 @@
       "timeComplexity": "O(n log n) for sorting plus O(n) scanning",
       "spaceComplexity": "O(n) for the output; sorting may use additional implementation-dependent memory",
       "interviewTip": "Ask whether intervals are closed: if touching endpoints count as overlap, use nextStart <= currentEnd, not <.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "intervals-greedy",
+      "dryRun": [
+        "Sort intervals by start",
+        "[1,3] meets [2,6] -> [1,6]",
+        "[8,10] meets [10,12] at inclusive boundary -> [8,12]"
+      ],
+      "testCases": [
+        {
+          "input": "intervals = [[1, 3], [2, 6], [8, 10], [10, 12]]",
+          "expected": "[[1, 6], [8, 12]]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "intervals=[]",
+          "expected": "[]",
+          "reason": "Empty"
+        },
+        {
+          "input": "intervals=[[1,2],[3,4]]",
+          "expected": "[[1,2],[3,4]]",
+          "reason": "No overlap"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Repeatedly merge any overlapping pair",
+          "type": "Baseline",
+          "timeComplexity": "O(n³) worst-case",
+          "spaceComplexity": "O(n) output",
+          "explanation": "Compare every pair after merges; poor scalability."
+        },
+        {
+          "name": "Sort by starting point, then sweep and merge",
+          "type": "Optimized",
+          "timeComplexity": "O(n log n) for sorting plus O(n) scanning",
+          "spaceComplexity": "O(n) for the output; sorting may use additional implementation-dependent memory",
+          "explanation": "Return an empty two-dimensional array if there are no intervals. Sort intervals by start using Integer.compare to avoid overflow. Keep a current merged interval. If the next start is at most the current end, extend the end to the larger of the two ends. Otherwise append the current interval to the answer and begin a new one. Append the final interval and return the result.",
+          "javaCode": "import java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\n\nclass Solution {\n    public int[][] merge(int[][] intervals) {\n        if (intervals.length == 0) return new int[0][2];\n        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));\n        List<int[]> merged = new ArrayList<>();\n        int start = intervals[0][0];\n        int end = intervals[0][1];\n        for (int i = 1; i < intervals.length; i++) {\n            if (intervals[i][0] <= end) {\n                end = Math.max(end, intervals[i][1]);\n            } else {\n                merged.add(new int[] {start, end});\n                start = intervals[i][0];\n                end = intervals[i][1];\n            }\n        }\n        merged.add(new int[] {start, end});\n        return merged.toArray(new int[merged.size()][]);\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Zoho",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-012",
@@ -378,7 +885,55 @@
       "timeComplexity": "O(n + u log k + k log k), where u is the number of distinct values",
       "spaceComplexity": "O(u + k)",
       "interviewTip": "Explain the min-heap ordering carefully: on ties, the larger value must be removed first so the smaller value remains.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "bst-heap",
+      "dryRun": [
+        "Frequencies: 4->2, 1->2, 2->3, 3->1",
+        "Top count is 2 (3 occurrences)",
+        "Tie between 1 and 4 (2 each); smaller 1 ranks first"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [4, 4, 1, 1, 2, 2, 2, 3], k = 2",
+          "expected": "[2, 1]",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[1,1,2,2], k=1",
+          "expected": "[1]",
+          "reason": "Tie-breaking"
+        },
+        {
+          "input": "nums=[9], k=1",
+          "expected": "[9]",
+          "reason": "Single"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Count then sort all distinct values",
+          "type": "Baseline",
+          "timeComplexity": "O(n + u log u)",
+          "spaceComplexity": "O(u)",
+          "explanation": "Sort distinct values by descending frequency and ascending number for ties."
+        },
+        {
+          "name": "Frequency map and size-k min-heap of the worst retained candidate",
+          "type": "Optimized",
+          "timeComplexity": "O(n + u log k + k log k), where u is the number of distinct values",
+          "spaceComplexity": "O(u + k)",
+          "explanation": "Count occurrences of each number in a HashMap. Maintain a min-heap whose root is the worst selected candidate: lower frequency is worse; for equal frequencies, larger numeric value is worse. Offer each distinct number to the heap. When the heap exceeds k entries, remove its root. Extract the k retained numbers, then sort them by descending frequency and ascending value to meet the output ordering.",
+          "javaCode": "import java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.PriorityQueue;\n\nclass Solution {\n    public int[] topKFrequent(int[] nums, int k) {\n        Map<Integer, Integer> frequency = new HashMap<>();\n        for (int x : nums) frequency.merge(x, 1, Integer::sum);\n        PriorityQueue<Integer> heap = new PriorityQueue<>((a, b) -> {\n            int byFrequency = Integer.compare(frequency.get(a), frequency.get(b));\n            return byFrequency != 0 ? byFrequency : Integer.compare(b, a);\n        });\n        for (int x : frequency.keySet()) {\n            heap.offer(x);\n            if (heap.size() > k) heap.poll();\n        }\n        List<Integer> chosen = new ArrayList<>(heap);\n        chosen.sort((a, b) -> {\n            int byFrequency = Integer.compare(frequency.get(b), frequency.get(a));\n            return byFrequency != 0 ? byFrequency : Integer.compare(a, b);\n        });\n        int[] result = new int[k];\n        for (int i = 0; i < k; i++) result[i] = chosen.get(i);\n        return result;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Microsoft",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-013",
@@ -411,7 +966,49 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(1)",
       "interviewTip": "Demonstrate x ^ x = 0 and x ^ 0 = x. This works for negative integers too.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "bit-math",
+      "dryRun": [
+        "Start XOR=0",
+        "XOR 6,3,6: both 6 cancel, leaves 3",
+        "XOR -2 then 3: 3 cancels, leaves -2"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [6, 3, 6, -2, 3]",
+          "expected": "-2",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[5]",
+          "expected": "5",
+          "reason": "Single"
+        },
+        {
+          "input": "nums=[0,1,0]",
+          "expected": "1",
+          "reason": "Zero repeats"
+        }
+      ],
+      "variants": [
+        {
+          "name": "HashMap counting",
+          "type": "Baseline",
+          "timeComplexity": "O(n) expected",
+          "spaceComplexity": "O(n)",
+          "explanation": "Count each number, then return the one with count 1."
+        },
+        {
+          "name": "Use XOR to cancel equal pairs",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Start an accumulator at zero. XOR each array value into the accumulator. XOR of identical numbers is zero, and XOR with zero leaves a number unchanged. Because XOR is associative and commutative, every duplicate pair cancels regardless of order. Return the accumulator, which is the single unpaired number.",
+          "javaCode": "class Solution {\n    public int singleNumber(int[] nums) {\n        int result = 0;\n        for (int value : nums) {\n            result ^= value;\n        }\n        return result;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-014",
@@ -442,7 +1039,49 @@
       "timeComplexity": "O(n)",
       "spaceComplexity": "O(1) (26 counters)",
       "interviewTip": "Counting alone is not enough: the second pass preserves the original order and identifies the first unique character.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "fundamentals",
+      "dryRun": [
+        "Count s=3, w=1, i=1",
+        "At index 0, 's' count 3 -> skip",
+        "At index 1, 'w' count 1 -> answer 1"
+      ],
+      "testCases": [
+        {
+          "input": "s = \"swiss\"",
+          "expected": "1",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "s=\"aabb\"",
+          "expected": "-1",
+          "reason": "All repeated"
+        },
+        {
+          "input": "s=\"z\"",
+          "expected": "0",
+          "reason": "Single"
+        }
+      ],
+      "variants": [
+        {
+          "name": "For each char scan entire string",
+          "type": "Baseline",
+          "timeComplexity": "O(n²)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Count each character by a nested loop; return the first count of one."
+        },
+        {
+          "name": "Two passes with a fixed-size frequency array",
+          "type": "Optimized",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1) (26 counters)",
+          "explanation": "Create an integer array of 26 zeros, one counter for each lowercase letter. Scan the string once, increasing the count for each character. Scan the string again from left to right, returning the first index whose character has frequency one. If no such character exists, return -1. An empty string also returns -1.",
+          "javaCode": "class Solution {\n    public int firstUniqueChar(String s) {\n        int[] frequency = new int[26];\n        for (int i = 0; i < s.length(); i++) {\n            frequency[s.charAt(i) - 'a']++;\n        }\n        for (int i = 0; i < s.length(); i++) {\n            if (frequency[s.charAt(i) - 'a'] == 1) {\n                return i;\n            }\n        }\n        return -1;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-015",
@@ -475,7 +1114,55 @@
       "timeComplexity": "O(log n)",
       "spaceComplexity": "O(1)",
       "interviewTip": "Explain why at least one half is sorted when all values are distinct. Check empty and single-element arrays.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "binary-search",
+      "dryRun": [
+        "Mid=2 (value 13), left segment [8,10,13] sorted",
+        "Target 3 isn't in [8,13) -> search right [1,3,5]",
+        "Mid in right side reaches index 4 with value 3"
+      ],
+      "testCases": [
+        {
+          "input": "nums = [8, 10, 13, 1, 3, 5], target = 3",
+          "expected": "4",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "nums=[1], target=1",
+          "expected": "0",
+          "reason": "Single"
+        },
+        {
+          "input": "nums=[4,5,1,2], target=9",
+          "expected": "-1",
+          "reason": "Missing"
+        }
+      ],
+      "variants": [
+        {
+          "name": "Linear scan",
+          "type": "Baseline",
+          "timeComplexity": "O(n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Check each index; no sorted-array reasoning required."
+        },
+        {
+          "name": "Binary search while identifying the sorted half",
+          "type": "Optimized",
+          "timeComplexity": "O(log n)",
+          "spaceComplexity": "O(1)",
+          "explanation": "Initialize left at zero and right at the last index. While left is not past right, find the middle index and return it if the middle element equals target. If nums[left] <= nums[mid], the left half is sorted. Keep it when target lies between nums[left] inclusive and nums[mid] exclusive; otherwise search right. Otherwise the right half is sorted. Keep it when target is greater than nums[mid] and at most nums[right]; otherwise search left. Each iteration discards at least half of the remaining range. Return -1 if no match is found.",
+          "javaCode": "class Solution {\n    public int search(int[] nums, int target) {\n        int left = 0, right = nums.length - 1;\n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            if (nums[mid] == target) return mid;\n            if (nums[left] <= nums[mid]) {\n                if (nums[left] <= target && target < nums[mid]) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            } else {\n                if (nums[mid] < target && target <= nums[right]) {\n                    left = mid + 1;\n                } else {\n                    right = mid - 1;\n                }\n            }\n        }\n        return -1;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     },
     {
       "id": "DSA-016",
@@ -509,7 +1196,57 @@
       "timeComplexity": "O(rows * cols)",
       "spaceComplexity": "O(rows * cols) worst-case BFS queue",
       "interviewTip": "Call out that this modifies the grid. If mutation is forbidden, use a separate visited matrix.",
-      "source": "Original interview-style formulation"
+      "source": "Original practice problem statement and authored Java implementation",
+      "stageId": "graphs-basic",
+      "dryRun": [
+        "At [0,0] discover land -> islands=1",
+        "Flood-fill [0,1] and [1,1], marking visited",
+        "At [2,2] find unvisited land -> islands=2"
+      ],
+      "testCases": [
+        {
+          "input": "grid = [[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]]",
+          "expected": "2",
+          "reason": "Main walkthrough example"
+        },
+        {
+          "input": "grid=[]",
+          "expected": "0",
+          "reason": "Empty grid"
+        },
+        {
+          "input": "grid=[[\"0\"]]",
+          "expected": "0",
+          "reason": "Water only"
+        }
+      ],
+      "variants": [
+        {
+          "name": "DFS recursive flood fill",
+          "type": "Baseline",
+          "timeComplexity": "O(R×C)",
+          "spaceComplexity": "O(R×C) recursion worst-case",
+          "explanation": "Count unvisited land cells and recursively flood-fill four neighbors."
+        },
+        {
+          "name": "Breadth-first search to flood-fill each discovered island",
+          "type": "Optimized",
+          "timeComplexity": "O(rows * cols)",
+          "spaceComplexity": "O(rows * cols) worst-case BFS queue",
+          "explanation": "Scan each grid cell row by row. Skip water cells. When an unvisited land cell is found, increment the island count, mark that cell as water, and enqueue its coordinates. Process the queue: for each cell, inspect its four neighbors. For every in-bounds land neighbor, mark it as water immediately and enqueue it. When the queue empties, the whole connected island has been visited. Continue scanning for other land cells. Return the island count. Marking before enqueueing avoids adding the same cell repeatedly.",
+          "javaCode": "import java.util.ArrayDeque;\nimport java.util.Queue;\n\nclass Solution {\n    public int numIslands(char[][] grid) {\n        int rows = grid.length, cols = grid[0].length;\n        int islands = 0;\n        int[] dr = {1, -1, 0, 0};\n        int[] dc = {0, 0, 1, -1};\n        Queue<Integer> queue = new ArrayDeque<>();\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (grid[r][c] != '1') continue;\n                islands++;\n                grid[r][c] = '0';\n                queue.offer(r * cols + c);\n                while (!queue.isEmpty()) {\n                    int cell = queue.poll();\n                    int row = cell / cols, col = cell % cols;\n                    for (int k = 0; k < 4; k++) {\n                        int nr = row + dr[k], nc = col + dc[k];\n                        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || grid[nr][nc] != '1') continue;\n                        grid[nr][nc] = '0';\n                        queue.offer(nr * cols + nc);\n                    }\n                }\n            }\n        }\n        return islands;\n    }\n}"
+        }
+      ],
+      "companyEvidence": [
+        {
+          "company": "Walmart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Third-party interview-prep report; not official confirmation"
+        }
+      ],
+      "contentStatus": "worked"
     }
-  ]
+  ],
+  "version": 2,
+  "curriculumFile": "data/dsa-roadmap.json"
 }
