@@ -1,7 +1,7 @@
 import React, {useEffect,useMemo,useState} from 'react';
 import {Link,useParams} from 'react-router-dom';
 import {Alert,Button,Chip,TextField,MenuItem,InputAdornment} from '@mui/material';
-import {ArrowBack,CheckCircleOutline,ContentCopy,Search,ExpandMore,ExpandLess,OpenInNew,School,Code} from '@mui/icons-material';
+import {ArrowBack,CheckCircleOutline,ContentCopy,Search,ExpandMore,ExpandLess,OpenInNew,AccountTree,Code,Terminal} from '@mui/icons-material';
 import ProfolioLoader from './ProfolioLoader.jsx';
 import './dsa-roadmap.css';
 
@@ -35,6 +35,7 @@ function useRoadmap(){
 }
 function CompanyTags({p}){return p.companyEvidence?.length?<div className="learning-company-row">{p.companyEvidence.map((item,i)=><a className="learning-company-tag" href={item.url} key={item.company+i} target="_blank" rel="noreferrer" title={item.label||'Third-party interview report'}>{item.company} <span aria-hidden="true">↗</span></a>)}</div>:null}
 function Difficulty({value}){return <span className={'learning-difficulty level-'+(value||'easy').toLowerCase()}>{value||'Easy'}</span>}
+function LearningTypePill({type}){const Icon=type==='Data structure'?AccountTree:type==='Algorithm'?Terminal:Code;const cls=type==='Data structure'?'structure':type==='Algorithm'?'algorithm':'problem';return <span className={'learning-kind-pill kind-'+cls}><Icon aria-hidden="true" fontSize="inherit"/><span>{type}</span></span>}
 function Solved({slug,progress,toggle}){const done=!!progress[slug];return <button type="button" className={'learning-check '+(done?'is-done':'')} onClick={e=>{e.stopPropagation();toggle(slug)}} aria-pressed={done} aria-label={(done?'Mark unsolved: ':'Mark solved: ')+slug}><CheckCircleOutline fontSize="small"/><span>{done?'Solved':'Mark solved'}</span></button>}
 function Dsa(){const {id}=useParams();const {loading,error,stages,problems,concepts,method}=useRoadmap();const [progress,setProgress]=useState(readProgress);
  useEffect(()=>{if(loading||!problems.length)return;try{const old=JSON.parse(localStorage.getItem(oldKey)||'{}');setProgress(prev=>{const next={...prev};let changed=false;for(const p of problems)if(old[p.id]&&!Object.prototype.hasOwnProperty.call(next,p.slug)){next[p.slug]=true;changed=true}return changed?next:prev})}catch{/* nothing to migrate */}},[loading,problems]);
@@ -47,21 +48,42 @@ function Dsa(){const {id}=useParams();const {loading,error,stages,problems,conce
 }
 function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
  const [mode,setMode]=useState('roadmap'),[expanded,setExpanded]=useState('fundamentals');
- const [search,setSearch]=useState(''),[difficulty,setDifficulty]=useState('All'),[stageFilter,setStageFilter]=useState('All'),[status,setStatus]=useState('All');
+ const [search,setSearch]=useState(''),[typeFilter,setTypeFilter]=useState('All'),[difficulty,setDifficulty]=useState('All'),[stageFilter,setStageFilter]=useState('All'),[status,setStatus]=useState('All');
  const solved=problems.filter(p=>progress[p.slug]).length;
  const worked=problems.filter(p=>p.format==='worked').length;
  const completedStages=stages.filter(s=>s.problemSlugs?.every(slug=>progress[slug])).length;
  const next=problems.find(p=>!progress[p.slug])||problems[0];
- const matches=p=>{
-  const stage=stages.find(s=>s.id===p.stageId);
-  return (!search||(p.title+' '+p.slug+' '+stage?.title).toLowerCase().includes(search.toLowerCase()))
-   &&(difficulty==='All'||p.difficulty===difficulty)
-   &&(stageFilter==='All'||p.stageId===stageFilter)
-   &&(status==='All'||(status==='Solved'?!!progress[p.slug]:status==='Unsolved'?!progress[p.slug]:status==='With Java'?(p.format==='worked'):(p.format!=='worked')));
+ const entriesByStage=useMemo(()=>{
+  const bySlug=new Map(problems.map(p=>[p.slug,p]));
+  const lessonsByStage=new Map(stages.map(s=>[s.id,concepts.filter(c=>c.stageId===s.id)]));
+  return new Map(stages.map(s=>{
+   const lessons=lessonsByStage.get(s.id)||[];
+   const structure=lessons.filter(c=>c.kind==='Data structure').map(lesson=>({key:'lesson-'+s.id+'-'+lesson.id,type:'Data structure',stageId:s.id,lesson}));
+   const algorithms=lessons.filter(c=>c.kind==='Algorithm').map(lesson=>({key:'lesson-'+s.id+'-'+lesson.id,type:'Algorithm',stageId:s.id,lesson}));
+   const exercises=(s.problemSlugs||[]).map(slug=>bySlug.get(slug)).filter(Boolean).map(p=>({key:'problem-'+p.slug,type:'Problem',stageId:s.id,p}));
+   return [s.id,[...structure,...algorithms,...exercises]];
+  }));
+ },[stages,concepts,problems]);
+ const allEntries=stages.flatMap(s=>entriesByStage.get(s.id)||[]);
+ const matches=entry=>{
+  const isProblem=entry.type==='Problem';
+  const p=entry.p;
+  const lesson=entry.lesson;
+  const stage=stages.find(s=>s.id===entry.stageId);
+  const words=(isProblem?[p.title,p.slug,p.topic,p.skills]:[lesson.title,lesson.overview,lesson.kind,lesson.mentalModel,lesson.whenToUse]);
+  const searchable=[...words,stage?.title].filter(Boolean).join(' ').toLowerCase();
+  return (!search.trim()||searchable.includes(search.trim().toLowerCase()))
+   &&(typeFilter==='All'||entry.type===typeFilter)
+   &&(difficulty==='All'||(isProblem&&p.difficulty===difficulty))
+   &&(stageFilter==='All'||entry.stageId===stageFilter)
+   &&(status==='All'||(status==='Solved'&&isProblem&&!!progress[p.slug])
+      ||(status==='Unsolved'&&isProblem&&!progress[p.slug])
+      ||(status==='With Java'&&!!(isProblem?p.javaCode:lesson.javaCode)));
  };
- const byStage=useMemo(()=>new Map(stages.map(s=>[s.id,problems.filter(p=>p.stageId===s.id&&matches(p))])),[stages,problems,search,difficulty,stageFilter,status,progress]);
- const filtered=problems.filter(matches);
- const reset=()=>{setSearch('');setDifficulty('All');setStageFilter('All');setStatus('All')};
+ const filtered=allEntries.filter(matches);
+ const byStage=new Map(stages.map(s=>[s.id,(entriesByStage.get(s.id)||[]).filter(matches)]));
+ const problemCount=filtered.filter(item=>item.type==='Problem').length;
+ const reset=()=>{setSearch('');setTypeFilter('All');setDifficulty('All');setStageFilter('All');setStatus('All')};
  return <div className="dsa-v2">
   <div className="learning-hero">
    <div className="learning-hero-copy"><p className="learning-eyebrow">JAVA · INTERVIEW PREP · BEGINNER TO ADVANCED</p><h1>DSA learning roadmap</h1><p>Learn the data structure, understand the algorithm, solve the pattern, then revisit it. Built for SDE interviews, not random daily question spam.</p></div>
@@ -75,41 +97,53 @@ function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
   <div className="learning-progress" role="progressbar" aria-label="Roadmap completion" aria-valuenow={solved} aria-valuemin={0} aria-valuemax={problems.length||1}><span style={{width:(problems.length?100*solved/problems.length:0)+'%'}}/></div>
   <div className="learning-intro"><div><strong>{completedStages}/{stages.length} stages completed</strong><p>Progress is saved in this browser. A problem counts only after you mark it solved.</p></div>{next&&<Link to={urlFor(next)} className="learning-next">Next: {next.title} <span>→</span></Link>}</div>
   <section className="panel learning-controls" aria-label="Roadmap filters">
-   <div className="learning-mode" role="group" aria-label="View mode"><button className={mode==='roadmap'?'active':''} onClick={()=>setMode('roadmap')} aria-pressed={mode==='roadmap'}>Learning path</button><button className={mode==='all'?'active':''} onClick={()=>setMode('all')} aria-pressed={mode==='all'}>All exercises</button></div>
-   <TextField size="small" fullWidth placeholder="Search problems, stages or algorithms" value={search} onChange={e=>setSearch(e.target.value)} inputProps={{'aria-label':'Search roadmap'}} InputProps={{startAdornment:<InputAdornment position="start"><Search fontSize="small"/></InputAdornment>}}/>
+   <div className="learning-mode" role="group" aria-label="View mode"><button className={mode==='roadmap'?'active':''} onClick={()=>setMode('roadmap')} aria-pressed={mode==='roadmap'}>Learning path</button><button className={mode==='all'?'active':''} onClick={()=>setMode('all')} aria-pressed={mode==='all'}>All learning items</button></div>
+   <TextField size="small" fullWidth placeholder="Search data structures, algorithms or problems" value={search} onChange={e=>setSearch(e.target.value)} inputProps={{'aria-label':'Search roadmap'}} InputProps={{startAdornment:<InputAdornment position="start"><Search fontSize="small"/></InputAdornment>}}/>
    <div className="learning-filter-grid">
+    <TextField select size="small" label="Type" value={typeFilter} onChange={e=>setTypeFilter(e.target.value)}>{['All','Data structure','Algorithm','Problem'].map(x=><MenuItem key={x} value={x}>{x==='All'?'All types':x}</MenuItem>)}</TextField>
     <TextField select size="small" label="Level" value={difficulty} onChange={e=>setDifficulty(e.target.value)}>{['All','Easy','Medium','Hard'].map(x=><MenuItem key={x} value={x}>{x==='All'?'All levels':x}</MenuItem>)}</TextField>
     <TextField select size="small" label="Stage" value={stageFilter} onChange={e=>{setStageFilter(e.target.value);if(e.target.value!=='All')setExpanded(e.target.value)}}><MenuItem value="All">All stages</MenuItem>{stages.map(s=><MenuItem key={s.id} value={s.id}>{s.number}. {s.title}</MenuItem>)}</TextField>
     <TextField select size="small" label="Practice" value={status} onChange={e=>setStatus(e.target.value)}>{['All','Solved','Unsolved','With Java'].map(x=><MenuItem key={x} value={x}>{x}</MenuItem>)}</TextField>
    </div>
-   <div className="learning-filter-footer"><span>{filtered.length} exercises in learning order</span><Button size="small" onClick={reset}>Reset filters</Button></div>
+   <div className="learning-filter-footer"><span>{filtered.length} learning items · {problemCount} problems</span><Button size="small" onClick={reset}>Reset filters</Button></div>
   </section>
   {mode==='roadmap'?<div className="learning-stage-list">
-   {stages.map((s,i)=>{const ps=byStage.get(s.id)||[];const isOpen=expanded===s.id;const done=(s.problemSlugs||[]).filter(slug=>progress[slug]).length;const total=s.problemSlugs?.length||0;const hasFilter=!!(search||difficulty!=='All'||stageFilter!=='All'||status!=='All');if(hasFilter&&!ps.length)return null;
+   {stages.map(s=>{const items=byStage.get(s.id)||[];const ps=items.filter(item=>item.type==='Problem');const isOpen=expanded===s.id;const done=(s.problemSlugs||[]).filter(slug=>progress[slug]).length;const total=s.problemSlugs?.length||0;const hasFilter=!!(search||typeFilter!=='All'||difficulty!=='All'||stageFilter!=='All'||status!=='All');if(hasFilter&&!items.length)return null;
    return <section className={'learning-stage '+(isOpen?'open':'')} key={s.id}>
     <button type="button" className="learning-stage-toggle" aria-expanded={isOpen} onClick={()=>setExpanded(isOpen?'':s.id)}>
      <div className="learning-stage-n"><span>{s.number}</span></div><div className="learning-stage-heading"><span className="learning-stage-level">{s.level} · {total} exercises</span><h2>{s.title}</h2><p>{s.summary}</p><div className="learning-stage-meter"><span style={{width:(total?100*done/total:0)+'%'}}/></div><small>{done} of {total} solved</small></div>{isOpen?<ExpandLess/>:<ExpandMore/>}
     </button>
     {isOpen&&<div className="learning-stage-content">
      {s.prerequisites?.length>0&&<p className="learning-prerequisite"><b>Prerequisite:</b> {s.prerequisites.map(id=>stages.find(x=>x.id===id)?.title||id).join(', ')}</p>}
-     <div className="learning-lesson">
-      <div className="learning-lesson-title"><School fontSize="small"/><h3>Learn the data structure</h3></div>
-      <h4>{s.dataStructure?.name}</h4><p>{s.dataStructure?.description}</p><Link className="learning-topic-link" to={'/dsa/learn/'+s.id+'/ds'}>Read full data-structure lesson & Java example <span aria-hidden="true">→</span></Link>
-      <div className="learning-concept-grid"><div><b>Example</b><p>{s.dataStructure?.example}</p></div><div><b>Real-world use</b><p>{s.dataStructure?.realWorld}</p></div><div><b>Operations & complexity</b><p>{s.dataStructure?.operations}</p></div></div>
-     </div>
-     <div className="learning-lesson"><div className="learning-lesson-title"><Code fontSize="small"/><h3>Algorithms to learn now</h3></div><div className="learning-algos">{s.algorithms?.map((a,index)=><article key={a.name}><div><strong>{a.name}</strong><span>{a.complexity}</span></div><p>{a.description}</p><small>Dry-run example: {a.example}</small><Link className="learning-topic-link" to={'/dsa/learn/'+s.id+'/a'+index}>Learn algorithm & Java implementation <span aria-hidden="true">→</span></Link></article>)}</div></div>
-     <div className="learning-exercises-head"><h3>Practice in this order</h3><small>{ps.filter(p=>p.format==='worked').length} with local Java walkthroughs · {ps.length} shown</small></div>
-     <div className="learning-exercises">{ps.map(p=><ProblemRow key={p.slug} p={p} progress={progress} toggle={toggle}/>)}</div>
+     <div className="learning-exercises-head"><h3>Learn & solve in this order</h3><small>{items.filter(item=>item.type==='Data structure').length} data structure · {items.filter(item=>item.type==='Algorithm').length} algorithms · {ps.length} problems</small></div>
+     <div className="learning-exercises learning-sequence" role="list">{items.map(item=><div role="listitem" key={item.key}>{item.type==='Problem'?<ProblemRow p={item.p} progress={progress} toggle={toggle}/>:<TopicRow lesson={item.lesson} type={item.type}/>}</div>)}</div>
      <p className="learning-checkpoint"><b>Before moving forward:</b> {s.checkpoint}</p>
     </div>}
    </section>})}
-  </div>:<div className="learning-all-list">{filtered.map(p=><ProblemRow key={p.slug} p={p} progress={progress} toggle={toggle} compact/>)}</div>}
-  {!filtered.length&&<div className="panel"><p>No exercises match. Clear the filters to see the whole roadmap.</p><Button onClick={reset}>Clear filters</Button></div>}
+  </div>:<div className="learning-all-list" role="list">{filtered.map(item=><div role="listitem" key={item.key}>{item.type==='Problem'?<ProblemRow p={item.p} progress={progress} toggle={toggle} compact/>:<TopicRow lesson={item.lesson} type={item.type} compact/>}</div>)}</div>}
+  {!filtered.length&&<div className="panel"><p>No learning items match. Clear the filters to see the whole roadmap.</p><Button onClick={reset}>Clear filters</Button></div>}
   <section className="panel learning-method"><h2>How to practice without fooling yourself</h2><ol>{method.map((s,i)=><li key={i}>{s}</li>)}</ol><p><b>Company tags:</b> Only shown when a linked third-party report associates the exercise with a company. They are not verified employer question banks or guarantees of repeat appearances.</p><p><b>Full learning material:</b> Each of the {worked} worked exercises includes Java code, complexity comparisons, tests and a dry run. The {concepts.length} data-structure and algorithm lessons have separate explanations and Java examples. Baseline approaches do not always include a second full code listing.</p></section>
  </div>;
 }
+function TopicRow({lesson,type,compact=false}){return <article className={'learning-problem learning-topic-row'+(compact?' compact':'')}>
+ <Link to={'/dsa/learn/'+lesson.stageId+'/'+lesson.id} className="learning-problem-link">
+  <div className="learning-problem-title">
+   <div className="learning-item-title-line"><LearningTypePill type={type}/><strong>{lesson.title}</strong></div>
+   <p className="learning-item-summary">{lesson.overview}</p>
+   <div className="learning-problem-meta"><span>{type==='Algorithm'?lesson.timeComplexity:lesson.operations}</span><span>Explanation + Java code</span></div>
+  </div>
+  <span className="learning-problem-arrow" aria-hidden="true">›</span>
+ </Link>
+ </article>}
 function ProblemRow({p,progress,toggle,compact=false}){const done=!!progress[p.slug];return <article className={'learning-problem '+(done?'finished':'')+(compact?' compact':'')}>
- <Link to={urlFor(p)} className="learning-problem-link"><span className="learning-problem-index">{String(p.order).padStart(3,'0')}</span><div className="learning-problem-title"><strong>{p.title}</strong><div className="learning-problem-meta"><Difficulty value={p.difficulty}/><span>{p.format==='worked'?'Java walkthrough':'External practice'}</span><span>~{p.estimatedMinutes||25} min</span></div><CompanyTags p={p}/></div><span className="learning-problem-arrow" aria-hidden="true">›</span></Link>
+ <Link to={urlFor(p)} className="learning-problem-link">
+  <div className="learning-problem-title">
+   <div className="learning-item-title-line"><LearningTypePill type="Problem"/><strong>{p.title}</strong><span className="learning-problem-index">#{String(p.order).padStart(3,'0')}</span></div>
+   <div className="learning-problem-meta"><Difficulty value={p.difficulty}/><span>{p.format==='worked'?'Java walkthrough':'External practice'}</span><span>~{p.estimatedMinutes||25} min</span></div>
+   <CompanyTags p={p}/>
+  </div>
+  <span className="learning-problem-arrow" aria-hidden="true">›</span>
+ </Link>
  <Solved slug={p.slug} progress={progress} toggle={toggle}/>
  </article>}
 function ProblemDetail({p,stage,progress,toggle}){
