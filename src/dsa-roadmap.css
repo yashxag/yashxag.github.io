@@ -397,3 +397,103 @@
  .dsa-v2 .learning-type-filter{font-size:9px;letter-spacing:-.01em}
  .dsa-v2 .learning-filter-result{width:100%;text-align:left;margin:0}
 }
+
+
+/* Dark mode: preserve semantic type colors and readable DSA code/explanations. */
+html[data-theme="dark"] .dsa-v2{color:#e5edf9}
+html[data-theme="dark"] .dsa-v2 h1,
+html[data-theme="dark"] .dsa-v2 h2,
+html[data-theme="dark"] .dsa-v2 h3,
+html[data-theme="dark"] .dsa-v2 h4{color:#edf4ff;-webkit-text-fill-color:currentColor}
+html[data-theme="dark"] .dsa-v2 p{color:#b2c2d9}
+html[data-theme="dark"] .dsa-v2 .learning-eyebrow{color:#a7c2fc}
+html[data-theme="dark"] .dsa-v2 .learning-hero{
+ background:linear-gradient(115deg,#1e3153,#142033 78%);
+ border-color:#344963;
+}
+html[data-theme="dark"] .dsa-v2 .learning-hero-stats>div,
+html[data-theme="dark"] .dsa-v2 .learning-mode,
+html[data-theme="dark"] .dsa-v2 .learning-problem,
+html[data-theme="dark"] .dsa-v2 .learning-stage,
+html[data-theme="dark"] .dsa-v2 .learning-type-filter{
+ background:#172438;border-color:#31445e;color:#dce9fa;box-shadow:none;
+}
+html[data-theme="dark"] .dsa-v2 .learning-hero-stats strong{color:#b2caff}
+html[data-theme="dark"] .dsa-v2 .learning-hero-stats span,
+html[data-theme="dark"] .dsa-v2 .learning-count,
+html[data-theme="dark"] .dsa-v2 .learning-filter-result,
+html[data-theme="dark"] .dsa-v2 .learning-stage-level,
+html[data-theme="dark"] .dsa-v2 .learning-stage-heading small,
+html[data-theme="dark"] .dsa-v2 .learning-intro p{color:#a8b8cf}
+html[data-theme="dark"] .dsa-v2 .learning-progress,
+html[data-theme="dark"] .dsa-v2 .learning-stage-meter{background:#293a52}
+html[data-theme="dark"] .dsa-v2 .learning-progress span,
+html[data-theme="dark"] .dsa-v2 .learning-stage-meter span{background:#7d9ff2}
+html[data-theme="dark"] .dsa-v2 .learning-next{background:#385da9;color:#fff!important}
+html[data-theme="dark"] .dsa-v2 .learning-mode button{color:#abbcd4}
+html[data-theme="dark"] .dsa-v2 .learning-mode button.active{background:#29416b;color:#e5efff;box-shadow:none}
+html[data-theme="dark"] .dsa-v2 .learning-search .MuiOutlinedInput-root{background:#1a293f;color:#e6effd}
+html[data-theme="dark"] .dsa-v2 .learning-type-filter small{color:#a6b7d0}
+html[data-theme="dark"] .dsa-v2 .learning-type-filter.active{background:#283e63;border-color:#7b9ee8;color:#e8f1ff;box-shadow:inset 0 0 0 1px #46649b}
+html[data-theme="dark"] .dsa-v2 .learning-type-filter:hover:not(.active){background:#223653;border-color:#526e9c}
+html[data-theme="dark"] .dsa-v2 .learning-kind-pill.kind-structure{background:#34244f;border-color:#7a5baa;color:#d2b6ff}
+html[data-theme="dark"] .dsa-v2 .learning-kind-pill.kind-algorithm{background:#45331f;border-color:#96743e;color:#ffcd7c}
+html[data-theme="dark"] .dsa-v2 .learning-kind-pill.kind-problem{background:#243b5c;border-color:#5277b2;color:#b1d0ff}
+html[data-theme="dark"] .dsa-v2 .learning-filter-grid{border-color:#33445f}
+html[data-theme="dark"] .dsa-v2 .learning-stage.open{border-color:#5577b4}
+html[data-theme="dark"] .dsa-v2 .learning-stage.open .learning-stage-toggle{background:linear-gradient(110deg,#1b2940,#172338)}
+html[data-theme="dark"] .dsa-v2 .learning-stage-toggle:hover{background:#1f3150}
+html[data-theme="dark"] .dsa-v2 .learning-stage-toggle{color:#a9b9d0}
+html[data-theme="dark"] .dsa-v2 .learning-stage-n{background:#293f62;border-color:#3a5b8f;color:#aecaef}
+html[data-theme="dark"] .dsa-v2 .learning-stage-content{border-color:#2f4057}
+html[data-theme="dark"] .dsa-v2 .learning-prerequisite{background:#1c2e49;color:#c2d2eb}
+html[data-theme="dark"] .dsa-v2 .learning-topic-row{background:#18263b}
+html[data-theme="dark"] .dsa-v2 .learning-problem:hover{background:#203452;border-color:#6785b7}
+html[data-theme="dark"] .dsa-v2 .learning-question-row.finished{background:#19372e}
+html[data-theme="dark"] .dsa-v2 .learning-problem-title>strong,
+html[data-theme="dark"] .dsa-v2 .learning-problem-title strong{color:#e9f1ff}
+html[data-theme="dark"] .dsa-v2 .learning-item-summary,
+html[data-theme="dark"] .dsa-v2 .learning-problem-meta>span:not(.learning-difficulty),
+html[data-theme="dark"] .dsa-v2 .learning-topic-row .learning-problem-meta>span:first-child{color:#a7b8cf}
+html[data-theme="dark"] .dsa-v2 .learning-problem-arrow{color:#96b6e6}
+html[data-theme="dark"] .dsa-v2 .level-easy{background:#173b2b;color:#a6e7be}
+html[data-theme="dark"] .dsa-v2 .level-medium{background:#48371e;color:#ffda96}
+html[data-theme="dark"] .dsa-v2 .level-hard{background:#46242d;color:#ffb1bc}
+html[data-theme="dark"] .dsa-v2 .learning-check{background:#20314a;border-color:#435a7a;color:#bbcee9}
+html[data-theme="dark"] .dsa-v2 .learning-check.is-done{background:#1d4433;border-color:#3b7d57;color:#b7f1ca}
+html[data-theme="dark"] .dsa-v2 .learning-company-tag{background:#22375b;border-color:#3a5684;color:#b6cdff}
+html[data-theme="dark"] .dsa-v2 .learning-company-extra{color:#a0b4ce}
+html[data-theme="dark"] .dsa-v2 .learning-checkpoint{border-color:#5872a0;background:#192943;color:#b5c9eb}
+html[data-theme="dark"] .dsa-v2 .learning-method ol,
+html[data-theme="dark"] .dsa-v2 .learning-tip ol,
+html[data-theme="dark"] .dsa-v2 .learning-trace ol{color:#c0d0e5}
+html[data-theme="dark"] .dsa-v2 .learning-detail-hero{background:linear-gradient(110deg,#1d304e,#151f30)!important}
+html[data-theme="dark"] .dsa-v2 .learning-detail-tags>span:not(.learning-difficulty){background:#253b58;color:#b9cae4}
+html[data-theme="dark"] .dsa-v2 .learning-example,
+html[data-theme="dark"] .dsa-v2 .learning-tests-list>article,
+html[data-theme="dark"] .dsa-v2 .learning-complexity>div,
+html[data-theme="dark"] .dsa-v2 .learning-topic-grid article{background:#1b2a40;border-color:#344863}
+html[data-theme="dark"] .dsa-v2 .learning-example b,
+html[data-theme="dark"] .dsa-v2 .learning-tests b,
+html[data-theme="dark"] .dsa-v2 .learning-tests span,
+html[data-theme="dark"] .dsa-v2 .learning-complexity span{color:#aec1db}
+html[data-theme="dark"] .dsa-v2 .learning-example pre,
+html[data-theme="dark"] .dsa-v2 .learning-tests pre,
+html[data-theme="dark"] .dsa-v2 .learning-tests strong{color:#e0ecff}
+html[data-theme="dark"] .dsa-v2 .learning-tip,
+html[data-theme="dark"] .dsa-v2 .learning-intuition{background:#213957;border-color:#3c587b;color:#d8e7ff}
+html[data-theme="dark"] .dsa-v2 .learning-tip strong,
+html[data-theme="dark"] .dsa-v2 .learning-complexity strong{color:#b5cfff}
+html[data-theme="dark"] .dsa-v2 .learning-approach-tabs button{background:#20314a;border-color:#3f5370;color:#bed0e9}
+html[data-theme="dark"] .dsa-v2 .learning-approach-tabs button.selected{background:#2d4979;border-color:#7c9ddd;color:#e9f3ff}
+html[data-theme="dark"] .dsa-v2 .learning-no-code{background:#202f45;color:#c3d3ec}
+html[data-theme="dark"] .dsa-v2 .learning-java{background:#0b1220;border-color:#33435b;color:#e5f0ff}
+html[data-theme="dark"] .dsa-v2 .learning-topic-grid h3{color:#d7e6ff!important}
+html[data-theme="dark"] .dsa-v2 .learning-topic-grid p{color:#b8c8df}
+html[data-theme="dark"] .dsa-v2 .learning-lesson-steps{color:#c6d3e7}
+html[data-theme="dark"] .dsa-v2 .learning-code-note{color:#adbfda!important}
+html[data-theme="dark"] .dsa-v2 .learning-topic-link,
+html[data-theme="dark"] .dsa-v2 .learning-stage-return{color:#adc8ff}
+html[data-theme="dark"] .dsa-v2 .learning-topic-pagination>a{background:#1b304d;border-color:#3e5d8c;color:#c4d8ff}
+html[data-theme="dark"] .dsa-v2 .learning-topic-pagination>a:hover{background:#27416a}
+html[data-theme="dark"] .dsa-v2 .learning-primary-link{background:#385fae;color:#fff!important}
