@@ -19,6 +19,8 @@ const VerifiedTag=({status})=>{const verified=status==='Active';return <span cla
 const companyPalette=['blue','purple','teal','amber','rose','slate'];
 const CompanyPill=({name})=>{const company=name||'Unknown company';const color=companyPalette[[...company].reduce((sum,char)=>sum+char.charCodeAt(0),0)%companyPalette.length];return <span className={'company-pill company-'+color} title={company}>{company}</span>};
 const briefFit=fit=>{const raw=(fit||'Not rated').trim();return raw.split(':')[0].trim().slice(0,36)};
+const hasKnownSalary=j=>Boolean(j.salary&&j.salary.trim()&&j.salary!=='Not disclosed');
+const SalaryPreview=({job,compact=false})=>hasKnownSalary(job)?<span className={'job-salary-preview'+(compact?' compact':'')} title={job.salaryEvidence?.scope||'Salary information from job dataset'}><span className="job-salary-amount">{job.salary}</span><span className="job-salary-type">{job.salaryEvidence?.type==='third_party_estimate'?'Third-party benchmark':job.salaryEvidence?.type==='employer_disclosed'?'Employer disclosed':'Pay stated in listing'}</span></span>:null;
 const ranking=j=>{const p={High:3,Medium:2,Low:1}[j.priority]||0;const fit=(j.fit||'').toLowerCase();const match=/strong|high:|best|excellent/.test(fit)?4:/good/.test(fit)?3:/stretch/.test(fit)?1:0;return p*10+match};
 const priorityRank={High:3,Medium:2,Low:1};
 const fitRank=fit=>{const s=(fit||'').toLowerCase();return /strong|excellent|best|high:/.test(s)?4:/good/.test(s)?3:/stretch/.test(s)?2:/unclear/.test(s)?1:0};
@@ -49,10 +51,10 @@ const featured=[...eligible].sort((a,b)=>score(b)-score(a)||(b.dateFound||'').lo
 const nextDsa=dsa.problems.slice(0,4);
 return <div className="home-sections">
 <section className="panel home-panel"><div className="head-row"><div><h2>Today's job listings</h2><p className="sub">{date(today)} · {todaysJobs.length} new {todaysJobs.length===1?'listing':'listings'}</p></div><Link to="/jobs">All jobs ↗</Link></div>
-{todaysJobs.length?todaysJobs.map(j=><Link key={j.id} to={'/jobs/'+slug(j)} className="listing home-listing"><div><b>{j.title}</b><p className="home-company-line"><CompanyPill name={j.company}/><span>{j.location}</span></p><small>{j.priority} priority · {briefFit(j.fit)} fit</small></div><Status s={j.vacancyStatus}/></Link>):<p className="home-empty">No new jobs have been added today. New listings will appear here when the job dataset is updated.</p>}
+{todaysJobs.length?todaysJobs.map(j=><Link key={j.id} to={'/jobs/'+slug(j)} className="listing home-listing"><div><b>{j.title}</b><p className="home-company-line"><CompanyPill name={j.company}/><span>{j.location}</span></p><small>{j.priority} priority · {briefFit(j.fit)} fit</small><SalaryPreview job={j} compact/></div><Status s={j.vacancyStatus}/></Link>):<p className="home-empty">No new jobs have been added today. New listings will appear here when the job dataset is updated.</p>}
 </section>
 <section className="panel home-panel"><div className="head-row"><div><h2>Top 5 recommended jobs</h2><p className="sub">Recent opportunities ranked by priority, fit and verification</p></div><Link to="/jobs">Explore jobs ↗</Link></div>
-{featured.map(j=><Link key={j.id} to={'/jobs/'+slug(j)} className="listing home-listing"><div><b>{j.title}</b><p className="home-company-line"><CompanyPill name={j.company}/><span>{j.location}</span></p><small>{j.priority} priority · {briefFit(j.fit)} fit · {date(j.dateFound)}</small></div><VerifiedTag status={j.vacancyStatus}/></Link>)}
+{featured.map(j=><Link key={j.id} to={'/jobs/'+slug(j)} className="listing home-listing"><div><b>{j.title}</b><p className="home-company-line"><CompanyPill name={j.company}/><span>{j.location}</span></p><small>{j.priority} priority · {briefFit(j.fit)} fit · {date(j.dateFound)}</small><SalaryPreview job={j} compact/></div><VerifiedTag status={j.vacancyStatus}/></Link>)}
 {!featured.length&&<p className="home-empty">No recommended jobs available yet.</p>}
 </section>
 <section className="panel home-panel"><div className="head-row"><div><h2>Your DSA learning path</h2><p className="sub">Start with fundamentals, move through 21 structured stages</p></div><Link to="/dsa">Open roadmap ↗</Link></div>
@@ -98,7 +100,7 @@ return <div className="jobs-page">
 <div className="jobs-list">{list.map(j=><article className="panel job" key={j.id}>
 <div className="job-content"><div className="job-topline"><CompanyPill name={j.company}/><Status s={j.vacancyStatus}/></div>
 <Link to={'/jobs/'+slug(j)} className="job-title-link"><h3 title={j.title}>{j.title}</h3></Link>
-<p className="job-location">{j.location}{j.workMode&&j.workMode!=='Unconfirmed'?' · '+j.workMode:''}</p>
+<p className="job-location">{j.location}{j.workMode&&j.workMode!=='Unconfirmed'?' · '+j.workMode:''}</p><SalaryPreview job={j}/>
 <div className="tags">{(j.skills||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,4).map((skill,i)=><span key={i} className="tag" title={skill}>{skill}</span>)}</div>
 <p className="job-meta">{j.priority} priority · {briefFit(j.fit)} fit · Found {date(j.dateFound)}</p>
 </div><div className="job-side"><label className="input-caption" htmlFor={'job-status-'+j.id}>Your application</label><div id={'job-status-'+j.id}><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></div><Link className="job-detail-link" to={'/jobs/'+slug(j)}>View details ↗</Link></div></article>)}</div>
@@ -123,7 +125,7 @@ return <div className="detail-page job-detail">
 </section>
 <div className="two">
 <div><section className="panel"><h2>Job description</h2><p className="description">{j.description||'The original dataset does not contain the full job description for this listing. Use the official application link for complete details.'}</p>{j.notes&&<p className="sub">{j.notes}</p>}</section>
-<section className="panel"><h2>Skills & requirements</h2><div className="tags">{(j.skills||'').split(',').filter(Boolean).map((skill,i)=><span className="tag" key={i}>{skill.trim()}</span>)}</div></section>
+{hasKnownSalary(j)&&<section className="panel job-salary-evidence"><h2>Salary information & source</h2><p className="job-salary-large">{j.salary}</p>{j.salaryEvidence?<><p><b>{j.salaryEvidence.type==='third_party_estimate'?'Third-party benchmark, not a job offer':'Employer-disclosed compensation'}</b></p><p>{j.salaryEvidence.scope}</p><p>{j.salaryEvidence.notes}</p><div className="job-salary-source"><span>Source: {j.salaryEvidence.sourceName} · Checked {date(j.salaryEvidence.checkedAt)} · Confidence: {j.salaryEvidence.confidence}</span><a href={j.salaryEvidence.sourceUrl} target="_blank" rel="noopener noreferrer">View salary source <OpenInNew fontSize="inherit"/></a></div></>:<p>The compensation figure was already included in the original listing dataset. Confirm the current pay and currency directly with the employer.</p>}</section>}<section className="panel"><h2>Skills & requirements</h2><div className="tags">{(j.skills||'').split(',').filter(Boolean).map((skill,i)=><span className="tag" key={i}>{skill.trim()}</span>)}</div></section>
 <section className="panel"><h2>Verification history</h2><p className="sub">Last checked: {j.lastChecked||'Not recorded'}</p><p className="description">{j.verification||'No verification evidence recorded.'}</p></section></div>
 <div><section className="panel"><h2>Your application</h2><p className="sub">Saved on this device only</p><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></section>
 <section className="panel"><h2>Role details</h2>{[['Company',j.company],['Experience',j.experience],['Work mode',j.workMode],['Vacancy',j.vacancyStatus],['Last checked',j.lastChecked]].map(([label,value])=><div className="breakdown" key={label}><span>{label}</span><b>{value||'Unknown'}</b></div>)}</section></div>
