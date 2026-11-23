@@ -88,6 +88,19 @@ function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
  const hasFilters=Boolean(search.trim()||typeFilter!=='All'||extraCount);
 
  const reset=()=>{setSearch('');setTypeFilter('All');setDifficulty('All');setStageFilter('All');setStatus('All')};
+ useEffect(()=>{
+  if(!search.trim()&&typeFilter==='All'&&difficulty==='All'&&stageFilter==='All'&&status==='All')return;
+  const nextStage=stages.find(stage=>(entriesByStage.get(stage.id)||[]).some(entry=>{
+   const p=entry.p,lesson=entry.lesson,isProblem=entry.type==='Problem';
+   const words=[stage.title,isProblem?p.title:lesson.title,isProblem?p.slug:lesson.overview,lesson?.mentalModel].filter(Boolean).join(' ').toLowerCase();
+   return (!search.trim()||words.includes(search.trim().toLowerCase()))&&
+    (typeFilter==='All'||entry.type===typeFilter)&&
+    (difficulty==='All'||(isProblem&&p.difficulty===difficulty))&&
+    (stageFilter==='All'||entry.stageId===stageFilter)&&
+    (status==='All'||(isProblem&&(status==='Solved'?!!progress[p.slug]:!progress[p.slug])));
+  }));
+  if(nextStage)setExpanded(previous=>previous===nextStage.id?previous:nextStage.id);
+ },[search,typeFilter,difficulty,stageFilter,status,stages,entriesByStage,progress]);
  return <div className="dsa-v2">
   <div className="learning-hero">
    <div className="learning-hero-copy"><p className="learning-eyebrow">JAVA · INTERVIEW PREP · BEGINNER TO ADVANCED</p><h1>DSA learning roadmap</h1><p>Learn the data structure, understand the algorithm, solve the pattern, then revisit it. Built for SDE interviews, not random daily question spam.</p></div>
