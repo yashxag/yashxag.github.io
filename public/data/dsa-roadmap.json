@@ -1,0 +1,2234 @@
+{
+  "version": 2,
+  "updatedAt": "2026-11-23",
+  "purpose": "Ordered beginner-to-advanced Java backend / product engineering interview curriculum",
+  "methodology": "Progress by prerequisite and pattern; 16 existing fully worked Java exercises plus independent external-practice follow-ups. Unverified company associations are intentionally omitted. Editorially reported tags are cited, not official company data.",
+  "studyMethod": [
+    "Read the data structure primer and algorithm before starting a stage.",
+    "Spend 15–25 minutes attempting a problem from scratch; write brute force and its Big-O first.",
+    "Derive an optimized invariant or recurrence, then explain it aloud and implement in Java.",
+    "Test empty/boundary/duplicate/negative/large cases when allowed; trace pointers or DP states.",
+    "Re-solve after 1, 3, 7 and 21 days without looking; mark solved only once you can explain it.",
+    "After two stages, perform one 45-minute unseen mixed problem; revisit failures."
+  ],
+  "stages": [
+    {
+      "id": "fundamentals",
+      "number": "01",
+      "title": "Foundations & Java problem solving",
+      "level": "Beginner",
+      "summary": "Learn to reason about inputs, invariants, loops, arrays, references, and Big-O before memorising templates.",
+      "prerequisites": [],
+      "dataStructure": {
+        "name": "Java arrays and strings",
+        "description": "An array stores elements at contiguous indices; String is immutable in Java. ArrayList grows dynamically.",
+        "example": "[4, 7, 1] -> a[1] = 7",
+        "realWorld": "Arrays back search results and data batches; immutable strings represent request keys.",
+        "operations": "Array index O(1); scan O(n); append to ArrayList amortized O(1)"
+      },
+      "algorithms": [
+        {
+          "name": "Linear scan",
+          "complexity": "O(n)",
+          "description": "Visit each candidate once until the condition is met",
+          "example": "Find the largest number in [3,8,2]; update max from 3 to 8; trace small inputs by hand"
+        },
+        {
+          "name": "Big-O & invariants",
+          "complexity": "O(1) to O(n log n)",
+          "description": "Estimate how the cost scales; explain what must remain true each iteration",
+          "example": "At index i, maxSoFar is the largest value among elements 0..i"
+        }
+      ],
+      "problemSlugs": [
+        "first-nonrepeating-character-index",
+        "find-maximum-in-array",
+        "contains-duplicate",
+        "best-time-to-buy-and-sell-stock",
+        "missing-number",
+        "running-sum-of-1d-array"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "hashing",
+      "number": "02",
+      "title": "Hash maps, sets & frequency counting",
+      "level": "Beginner",
+      "summary": "Learn HashMap and HashSet, frequency tables, duplicate detection and lookup trade-offs.",
+      "prerequisites": [
+        "fundamentals"
+      ],
+      "dataStructure": {
+        "name": "HashMap & HashSet",
+        "description": "HashMap stores key-to-value pairs; HashSet stores unique keys. Java hashing gives expected constant-time lookup.",
+        "example": "count = {a:2, b:1}; set = {a,b}",
+        "realWorld": "Indexes, caching, deduplication, feature flags, counting HTTP status codes.",
+        "operations": "Lookup/insert/delete expected O(1); worst-case assumptions depend on collision handling"
+      },
+      "algorithms": [
+        {
+          "name": "Hash lookup",
+          "complexity": "O(n) expected total",
+          "description": "Replace repeated scanning with a map/set lookup",
+          "example": "In [2,7,11] with target 9, store 2->0 then find 7's complement 2"
+        }
+      ],
+      "problemSlugs": [
+        "two-sum",
+        "valid-anagram",
+        "majority-element",
+        "group-anagrams",
+        "longest-consecutive-sequence"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "two-pointers",
+      "number": "03",
+      "title": "Sorting, two pointers & partitioning",
+      "level": "Beginner",
+      "summary": "Use sorted order to avoid nested loops; understand stable sorts, merge, quicksort and in-place partitions.",
+      "prerequisites": [
+        "hashing"
+      ],
+      "dataStructure": {
+        "name": "Sorted arrays",
+        "description": "Sorting orders comparable items so two pointers can make monotonic decisions.",
+        "example": "Sorted [1,3,6] + [2,3,5] -> [1,2,3,3,5,6]",
+        "realWorld": "Merging paginated feeds and reconciling sorted logs.",
+        "operations": "Two-pointer scan O(n); sort O(n log n) typical"
+      },
+      "algorithms": [
+        {
+          "name": "Insertion sort",
+          "complexity": "O(n²)",
+          "description": "Insert the next item into an already sorted prefix",
+          "example": "[3,1,2] -> [1,3,2] -> [1,2,3]"
+        },
+        {
+          "name": "Merge sort",
+          "complexity": "O(n log n)",
+          "description": "Divide, recursively sort halves, and merge; needs O(n) buffer",
+          "example": "[4,1,3,2] -> [1,4] + [2,3] -> [1,2,3,4]"
+        },
+        {
+          "name": "Quicksort",
+          "complexity": "O(n log n) average; O(n²) worst",
+          "description": "Partition around a pivot; recurse; pivot choice matters",
+          "example": "[3,1,2] pivot 2 -> [1] 2 [3]"
+        },
+        {
+          "name": "Dutch national flag",
+          "complexity": "O(n)",
+          "description": "Maintain low, mid and high partitions using swaps",
+          "example": "[2,0,1] -> [0,1,2]"
+        }
+      ],
+      "problemSlugs": [
+        "merge-two-sorted-arrays",
+        "valid-palindrome",
+        "move-zeroes",
+        "two-sum-ii-input-array-is-sorted",
+        "3sum",
+        "sort-colors",
+        "container-with-most-water"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "sliding-window",
+      "number": "04",
+      "title": "Sliding windows & prefix sums",
+      "level": "Beginner",
+      "summary": "Recognize contiguous segments. Know fixed versus variable windows and when negative numbers break sliding-window logic.",
+      "prerequisites": [
+        "two-pointers"
+      ],
+      "dataStructure": {
+        "name": "Prefix sum array",
+        "description": "Prefix[i+1] stores the sum of elements 0..i. Subarray [l,r) sum = prefix[r]-prefix[l].",
+        "example": "a=[2,3,1] -> prefix=[0,2,5,6]",
+        "realWorld": "Analytics rolling aggregates and moving time windows.",
+        "operations": "Build O(n), range sum O(1); window scan O(n)"
+      },
+      "algorithms": [
+        {
+          "name": "Fixed window",
+          "complexity": "O(n)",
+          "description": "Subtract outgoing and add incoming when sliding",
+          "example": "[1,2,3,4], k=2 sums 3,5,7"
+        },
+        {
+          "name": "Variable window",
+          "complexity": "O(n)",
+          "description": "Expand right, shrink left while constraint fails (requires monotonic validity)",
+          "example": "For nonnegative [2,1,3], target 4: grow then shrink"
+        },
+        {
+          "name": "Prefix sum + hashmap",
+          "complexity": "O(n) expected",
+          "description": "Track cumulative sums; look for prefix-target",
+          "example": "Prefix sum 6 and earlier sum 3 produce a subarray of 3"
+        }
+      ],
+      "problemSlugs": [
+        "longest-distinct-substring",
+        "maximum-average-subarray-i",
+        "minimum-size-subarray-sum",
+        "subarray-sum-equals-k",
+        "permutation-in-string",
+        "minimum-window-substring"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "binary-search",
+      "number": "05",
+      "title": "Binary search & answer-space search",
+      "level": "Beginner",
+      "summary": "Master bounds (first/last occurrence), sorted-array invariants, rotated arrays and monotonic predicates.",
+      "prerequisites": [
+        "sliding-window"
+      ],
+      "dataStructure": {
+        "name": "Sorted indexed sequence",
+        "description": "An indexable ordered range lets you halve the candidate interval on each decision.",
+        "example": "[1,2,2,2,5], lowerBound(2) = 1",
+        "realWorld": "Database index seek; threshold tuning; capacity planning.",
+        "operations": "Binary search O(log n); binary search on answer O(log range × check cost)"
+      },
+      "algorithms": [
+        {
+          "name": "Lower bound",
+          "complexity": "O(log n)",
+          "description": "Keep [low,high) as the candidate range; move high on >= target",
+          "example": "[1,3,3,5], target 3: answer index 1"
+        },
+        {
+          "name": "Binary search on answer",
+          "complexity": "O(log range × feasible())",
+          "description": "Use a monotonic yes/no predicate to find minimal feasible value",
+          "example": "Minimum ship capacity with a fixed days limit"
+        }
+      ],
+      "problemSlugs": [
+        "first-position-of-target",
+        "search-rotated-sorted-array",
+        "binary-search",
+        "search-insert-position",
+        "koko-eating-bananas",
+        "find-minimum-in-rotated-sorted-array"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "linked-lists",
+      "number": "06",
+      "title": "Linked lists & fast/slow pointers",
+      "level": "Intermediate",
+      "summary": "Learn reference rewiring, dummy heads, cycle detection, reverse and merge; draw pointer diagrams.",
+      "prerequisites": [
+        "binary-search"
+      ],
+      "dataStructure": {
+        "name": "Singly linked list",
+        "description": "Each node stores a value and reference to the next node, unlike contiguous array storage.",
+        "example": "1 -> 2 -> 3 -> null",
+        "realWorld": "Chained queues and adjacency lists; pointer-heavy LRU designs.",
+        "operations": "Index O(n), insert at known node O(1), scan O(n)"
+      },
+      "algorithms": [
+        {
+          "name": "Fast & slow pointers",
+          "complexity": "O(n)",
+          "description": "Move one pointer one hop and the other two hops to detect cycle or middle",
+          "example": "1->2->3->4->5: slow ends at 3"
+        },
+        {
+          "name": "Pointer reversal",
+          "complexity": "O(n), O(1) space",
+          "description": "Save next before changing next pointer to previous",
+          "example": "1->2->3 becomes 1<-2<-3"
+        }
+      ],
+      "problemSlugs": [
+        "reverse-singly-linked-list",
+        "middle-of-the-linked-list",
+        "linked-list-cycle",
+        "merge-two-sorted-lists",
+        "remove-nth-node-from-end-of-list",
+        "reorder-list",
+        "add-two-numbers"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "stacks-queues",
+      "number": "07",
+      "title": "Stacks, queues & monotonic structures",
+      "level": "Intermediate",
+      "summary": "Understand LIFO, FIFO, ArrayDeque, bracket parsing and maintaining a monotonic candidate set.",
+      "prerequisites": [
+        "linked-lists"
+      ],
+      "dataStructure": {
+        "name": "Stack / queue (ArrayDeque)",
+        "description": "Stack removes the most recent item; queue removes the oldest. ArrayDeque supports both in Java.",
+        "example": "stack push(1), push(2), pop()->2; queue offer(1), offer(2), poll()->1",
+        "realWorld": "Parser nesting, undo, task queues, streaming window maxima.",
+        "operations": "Push/pop/offer/poll amortized O(1)"
+      },
+      "algorithms": [
+        {
+          "name": "Monotonic stack",
+          "complexity": "O(n)",
+          "description": "Remove dominated values while maintaining increasing/decreasing candidates",
+          "example": "Daily temperatures: pop cooler days when a hotter day arrives"
+        },
+        {
+          "name": "Monotonic deque",
+          "complexity": "O(n)",
+          "description": "Discard stale indices and dominated values",
+          "example": "Sliding window maximum in O(n)"
+        }
+      ],
+      "problemSlugs": [
+        "valid-brackets",
+        "implement-queue-using-stacks",
+        "min-stack",
+        "daily-temperatures",
+        "next-greater-element-i",
+        "sliding-window-maximum",
+        "largest-rectangle-in-histogram"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "recursion",
+      "number": "08",
+      "title": "Recursion & backtracking",
+      "level": "Intermediate",
+      "summary": "Learn call-stack frames, base cases, choose/explore/undo, pruning, permutations and subsets.",
+      "prerequisites": [
+        "stacks-queues"
+      ],
+      "dataStructure": {
+        "name": "Call stack",
+        "description": "A recursive call adds a frame holding parameters and local state; deep recursion risks StackOverflowError.",
+        "example": "factorial(3): 3*factorial(2)",
+        "realWorld": "Configuration search, parsers, directory walks.",
+        "operations": "For subset enumeration O(2^n) outputs; recursion depth O(n)"
+      },
+      "algorithms": [
+        {
+          "name": "Backtracking",
+          "complexity": "O(branches^depth)",
+          "description": "Choose, recurse, then undo the choice; prune invalid partial states",
+          "example": "For [1,2], choose/exclude each number to enumerate [],[1],[2],[1,2]"
+        },
+        {
+          "name": "Divide and conquer",
+          "complexity": "varies",
+          "description": "Split into independent smaller subproblems then combine",
+          "example": "Merge sort splits halves"
+        }
+      ],
+      "problemSlugs": [
+        "subsets",
+        "permutations",
+        "combination-sum",
+        "generate-parentheses",
+        "word-search",
+        "n-queens"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "trees",
+      "number": "09",
+      "title": "Binary trees & depth/breadth traversals",
+      "level": "Intermediate",
+      "summary": "Build a mental model for nodes/edges, DFS preorder/inorder/postorder, BFS levels, height and subtree properties.",
+      "prerequisites": [
+        "recursion"
+      ],
+      "dataStructure": {
+        "name": "Binary tree",
+        "description": "Each node has at most two children. BST additionally orders keys; do not confuse the two.",
+        "example": "    1 / \\ 2 3 -> BFS [1,2,3]",
+        "realWorld": "DOM trees, ASTs, org charts, indexes.",
+        "operations": "Visit all nodes O(n); recursion O(h) stack; BFS O(w) queue"
+      },
+      "algorithms": [
+        {
+          "name": "DFS recursive",
+          "complexity": "O(n)",
+          "description": "Choose preorder/inorder/postorder based on when node is processed",
+          "example": "Inorder left,node,right"
+        },
+        {
+          "name": "BFS level order",
+          "complexity": "O(n)",
+          "description": "Use a queue and snapshot its length per level",
+          "example": "[1] -> [2,3] -> [4,5]"
+        }
+      ],
+      "problemSlugs": [
+        "maximum-depth-binary-tree",
+        "binary-tree-level-order",
+        "invert-binary-tree",
+        "diameter-of-binary-tree",
+        "balanced-binary-tree",
+        "lowest-common-ancestor-of-a-binary-tree",
+        "serialize-and-deserialize-binary-tree"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "bst-heap",
+      "number": "10",
+      "title": "BSTs, heaps & top-K",
+      "level": "Intermediate",
+      "summary": "Know BST invariants, balanced versus skewed shapes, heap ordering and priority queues.",
+      "prerequisites": [
+        "trees"
+      ],
+      "dataStructure": {
+        "name": "Binary search tree / binary heap",
+        "description": "BST: left values < node < right (strict if keys unique). Heap: parent has higher priority than children, but is not fully sorted.",
+        "example": "min heap [1,4,3] -> poll()=1",
+        "realWorld": "Schedulers, recommendation feeds, finding top response times.",
+        "operations": "Balanced BST O(log n); skewed BST O(n); heap add/poll O(log n), peek O(1)"
+      },
+      "algorithms": [
+        {
+          "name": "Heap select top-K",
+          "complexity": "O(n log k)",
+          "description": "Keep size-k heap of the best candidates",
+          "example": "Maintain 3 largest numbers in an incoming stream"
+        },
+        {
+          "name": "Tree inorder",
+          "complexity": "O(n)",
+          "description": "Inorder traversal of BST visits sorted values",
+          "example": "BST [2,1,3] -> 1,2,3"
+        }
+      ],
+      "problemSlugs": [
+        "top-k-frequent-numbers",
+        "kth-largest-element-in-an-array",
+        "validate-binary-search-tree",
+        "kth-smallest-element-in-a-bst",
+        "find-median-from-data-stream",
+        "merge-k-sorted-lists"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "tries",
+      "number": "11",
+      "title": "Tries & string searching",
+      "level": "Intermediate",
+      "summary": "Store prefixes efficiently; understand trie nodes, DFS over words, and when KMP beats repeated substring matching.",
+      "prerequisites": [
+        "bst-heap"
+      ],
+      "dataStructure": {
+        "name": "Trie (prefix tree)",
+        "description": "An edge represents a character; each node corresponds to a prefix. Memory can be larger than a hash set.",
+        "example": "car, cat share c -> a",
+        "realWorld": "Autocomplete, routing prefixes, spell check.",
+        "operations": "Insert/search O(word length), memory O(total stored characters)"
+      },
+      "algorithms": [
+        {
+          "name": "Trie insertion/search",
+          "complexity": "O(L)",
+          "description": "Traverse one edge per character",
+          "example": "Insert cat then car; both reuse ca"
+        },
+        {
+          "name": "KMP prefix function",
+          "complexity": "O(n+m)",
+          "description": "Reuse known prefix/suffix matches after mismatch",
+          "example": "Pattern abab has a reusable ab prefix"
+        }
+      ],
+      "problemSlugs": [
+        "implement-trie-prefix-tree",
+        "design-add-and-search-words-data-structure",
+        "word-search-ii",
+        "find-the-index-of-the-first-occurrence-in-a-string"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "intervals-greedy",
+      "number": "12",
+      "title": "Intervals & greedy decisions",
+      "level": "Intermediate",
+      "summary": "Sort by starts/ends; merge overlapping ranges; learn exchange arguments to justify local choices.",
+      "prerequisites": [
+        "tries"
+      ],
+      "dataStructure": {
+        "name": "Interval list",
+        "description": "A pair [start,end] represents a segment. Whether touching endpoints overlap depends on the question.",
+        "example": "[1,3],[2,5] -> [1,5]",
+        "realWorld": "Booking windows, CPU scheduling, calendar availability.",
+        "operations": "Sort O(n log n), sweep O(n)"
+      },
+      "algorithms": [
+        {
+          "name": "Interval sweep",
+          "complexity": "O(n log n)",
+          "description": "Sort intervals then merge or select without revisiting previous ones",
+          "example": "[1,3],[2,5],[8,9] -> [1,5],[8,9]"
+        },
+        {
+          "name": "Greedy exchange argument",
+          "complexity": "varies",
+          "description": "Prove replacing an optimal first choice with the greedy choice cannot hurt",
+          "example": "Activity selection by earliest finish"
+        }
+      ],
+      "problemSlugs": [
+        "merge-overlapping-intervals",
+        "insert-interval",
+        "non-overlapping-intervals",
+        "jump-game",
+        "jump-game-ii",
+        "gas-station",
+        "task-scheduler"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "graphs-basic",
+      "number": "13",
+      "title": "Graph models, BFS, DFS & grids",
+      "level": "Intermediate",
+      "summary": "Represent edges, visited sets, adjacency lists and components; compare shortest unweighted BFS with DFS exploration.",
+      "prerequisites": [
+        "intervals-greedy"
+      ],
+      "dataStructure": {
+        "name": "Adjacency list",
+        "description": "For each vertex, store neighboring vertices. Directed edges are one-way; undirected edges are two-way.",
+        "example": "0:[1,2], 1:[0], 2:[0]",
+        "realWorld": "Service dependencies, maps, social networks, workflow DAGs.",
+        "operations": "BFS/DFS O(V+E), space O(V) for visited/frontier"
+      },
+      "algorithms": [
+        {
+          "name": "BFS",
+          "complexity": "O(V+E)",
+          "description": "Queue processes nodes in increasing path length for unweighted graphs",
+          "example": "Grid island counts use four-direction neighbor checks"
+        },
+        {
+          "name": "DFS",
+          "complexity": "O(V+E)",
+          "description": "Walk deeply before backtracking; use visited to avoid loops",
+          "example": "Components discovered by repeated DFS"
+        }
+      ],
+      "problemSlugs": [
+        "count-islands-grid",
+        "flood-fill",
+        "max-area-of-island",
+        "rotting-oranges",
+        "clone-graph",
+        "pacific-atlantic-water-flow",
+        "word-ladder"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "graph-advanced",
+      "number": "14",
+      "title": "Topological sort, DSU & connectivity",
+      "level": "Advanced",
+      "summary": "Recognize prerequisites, directed cycles, connected components and disjoint-set union.",
+      "prerequisites": [
+        "graphs-basic"
+      ],
+      "dataStructure": {
+        "name": "Disjoint-set union (Union-Find)",
+        "description": "Keeps components using parent pointers; path compression and union-by-size give near-constant amortized operations.",
+        "example": "union(A,B), union(B,C) -> A and C connected",
+        "realWorld": "Dependency resolution, clustering, network connectivity.",
+        "operations": "Union/find amortized O(α(n)); topo sort O(V+E)"
+      },
+      "algorithms": [
+        {
+          "name": "Kahn topological sort",
+          "complexity": "O(V+E)",
+          "description": "Queue zero-indegree vertices; if fewer than V removed, cycle exists",
+          "example": "Course B depends on A, emit A before B"
+        },
+        {
+          "name": "Union-find",
+          "complexity": "O((V+E)α(V))",
+          "description": "Merge roots and compress paths for connectivity queries",
+          "example": "Edges [0,1],[1,2] join one component"
+        }
+      ],
+      "problemSlugs": [
+        "course-schedule",
+        "course-schedule-ii",
+        "redundant-connection",
+        "number-of-connected-components-in-an-undirected-graph",
+        "graph-valid-tree",
+        "accounts-merge"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "shortest-path",
+      "number": "15",
+      "title": "Weighted graphs, shortest paths & MST",
+      "level": "Advanced",
+      "summary": "Differentiate Dijkstra, Bellman-Ford, Floyd-Warshall, and Kruskal/Prim with valid graph assumptions.",
+      "prerequisites": [
+        "graph-advanced"
+      ],
+      "dataStructure": {
+        "name": "Weighted adjacency list",
+        "description": "Edges store both destination and cost. Negative edges break Dijkstra's standard assumptions.",
+        "example": "A->B (4), A->C (1), C->B (1) => A->B distance 2",
+        "realWorld": "Routing, delivery planning, cloud network optimization.",
+        "operations": "Dijkstra O((V+E)log V) heap; Bellman-Ford O(VE); Floyd O(V³)"
+      },
+      "algorithms": [
+        {
+          "name": "Dijkstra",
+          "complexity": "O((V+E)log V)",
+          "description": "Repeatedly settle lowest tentative nonnegative distance using min heap",
+          "example": "A->C->B beats direct A->B"
+        },
+        {
+          "name": "Bellman-Ford",
+          "complexity": "O(VE)",
+          "description": "Relax every edge V-1 times; can detect reachable negative cycles",
+          "example": "Negative edge costs allowed"
+        },
+        {
+          "name": "Kruskal MST",
+          "complexity": "O(E log E)",
+          "description": "Sort edges and accept if they join different DSU components",
+          "example": "Connect sites with least total cable cost"
+        }
+      ],
+      "problemSlugs": [
+        "network-delay-time",
+        "cheapest-flights-within-k-stops",
+        "min-cost-to-connect-all-points",
+        "path-with-minimum-effort",
+        "reconstruct-itinerary"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "dp-one",
+      "number": "16",
+      "title": "Dynamic programming: one dimension",
+      "level": "Intermediate",
+      "summary": "Write a state definition, transitions, base cases, evaluation order and space optimization.",
+      "prerequisites": [
+        "shortest-path"
+      ],
+      "dataStructure": {
+        "name": "DP table",
+        "description": "Cache overlapping subproblem results instead of recomputing them, or fill answers bottom-up.",
+        "example": "F(5)=F(4)+F(3) with memo",
+        "realWorld": "Optimization, planning, throttling and sequence decisions.",
+        "operations": "Usually O(states × transition cost) time; space O(states) or optimized"
+      },
+      "algorithms": [
+        {
+          "name": "Memoization",
+          "complexity": "O(states × transitions)",
+          "description": "Recursively cache states",
+          "example": "Ways to reach step i depends on i-1 and i-2"
+        },
+        {
+          "name": "Tabulation",
+          "complexity": "O(states × transitions)",
+          "description": "Fill states in dependency order",
+          "example": "House Robber: dp[i] = max(dp[i-1],dp[i-2]+value[i])"
+        }
+      ],
+      "problemSlugs": [
+        "minimum-coins-for-amount",
+        "largest-contiguous-sum",
+        "climbing-stairs",
+        "house-robber",
+        "min-cost-climbing-stairs",
+        "decode-ways",
+        "coin-change",
+        "longest-increasing-subsequence"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "dp-two",
+      "number": "17",
+      "title": "Dynamic programming: grids, strings & knapsack",
+      "level": "Advanced",
+      "summary": "Practice 2D state tables, subsequences, edit distance, 0/1 knapsack, interval DP and reconstruction.",
+      "prerequisites": [
+        "dp-one"
+      ],
+      "dataStructure": {
+        "name": "2D DP matrix",
+        "description": "dp[i][j] represents an answer for two prefixes or grid coordinates; transitions refer to smaller states.",
+        "example": "LCS prefixes: dp[i][j] from dp[i-1][j-1] on equal characters",
+        "realWorld": "Diff engines, DNA similarity, cost optimization.",
+        "operations": "Often O(nm) time and space; rolling rows reduce memory when valid"
+      },
+      "algorithms": [
+        {
+          "name": "LCS",
+          "complexity": "O(nm)",
+          "description": "If end characters match add 1 diagonally, else take max of neighbors",
+          "example": "LCS(abc, ac)=2"
+        },
+        {
+          "name": "0/1 knapsack",
+          "complexity": "O(nW)",
+          "description": "For each item, choose skip or take once",
+          "example": "Update capacity backward for 1D optimization"
+        },
+        {
+          "name": "Edit distance",
+          "complexity": "O(nm)",
+          "description": "Take min insert/delete/replace cost per pair of prefixes",
+          "example": "cat -> cut costs 1 replace"
+        }
+      ],
+      "problemSlugs": [
+        "unique-paths",
+        "longest-common-subsequence",
+        "partition-equal-subset-sum",
+        "target-sum",
+        "edit-distance",
+        "interleaving-string",
+        "regular-expression-matching"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "bit-math",
+      "number": "18",
+      "title": "Bit manipulation & number theory",
+      "level": "Intermediate",
+      "summary": "Learn XOR cancellation, masks, shifts, signed integers, Euclid's gcd, sieve and fast exponentiation.",
+      "prerequisites": [
+        "dp-two"
+      ],
+      "dataStructure": {
+        "name": "Bitmask",
+        "description": "An integer's binary digits encode independent flags or membership in a small set.",
+        "example": "0101 XOR 0011 = 0110",
+        "realWorld": "Permissions, compression, protocol flags, Bloom-filter internals.",
+        "operations": "Bit checks O(1) per machine word; gcd O(log min(a,b))"
+      },
+      "algorithms": [
+        {
+          "name": "XOR cancellation",
+          "complexity": "O(n)",
+          "description": "x XOR x=0 and x XOR 0=x",
+          "example": "[4,1,4] XOR => 1"
+        },
+        {
+          "name": "Euclid GCD",
+          "complexity": "O(log min(a,b))",
+          "description": "Replace (a,b) with (b,a%b) until b=0",
+          "example": "gcd(18,12) -> gcd(12,6) -> 6"
+        },
+        {
+          "name": "Sieve of Eratosthenes",
+          "complexity": "O(n log log n)",
+          "description": "Mark multiples of each prime to generate primes up to n",
+          "example": "Sieve [2..10] leaves 2,3,5,7"
+        }
+      ],
+      "problemSlugs": [
+        "single-occurring-number",
+        "number-of-1-bits",
+        "counting-bits",
+        "reverse-bits",
+        "sum-of-two-integers",
+        "powx-n",
+        "happy-number"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "advanced-ds",
+      "number": "19",
+      "title": "Advanced data structures & range queries",
+      "level": "Advanced",
+      "summary": "Learn Fenwick trees, segment trees, balanced search trees, sparse tables and lazy propagation only after core patterns.",
+      "prerequisites": [
+        "bit-math"
+      ],
+      "dataStructure": {
+        "name": "Fenwick / segment tree",
+        "description": "Fenwick stores prefix aggregates in O(n) space. Segment tree stores range summaries and supports updates.",
+        "example": "Sum queries over [2,1,4,3] after point updates",
+        "realWorld": "Live counters, range analytics, leaderboard updates.",
+        "operations": "Build Fenwick O(n log n) naive / O(n) optimized; update/query O(log n)"
+      },
+      "algorithms": [
+        {
+          "name": "Fenwick update/query",
+          "complexity": "O(log n)",
+          "description": "Jump by lowest set bit to update ancestors and collect prefix partial sums",
+          "example": "sum(1..3) from aggregates"
+        },
+        {
+          "name": "Segment tree",
+          "complexity": "O(log n) query/update",
+          "description": "Store aggregate per segment and recursively combine overlaps",
+          "example": "Maximum in index range [l,r]"
+        }
+      ],
+      "problemSlugs": [
+        "range-sum-query-mutable",
+        "range-sum-query-2d-immutable",
+        "count-of-smaller-numbers-after-self",
+        "my-calendar-iii"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "design",
+      "number": "20",
+      "title": "Data structure design & mixed problems",
+      "level": "Advanced",
+      "summary": "Combine hash maps, doubly linked lists, heaps, queues and tradeoffs with clean Java APIs.",
+      "prerequisites": [
+        "advanced-ds"
+      ],
+      "dataStructure": {
+        "name": "HashMap + doubly linked list",
+        "description": "Map finds a cache node in expected O(1); list maintains recency in O(1).",
+        "example": "GET(key) moves entry to head; eviction removes tail",
+        "realWorld": "Actual service caches, frequency tracking, event queues.",
+        "operations": "LRU get/put O(1) expected; memory O(capacity)"
+      },
+      "algorithms": [
+        {
+          "name": "LRU cache",
+          "complexity": "O(1) expected get/put",
+          "description": "Hash map -> node; doubly linked list -> order; evict least recent",
+          "example": "Capacity 2: put(1),put(2),get(1),put(3) evicts 2"
+        },
+        {
+          "name": "Two heaps",
+          "complexity": "O(log n) add, O(1) median",
+          "description": "Lower max heap and upper min heap partition stream",
+          "example": "Insert 1,5,2 -> median 2"
+        }
+      ],
+      "problemSlugs": [
+        "lru-cache",
+        "time-based-key-value-store",
+        "design-twitter",
+        "design-median-from-data-stream",
+        "insert-delete-getrandom-o1"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    },
+    {
+      "id": "hard-patterns",
+      "number": "21",
+      "title": "Advanced hard patterns & mocks",
+      "level": "Advanced",
+      "summary": "Finish with hard combinations, graph shortest paths, interval scheduling, DP optimizations, and timed interviews.",
+      "prerequisites": [
+        "design"
+      ],
+      "dataStructure": {
+        "name": "Interview simulation",
+        "description": "Clarify requirements, present brute force, improve to optimal, test and dry-run before writing final code.",
+        "example": "45 minutes: 5 understand, 10 design, 20 implement, 10 test",
+        "realWorld": "FAANG/product coding rounds evaluate reasoning as well as implementation.",
+        "operations": "Choose complexity based on constraints, not memorized labels"
+      },
+      "algorithms": [
+        {
+          "name": "Binary search + partition",
+          "complexity": "O(log min(m,n))",
+          "description": "Partition two sorted arrays so all left values <= all right values",
+          "example": "Median of sorted arrays"
+        },
+        {
+          "name": "Sweep line",
+          "complexity": "O(n log n)",
+          "description": "Sort start/end events, maintain active state",
+          "example": "Meeting-room allocations"
+        },
+        {
+          "name": "Advanced DP",
+          "complexity": "varies",
+          "description": "Pick a compact state, identify transition and check memory bounds",
+          "example": "Burst balloons interval DP"
+        }
+      ],
+      "problemSlugs": [
+        "trapping-rain-water",
+        "median-of-two-sorted-arrays",
+        "word-break",
+        "burst-balloons",
+        "longest-valid-parentheses"
+      ],
+      "checkpoint": "Explain the invariant, walk through one nontrivial test, state worst-case complexity, and write Java without looking at the solution."
+    }
+  ],
+  "practice": [
+    {
+      "id": "ROAD-001",
+      "slug": "find-maximum-in-array",
+      "title": "Find Maximum In Array",
+      "difficulty": "Easy",
+      "stageId": "fundamentals",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/maximum-subarray?/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-002",
+      "slug": "contains-duplicate",
+      "title": "Contains Duplicate",
+      "difficulty": "Easy",
+      "stageId": "fundamentals",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/contains-duplicate/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-003",
+      "slug": "best-time-to-buy-and-sell-stock",
+      "title": "Best Time To Buy And Sell Stock",
+      "difficulty": "Easy",
+      "stageId": "fundamentals",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-004",
+      "slug": "missing-number",
+      "title": "Missing Number",
+      "difficulty": "Easy",
+      "stageId": "fundamentals",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/missing-number/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-005",
+      "slug": "running-sum-of-1d-array",
+      "title": "Running Sum Of 1d Array",
+      "difficulty": "Easy",
+      "stageId": "fundamentals",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/running-sum-of-1d-array/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-006",
+      "slug": "valid-anagram",
+      "title": "Valid Anagram",
+      "difficulty": "Easy",
+      "stageId": "hashing",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/valid-anagram/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-007",
+      "slug": "majority-element",
+      "title": "Majority Element",
+      "difficulty": "Easy",
+      "stageId": "hashing",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/majority-element/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Microsoft",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-008",
+      "slug": "group-anagrams",
+      "title": "Group Anagrams",
+      "difficulty": "Medium",
+      "stageId": "hashing",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/group-anagrams/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Adobe",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-009",
+      "slug": "longest-consecutive-sequence",
+      "title": "Longest Consecutive Sequence",
+      "difficulty": "Medium",
+      "stageId": "hashing",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/longest-consecutive-sequence/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-010",
+      "slug": "valid-palindrome",
+      "title": "Valid Palindrome",
+      "difficulty": "Easy",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/valid-palindrome/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-011",
+      "slug": "move-zeroes",
+      "title": "Move Zeroes",
+      "difficulty": "Easy",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/move-zeroes/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-012",
+      "slug": "two-sum-ii-input-array-is-sorted",
+      "title": "Two Sum II Input Array Is Sorted",
+      "difficulty": "Medium",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-013",
+      "slug": "3sum",
+      "title": "3sum",
+      "difficulty": "Medium",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/3sum/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-014",
+      "slug": "sort-colors",
+      "title": "Sort Colors",
+      "difficulty": "Medium",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/sort-colors/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/interview-experiences/amazon-interview-experience-set-264-experienced-for-sde1/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-015",
+      "slug": "container-with-most-water",
+      "title": "Container With Most Water",
+      "difficulty": "Medium",
+      "stageId": "two-pointers",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/container-with-most-water/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-016",
+      "slug": "maximum-average-subarray-i",
+      "title": "Maximum Average Subarray I",
+      "difficulty": "Easy",
+      "stageId": "sliding-window",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/maximum-average-subarray-i/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-017",
+      "slug": "minimum-size-subarray-sum",
+      "title": "Minimum Size Subarray Sum",
+      "difficulty": "Medium",
+      "stageId": "sliding-window",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/minimum-size-subarray-sum/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-018",
+      "slug": "subarray-sum-equals-k",
+      "title": "Subarray Sum Equals K",
+      "difficulty": "Medium",
+      "stageId": "sliding-window",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/subarray-sum-equals-k/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-019",
+      "slug": "permutation-in-string",
+      "title": "Permutation In String",
+      "difficulty": "Medium",
+      "stageId": "sliding-window",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/permutation-in-string/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-020",
+      "slug": "minimum-window-substring",
+      "title": "Minimum Window Substring",
+      "difficulty": "Hard",
+      "stageId": "sliding-window",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/minimum-window-substring/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Atlassian",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-021",
+      "slug": "binary-search",
+      "title": "Binary Search",
+      "difficulty": "Easy",
+      "stageId": "binary-search",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/binary-search/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-022",
+      "slug": "search-insert-position",
+      "title": "Search Insert Position",
+      "difficulty": "Easy",
+      "stageId": "binary-search",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/search-insert-position/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-023",
+      "slug": "koko-eating-bananas",
+      "title": "Koko Eating Bananas",
+      "difficulty": "Medium",
+      "stageId": "binary-search",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/koko-eating-bananas/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-024",
+      "slug": "find-minimum-in-rotated-sorted-array",
+      "title": "Find Minimum In Rotated Sorted Array",
+      "difficulty": "Medium",
+      "stageId": "binary-search",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-025",
+      "slug": "middle-of-the-linked-list",
+      "title": "Middle Of The Linked List",
+      "difficulty": "Easy",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/middle-of-the-linked-list/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-026",
+      "slug": "linked-list-cycle",
+      "title": "Linked List Cycle",
+      "difficulty": "Easy",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/linked-list-cycle/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-027",
+      "slug": "merge-two-sorted-lists",
+      "title": "Merge Two Sorted Lists",
+      "difficulty": "Easy",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/merge-two-sorted-lists/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-028",
+      "slug": "remove-nth-node-from-end-of-list",
+      "title": "Remove Nth Node From End Of List",
+      "difficulty": "Medium",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-029",
+      "slug": "reorder-list",
+      "title": "Reorder List",
+      "difficulty": "Medium",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/reorder-list/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-030",
+      "slug": "add-two-numbers",
+      "title": "Add Two Numbers",
+      "difficulty": "Medium",
+      "stageId": "linked-lists",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/add-two-numbers/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-031",
+      "slug": "implement-queue-using-stacks",
+      "title": "Implement Queue Using Stacks",
+      "difficulty": "Easy",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/implement-queue-using-stacks/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-032",
+      "slug": "min-stack",
+      "title": "Min Stack",
+      "difficulty": "Medium",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/min-stack/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-033",
+      "slug": "daily-temperatures",
+      "title": "Daily Temperatures",
+      "difficulty": "Medium",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/daily-temperatures/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-034",
+      "slug": "next-greater-element-i",
+      "title": "Next Greater Element I",
+      "difficulty": "Easy",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/next-greater-element-i/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-035",
+      "slug": "sliding-window-maximum",
+      "title": "Sliding Window Maximum",
+      "difficulty": "Hard",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/sliding-window-maximum/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-036",
+      "slug": "largest-rectangle-in-histogram",
+      "title": "Largest Rectangle In Histogram",
+      "difficulty": "Hard",
+      "stageId": "stacks-queues",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-037",
+      "slug": "subsets",
+      "title": "Subsets",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/subsets/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-038",
+      "slug": "permutations",
+      "title": "Permutations",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/permutations/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-039",
+      "slug": "combination-sum",
+      "title": "Combination Sum",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/combination-sum/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-040",
+      "slug": "generate-parentheses",
+      "title": "Generate Parentheses",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/generate-parentheses/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Google",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-041",
+      "slug": "word-search",
+      "title": "Word Search",
+      "difficulty": "Medium",
+      "stageId": "recursion",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/word-search/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-042",
+      "slug": "n-queens",
+      "title": "N Queens",
+      "difficulty": "Hard",
+      "stageId": "recursion",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/n-queens/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-043",
+      "slug": "invert-binary-tree",
+      "title": "Invert Binary Tree",
+      "difficulty": "Easy",
+      "stageId": "trees",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/invert-binary-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-044",
+      "slug": "diameter-of-binary-tree",
+      "title": "Diameter Of Binary Tree",
+      "difficulty": "Easy",
+      "stageId": "trees",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/diameter-of-binary-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-045",
+      "slug": "balanced-binary-tree",
+      "title": "Balanced Binary Tree",
+      "difficulty": "Easy",
+      "stageId": "trees",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/balanced-binary-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-046",
+      "slug": "lowest-common-ancestor-of-a-binary-tree",
+      "title": "Lowest Common Ancestor Of A Binary Tree",
+      "difficulty": "Medium",
+      "stageId": "trees",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-047",
+      "slug": "serialize-and-deserialize-binary-tree",
+      "title": "Serialize And Deserialize Binary Tree",
+      "difficulty": "Hard",
+      "stageId": "trees",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-048",
+      "slug": "kth-largest-element-in-an-array",
+      "title": "Kth Largest Element In An Array",
+      "difficulty": "Medium",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-049",
+      "slug": "validate-binary-search-tree",
+      "title": "Validate Binary Search Tree",
+      "difficulty": "Medium",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-050",
+      "slug": "kth-smallest-element-in-a-bst",
+      "title": "Kth Smallest Element In A Bst",
+      "difficulty": "Medium",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-051",
+      "slug": "find-median-from-data-stream",
+      "title": "Find Median From Data Stream",
+      "difficulty": "Hard",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Morgan Stanley",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-052",
+      "slug": "merge-k-sorted-lists",
+      "title": "Merge K Sorted Lists",
+      "difficulty": "Hard",
+      "stageId": "bst-heap",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-053",
+      "slug": "implement-trie-prefix-tree",
+      "title": "Implement Trie Prefix Tree",
+      "difficulty": "Medium",
+      "stageId": "tries",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-054",
+      "slug": "design-add-and-search-words-data-structure",
+      "title": "Design Add And Search Words Data Structure",
+      "difficulty": "Medium",
+      "stageId": "tries",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-055",
+      "slug": "word-search-ii",
+      "title": "Word Search II",
+      "difficulty": "Hard",
+      "stageId": "tries",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/word-search-ii/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-056",
+      "slug": "find-the-index-of-the-first-occurrence-in-a-string",
+      "title": "Find The Index Of The First Occurrence In A String",
+      "difficulty": "Easy",
+      "stageId": "tries",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-057",
+      "slug": "insert-interval",
+      "title": "Insert Interval",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/insert-interval/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-058",
+      "slug": "non-overlapping-intervals",
+      "title": "Non Overlapping Intervals",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/non-overlapping-intervals/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-059",
+      "slug": "jump-game",
+      "title": "Jump Game",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/jump-game/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Adobe",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-060",
+      "slug": "jump-game-ii",
+      "title": "Jump Game II",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/jump-game-ii/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-061",
+      "slug": "gas-station",
+      "title": "Gas Station",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/gas-station/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-062",
+      "slug": "task-scheduler",
+      "title": "Task Scheduler",
+      "difficulty": "Medium",
+      "stageId": "intervals-greedy",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/task-scheduler/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-063",
+      "slug": "flood-fill",
+      "title": "Flood Fill",
+      "difficulty": "Easy",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/flood-fill/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-064",
+      "slug": "max-area-of-island",
+      "title": "Max Area Of Island",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/max-area-of-island/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-065",
+      "slug": "rotting-oranges",
+      "title": "Rotting Oranges",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/rotting-oranges/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-066",
+      "slug": "clone-graph",
+      "title": "Clone Graph",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/clone-graph/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-067",
+      "slug": "pacific-atlantic-water-flow",
+      "title": "Pacific Atlantic Water Flow",
+      "difficulty": "Medium",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/pacific-atlantic-water-flow/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-068",
+      "slug": "word-ladder",
+      "title": "Word Ladder",
+      "difficulty": "Hard",
+      "stageId": "graphs-basic",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/word-ladder/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-069",
+      "slug": "course-schedule",
+      "title": "Course Schedule",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/course-schedule/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Amazon",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-070",
+      "slug": "course-schedule-ii",
+      "title": "Course Schedule II",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/course-schedule-ii/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-071",
+      "slug": "redundant-connection",
+      "title": "Redundant Connection",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/redundant-connection/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-072",
+      "slug": "number-of-connected-components-in-an-undirected-graph",
+      "title": "Number Of Connected Components In An Undirected Graph",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-073",
+      "slug": "graph-valid-tree",
+      "title": "Graph Valid Tree",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/graph-valid-tree/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-074",
+      "slug": "accounts-merge",
+      "title": "Accounts Merge",
+      "difficulty": "Medium",
+      "stageId": "graph-advanced",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/accounts-merge/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-075",
+      "slug": "network-delay-time",
+      "title": "Network Delay Time",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/network-delay-time/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-076",
+      "slug": "cheapest-flights-within-k-stops",
+      "title": "Cheapest Flights Within K Stops",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-077",
+      "slug": "min-cost-to-connect-all-points",
+      "title": "Min Cost To Connect All Points",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/min-cost-to-connect-all-points/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-078",
+      "slug": "path-with-minimum-effort",
+      "title": "Path With Minimum Effort",
+      "difficulty": "Medium",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/path-with-minimum-effort/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-079",
+      "slug": "reconstruct-itinerary",
+      "title": "Reconstruct Itinerary",
+      "difficulty": "Hard",
+      "stageId": "shortest-path",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/reconstruct-itinerary/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-080",
+      "slug": "climbing-stairs",
+      "title": "Climbing Stairs",
+      "difficulty": "Easy",
+      "stageId": "dp-one",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/climbing-stairs/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Adobe",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-081",
+      "slug": "house-robber",
+      "title": "House Robber",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/house-robber/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-082",
+      "slug": "min-cost-climbing-stairs",
+      "title": "Min Cost Climbing Stairs",
+      "difficulty": "Easy",
+      "stageId": "dp-one",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/min-cost-climbing-stairs/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-083",
+      "slug": "decode-ways",
+      "title": "Decode Ways",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/decode-ways/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-084",
+      "slug": "coin-change",
+      "title": "Coin Change",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/coin-change/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-085",
+      "slug": "longest-increasing-subsequence",
+      "title": "Longest Increasing Subsequence",
+      "difficulty": "Medium",
+      "stageId": "dp-one",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/longest-increasing-subsequence/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Microsoft",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-086",
+      "slug": "unique-paths",
+      "title": "Unique Paths",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/unique-paths/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-087",
+      "slug": "longest-common-subsequence",
+      "title": "Longest Common Subsequence",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/longest-common-subsequence/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-088",
+      "slug": "partition-equal-subset-sum",
+      "title": "Partition Equal Subset Sum",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/partition-equal-subset-sum/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-089",
+      "slug": "target-sum",
+      "title": "Target Sum",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/target-sum/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-090",
+      "slug": "edit-distance",
+      "title": "Edit Distance",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/edit-distance/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-091",
+      "slug": "interleaving-string",
+      "title": "Interleaving String",
+      "difficulty": "Medium",
+      "stageId": "dp-two",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/interleaving-string/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-092",
+      "slug": "regular-expression-matching",
+      "title": "Regular Expression Matching",
+      "difficulty": "Hard",
+      "stageId": "dp-two",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/regular-expression-matching/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-093",
+      "slug": "number-of-1-bits",
+      "title": "Number Of 1 Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/number-of-1-bits/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-094",
+      "slug": "counting-bits",
+      "title": "Counting Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/counting-bits/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-095",
+      "slug": "reverse-bits",
+      "title": "Reverse Bits",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/reverse-bits/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-096",
+      "slug": "sum-of-two-integers",
+      "title": "Sum Of Two Integers",
+      "difficulty": "Medium",
+      "stageId": "bit-math",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/sum-of-two-integers/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-097",
+      "slug": "powx-n",
+      "title": "Powx N",
+      "difficulty": "Medium",
+      "stageId": "bit-math",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/powx-n/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-098",
+      "slug": "happy-number",
+      "title": "Happy Number",
+      "difficulty": "Easy",
+      "stageId": "bit-math",
+      "estimatedMinutes": 18,
+      "practiceUrl": "https://leetcode.com/problems/happy-number/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-099",
+      "slug": "range-sum-query-mutable",
+      "title": "Range Sum Query Mutable",
+      "difficulty": "Medium",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/range-sum-query-mutable/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-100",
+      "slug": "range-sum-query-2d-immutable",
+      "title": "Range Sum Query 2d Immutable",
+      "difficulty": "Medium",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/range-sum-query-2d-immutable/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-101",
+      "slug": "count-of-smaller-numbers-after-self",
+      "title": "Count Of Smaller Numbers After Self",
+      "difficulty": "Hard",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/count-of-smaller-numbers-after-self/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-102",
+      "slug": "my-calendar-iii",
+      "title": "My Calendar III",
+      "difficulty": "Hard",
+      "stageId": "advanced-ds",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/my-calendar-iii/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-103",
+      "slug": "lru-cache",
+      "title": "Lru Cache",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/lru-cache/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Uber",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-104",
+      "slug": "time-based-key-value-store",
+      "title": "Time Based Key Value Store",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/time-based-key-value-store/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-105",
+      "slug": "design-twitter",
+      "title": "Design Twitter",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/design-twitter/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-106",
+      "slug": "design-median-from-data-stream",
+      "title": "Design Median From Data Stream",
+      "difficulty": "Hard",
+      "stageId": "design",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/find-median-from-data-stream/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-107",
+      "slug": "insert-delete-getrandom-o1",
+      "title": "Insert Delete Getrandom O1",
+      "difficulty": "Medium",
+      "stageId": "design",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/insert-delete-getrandom-o1/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-108",
+      "slug": "trapping-rain-water",
+      "title": "Trapping Rain Water",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/trapping-rain-water/",
+      "format": "external-practice",
+      "companyEvidence": [
+        {
+          "company": "Flipkart",
+          "url": "https://www.geeksforgeeks.org/blogs/top-interview-problems-asked-in-2024/",
+          "label": "Reported in interview-prep coverage; not official company confirmation"
+        }
+      ]
+    },
+    {
+      "id": "ROAD-109",
+      "slug": "median-of-two-sorted-arrays",
+      "title": "Median Of Two Sorted Arrays",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-110",
+      "slug": "word-break",
+      "title": "Word Break",
+      "difficulty": "Medium",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 30,
+      "practiceUrl": "https://leetcode.com/problems/word-break/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-111",
+      "slug": "burst-balloons",
+      "title": "Burst Balloons",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/burst-balloons/",
+      "format": "external-practice",
+      "companyEvidence": []
+    },
+    {
+      "id": "ROAD-112",
+      "slug": "longest-valid-parentheses",
+      "title": "Longest Valid Parentheses",
+      "difficulty": "Hard",
+      "stageId": "hard-patterns",
+      "estimatedMinutes": 45,
+      "practiceUrl": "https://leetcode.com/problems/longest-valid-parentheses/",
+      "format": "external-practice",
+      "companyEvidence": []
+    }
+  ]
+}
