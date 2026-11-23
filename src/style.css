@@ -636,3 +636,140 @@ body{background-image:none;color:#182439}
  .job-detail .job-salary-evidence .job-salary-large{font-size:15px}
  .job-salary-source{align-items:flex-start;flex-direction:column;gap:8px}
 }
+
+
+/* Theme switcher visible across jobs, dashboard and learning pages. */
+.topbar-utilities{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0}
+.topbar-utilities .topbar-update{font-size:11px;font-weight:650;white-space:nowrap;color:#65738b}
+.topbar .theme-toggle{flex:0 0 38px;display:grid;place-items:center;width:38px;height:38px;min-width:38px;padding:6px;border:1px solid var(--cb-border);border-radius:11px;background:var(--cb-card);color:#395892;transition:background .15s,color .15s,border-color .15s}
+.topbar .theme-toggle:hover{background:#eaf1ff;color:#234ba5;border-color:#adbfdf}
+.topbar .theme-toggle:focus-visible{outline:3px solid #7097ec;outline-offset:3px}
+@media(max-width:600px){.topbar-utilities{margin-left:auto;gap:7px}.topbar-utilities .topbar-update{font-size:10px}.topbar .theme-toggle{width:36px;min-width:36px;height:36px;flex-basis:36px}}
+@media(max-width:365px){.topbar-utilities .topbar-update{width:auto!important;font-size:9px}}
+
+/* Dark theme: high-contrast surfaces and MUI-compatible color tokens.
+   Applied to the whole website, not just the DSA content. */
+html[data-theme="dark"]{
+ color-scheme:dark;
+ --cb-bg:#0c1421;
+ --cb-card:#151f30;
+ --cb-text:#e7eefb;
+ --cb-muted:#aec0d8;
+ --cb-border:#2d3d55;
+ --cb-accent:#aac4ff;
+ --cb-soft:#1d2c47;
+}
+html[data-theme="dark"],html[data-theme="dark"] body,
+html[data-theme="dark"] #root,
+html[data-theme="dark"] .shell,
+html[data-theme="dark"] .main{background-color:var(--cb-bg)!important;color:var(--cb-text)}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3,
+html[data-theme="dark"] h4{color:#ecf3ff;-webkit-text-fill-color:currentColor;background:none}
+html[data-theme="dark"] p{color:#b6c5da}
+html[data-theme="dark"] .small,html[data-theme="dark"] .sub,html[data-theme="dark"] small,
+html[data-theme="dark"] .micro,html[data-theme="dark"] footer,
+html[data-theme="dark"] .input-caption{color:#a7b8cf}
+html[data-theme="dark"] .panel,html[data-theme="dark"] .stat,
+html[data-theme="dark"] .home-panel,html[data-theme="dark"] .home-panel .home-listing,
+html[data-theme="dark"] .jobs-search-panel,html[data-theme="dark"] .jobs-list>.job,
+html[data-theme="dark"] .job-detail .job-detail-hero,
+html[data-theme="dark"] .job-detail .two .panel,
+html[data-theme="dark"] .job-detail .job-toolkit,
+html[data-theme="dark"] .dsa-card,
+html[data-theme="dark"] .dsa-detail>.panel{
+ background:#151f30!important;border-color:#2d3d55!important;
+ box-shadow:0 1px 6px rgba(0,0,0,.12);
+}
+html[data-theme="dark"] .sidebar,html[data-theme="dark"] .mobile-nav{
+ background:#141f30!important;border-color:#31415a!important;
+ box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+html[data-theme="dark"] .brand,html[data-theme="dark"] .mobile-brand{color:#e6efff}
+html[data-theme="dark"] .brand span,html[data-theme="dark"] .mobile-brand span{color:#a9c1ff}
+html[data-theme="dark"] .nav,html[data-theme="dark"] .mobile-nav-item{color:#a7b9d2}
+html[data-theme="dark"] .nav.active,html[data-theme="dark"] .mobile-nav-item.active{background:#253a5c;color:#dceaff}
+html[data-theme="dark"] .nav:hover,html[data-theme="dark"] .mobile-nav-item:hover{background:#20314b;color:#e4eeff}
+html[data-theme="dark"] footer,html[data-theme="dark"] .topbar{border-color:#293950}
+html[data-theme="dark"] .topbar .theme-toggle{background:#1b2940;border-color:#3a4e69;color:#ffdb91}
+html[data-theme="dark"] .topbar .theme-toggle:hover{background:#293f61;border-color:#7594c8}
+html[data-theme="dark"] .topbar-utilities .topbar-update{color:#a6b7ce}
+html[data-theme="dark"] .listing,html[data-theme="dark"] .home-listing,
+html[data-theme="dark"] .home-panel .home-empty{background:#182437;border-color:#304158;color:#e5edfa}
+html[data-theme="dark"] .listing:hover,html[data-theme="dark"] .job:hover{border-color:#688bc7!important;background:#1b2c43}
+html[data-theme="dark"] .listing b,html[data-theme="dark"] .home-listing b,
+html[data-theme="dark"] .home-panel h2,
+html[data-theme="dark"] .job-title-link h3,html[data-theme="dark"] .stat b{color:#e4ecfa}
+html[data-theme="dark"] .listing p,html[data-theme="dark"] .job p,
+html[data-theme="dark"] .example p,
+html[data-theme="dark"] .home-panel .head-row .sub{color:#b2c2d8}
+html[data-theme="dark"] .head-row>a,html[data-theme="dark"] .job-side>a,
+html[data-theme="dark"] .back,html[data-theme="dark"] .home-practice,
+html[data-theme="dark"] .home-panel .head-row>a{color:#a5c1ff}
+html[data-theme="dark"] .stat strong,html[data-theme="dark"] .dsa-summary-item strong{color:#a9c3ff}
+html[data-theme="dark"] .tag,html[data-theme="dark"] .jobs-list>.job .tag,
+html[data-theme="dark"] .dsa-topic-pill{background:#21324b;border-color:#385170;color:#bbcee8}
+html[data-theme="dark"] .description,html[data-theme="dark"] .dsa-steps,
+html[data-theme="dark"] .complexities{color:#c2d0e3}
+html[data-theme="dark"] .breakdown{border-color:#293b53}
+html[data-theme="dark"] .breakdown>span{color:#9eafc9}
+html[data-theme="dark"] .breakdown b{color:#e5eefc}
+html[data-theme="dark"] .detail-summary-item,html[data-theme="dark"] .job-fit-explanation,
+html[data-theme="dark"] .toolkit-prompt,html[data-theme="dark"] .dsa-summary-item{
+ background:#1a283c;border-color:#31455f;box-shadow:none;
+}
+html[data-theme="dark"] .detail-summary-item strong,
+html[data-theme="dark"] .job-fit-explanation>strong,
+html[data-theme="dark"] .job-detail-experience strong,
+html[data-theme="dark"] .job-detail .job-salary-evidence h2{color:#e4ecfa}
+html[data-theme="dark"] .job-fit-explanation p,
+html[data-theme="dark"] .job-detail-location,
+html[data-theme="dark"] .job-detail-experience,
+html[data-theme="dark"] .jobs-page-title p,
+html[data-theme="dark"] .jobs-results-line span,
+html[data-theme="dark"] .jobs-filter-help,
+html[data-theme="dark"] .jobs-privacy-note,
+html[data-theme="dark"] .job-detail .job-salary-evidence p{color:#b6c7db}
+html[data-theme="dark"] .jobs-results-line strong{color:#eaf1ff}
+html[data-theme="dark"] .jobs-search-line .MuiOutlinedInput-root,
+html[data-theme="dark"] .jobs-page-actions .MuiIconButton-root,
+html[data-theme="dark"] .dsa-search-panel .MuiOutlinedInput-root{
+ background:#1a283e;border-color:#354b69;color:#dfebff;
+}
+html[data-theme="dark"] .jobs-page-actions .MuiIconButton-root{color:#bbd1f5}
+html[data-theme="dark"] .jobs-page-actions .MuiIconButton-root:hover{background:#253c5b}
+html[data-theme="dark"] .jobs-filter-chip{
+ background:#1b2b40;color:#c6d5e9;border-color:#3a4b65;
+}
+html[data-theme="dark"] .jobs-filter-chip.selected{background:#385ca9;color:#fff;border-color:#7a9ce6}
+html[data-theme="dark"] .jobs-filter-chip:hover:not(.selected){background:#253b55}
+html[data-theme="dark"] .jobs-extra-filters,
+html[data-theme="dark"] .job-salary-source,
+html[data-theme="dark"] .toolkit-tabs{border-color:#34445c}
+html[data-theme="dark"] .job-salary-amount,
+html[data-theme="dark"] .job-salary-preview{color:#bfd2fa}
+html[data-theme="dark"] .job-salary-amount{background:#233960;border-color:#3c5680;color:#bdd3ff}
+html[data-theme="dark"] .job-salary-type,html[data-theme="dark"] .job-salary-source{color:#a7bad3}
+html[data-theme="dark"] .job-detail .job-salary-evidence .job-salary-large{color:#b7d2ff}
+html[data-theme="dark"] .job-salary-source a{color:#a5c5ff}
+html[data-theme="dark"] .toolkit-content h3{color:#ebf2ff}
+html[data-theme="dark"] .toolkit-prompt pre{color:#cddcf1}
+html[data-theme="dark"] .toolkit-prompt.collapsed:after{background:linear-gradient(transparent,#1a283c)}
+html[data-theme="dark"] .toolkit-note{background:#173529;border-color:#2e6d51;color:#bdf1d0}
+html[data-theme="dark"] .toolkit-feedback{color:#b7f0d2}
+html[data-theme="dark"] .example{background:#17253b;border-color:#31435e;color:#e4efff}
+html[data-theme="dark"] .example span{color:#aec3df}
+html[data-theme="dark"] .example code{color:#c2d7ff}
+html[data-theme="dark"] .interview-note{background:#1e3051;color:#dfebff;border-left-color:#80a2ee}
+html[data-theme="dark"] .interview-note p{color:#bdd0ec}
+html[data-theme="dark"] .MuiButton-root.MuiButton-containedPrimary:not(.Mui-disabled){
+ background-color:#7597e5;color:#101a30
+}
+html[data-theme="dark"] .MuiButton-root.MuiButton-containedPrimary:not(.Mui-disabled):hover{background-color:#a4bcfa;color:#0b1530}
+html[data-theme="dark"] .MuiButton-root.MuiButton-outlinedPrimary:not(.Mui-disabled),
+html[data-theme="dark"] .MuiButton-root.MuiButton-textPrimary:not(.Mui-disabled){color:#aac4ff;border-color:#526f9e}
+html[data-theme="dark"] .MuiButton-root.MuiButton-outlinedPrimary:not(.Mui-disabled):hover,
+html[data-theme="dark"] .MuiButton-root.MuiButton-textPrimary:not(.Mui-disabled):hover{color:#d2e0ff;background:#213653}
+html[data-theme="dark"] .MuiButton-root.Mui-disabled{color:#72859d;background:#29364b}
+html[data-theme="dark"] .MuiAlert-standardError{background:#3a202d;color:#ffc7d1}
+html[data-theme="dark"] .MuiAlert-standardInfo{background:#1c334d;color:#c6e0ff}
+html[data-theme="dark"] a:focus-visible,html[data-theme="dark"] button:focus-visible{outline-color:#a6bdff}
