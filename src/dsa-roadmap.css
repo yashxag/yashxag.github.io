@@ -497,3 +497,9 @@ html[data-theme="dark"] .dsa-v2 .learning-stage-return{color:#adc8ff}
 html[data-theme="dark"] .dsa-v2 .learning-topic-pagination>a{background:#1b304d;border-color:#3e5d8c;color:#c4d8ff}
 html[data-theme="dark"] .dsa-v2 .learning-topic-pagination>a:hover{background:#27416a}
 html[data-theme="dark"] .dsa-v2 .learning-primary-link{background:#385fae;color:#fff!important}
+
+/* Override legacy filter grid placement: three advanced controls only. */
+@media(max-width:620px){
+ .dsa-v2 .learning-filter-grid>div:nth-child(3){grid-column:auto;grid-row:auto}
+ .dsa-v2 .learning-filter-grid>div:nth-child(4){grid-column:auto;grid-row:auto}
+}
