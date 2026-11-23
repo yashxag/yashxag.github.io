@@ -89,8 +89,8 @@ function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
    <div className="learning-hero-copy"><p className="learning-eyebrow">JAVA · INTERVIEW PREP · BEGINNER TO ADVANCED</p><h1>DSA learning roadmap</h1><p>Learn the data structure, understand the algorithm, solve the pattern, then revisit it. Built for SDE interviews, not random daily question spam.</p></div>
    <div className="learning-hero-stats" aria-label="Your learning progress">
     <div><strong>{stages.length}</strong><span>Learning stages</span></div>
-    <div><strong>{problems.length}</strong><span>Curated exercises</span></div>
-    <div><strong>{worked}</strong><span>Java walkthroughs</span></div>
+    <div><strong>{allEntries.length}</strong><span>Learning items</span></div>
+    <div><strong>{worked}</strong><span>Java problems</span></div>
     <div><strong>{solved}</strong><span>Marked solved</span></div>
    </div>
   </div>
