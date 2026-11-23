@@ -595,3 +595,44 @@ body{background-image:none;color:#182439}
 /* Date range fits neatly with the existing advanced filters. */
 @media(min-width:951px){.dsa-extra-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.dsa-extra-filters>.MuiFormControl-root:last-child{grid-column:1/-1}}
+
+
+/* Salary visibility: estimates stay visually distinct from employer-posted compensation. */
+.job-salary-preview{
+ display:flex;align-items:center;flex-wrap:wrap;gap:6px 9px;
+ font-size:12px;line-height:1.55;margin:9px 0 5px;max-width:100%;
+ color:#23456b;overflow-wrap:anywhere;
+}
+.job-salary-amount{
+ color:#214a9a;font-weight:750;background:#edf3ff;border:1px solid #d6e1f5;
+ border-radius:8px;padding:4px 8px;max-width:100%;
+}
+.job-salary-type{font-size:11px;color:#5e718c;font-weight:600}
+.job-salary-preview.compact{gap:5px;margin:7px 0 0}
+.home-listing .job-salary-preview.compact{font-size:11px}
+.home-listing .job-salary-preview.compact .job-salary-amount{font-size:11px}
+.home-listing .job-salary-preview.compact .job-salary-type{font-size:10px}
+.job .job-salary-preview{margin:10px 0 9px}
+.job .job-salary-amount{font-size:12px}
+.job-salary-evidence{display:flex;flex-direction:column;gap:10px}
+.job-detail .job-salary-evidence h2{margin:0}
+.job-detail .job-salary-evidence p{margin:0;line-height:1.65;color:#425573;font-size:13px;overflow-wrap:anywhere}
+.job-detail .job-salary-evidence .job-salary-large{
+ font-size:17px;font-weight:800;color:#284b9b;line-height:1.5;
+}
+.job-salary-source{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ padding-top:12px;border-top:1px solid #e4eaf3;color:#60718b;font-size:12px;
+}
+.job-salary-source a{display:inline-flex;gap:5px;align-items:center;color:#3153bb;
+ text-decoration:underline;text-underline-offset:3px;font-weight:750;
+}
+.job-salary-source a:hover{color:#183783}
+.job-salary-source a:focus-visible{outline:3px solid #567ad2;outline-offset:3px}
+.job-detail .detail-summary-item strong{overflow-wrap:anywhere;word-break:normal}
+@media(max-width:600px){
+ .job-salary-preview{font-size:11px;gap:5px;margin:8px 0}
+ .job-salary-amount{font-size:11px;padding:5px 7px}
+ .job-salary-type{font-size:10px}
+ .job-detail .job-salary-evidence .job-salary-large{font-size:15px}
+ .job-salary-source{align-items:flex-start;flex-direction:column;gap:8px}
+}
