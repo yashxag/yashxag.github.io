@@ -92,7 +92,7 @@ function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
   if(!search.trim()&&typeFilter==='All'&&difficulty==='All'&&stageFilter==='All'&&status==='All')return;
   const nextStage=stages.find(stage=>(entriesByStage.get(stage.id)||[]).some(entry=>{
    const p=entry.p,lesson=entry.lesson,isProblem=entry.type==='Problem';
-   const words=[stage.title,isProblem?p.title:lesson.title,isProblem?p.slug:lesson.overview,lesson?.mentalModel].filter(Boolean).join(' ').toLowerCase();
+   const words=[stage.title,isProblem?p.title:lesson.title,isProblem?p.slug:lesson.overview,isProblem?p.topic:lesson.kind,isProblem?p.skills:lesson.mentalModel,lesson?.whenToUse].filter(Boolean).join(' ').toLowerCase();
    return (!search.trim()||words.includes(search.trim().toLowerCase()))&&
     (typeFilter==='All'||entry.type===typeFilter)&&
     (difficulty==='All'||(isProblem&&p.difficulty===difficulty))&&
@@ -120,7 +120,7 @@ function RoadmapHome({stages,problems,concepts,method,progress,toggle}){
    </div>
    <div className="learning-search"><TextField size="small" fullWidth placeholder="Search topics or questions" value={search} onChange={e=>setSearch(e.target.value)} inputProps={{'aria-label':'Search DSA roadmap'}} InputProps={{startAdornment:<InputAdornment position="start"><Search fontSize="small"/></InputAdornment>,endAdornment:search?<InputAdornment position="end"><IconButton size="small" aria-label="Clear DSA search" onClick={()=>setSearch('')}><Close fontSize="small"/></IconButton></InputAdornment>:null}}/></div>
    <div className="learning-type-filters" role="group" aria-label="Filter learning item type">
-    {typeOptions.map(item=><button type="button" key={item.value} aria-pressed={typeFilter===item.value} className={'learning-type-filter '+(typeFilter===item.value?'active':'')} onClick={()=>setTypeFilter(item.value)}>{item.value!=='All'&&<LearningTypePill type={item.value}/>}<span>{item.label}</span><small>{item.count}</small></button>)}
+    {typeOptions.map(item=><button type="button" key={item.value} aria-pressed={typeFilter===item.value} className={'learning-type-filter '+(typeFilter===item.value?'active':'')} onClick={()=>{setTypeFilter(item.value);if(item.value==='Data structure'||item.value==='Algorithm'){setDifficulty('All');setStatus('All')}}}>{item.value!=='All'&&<LearningTypePill type={item.value}/>}<span>{item.label}</span><small>{item.count}</small></button>)}
    </div>
    <div className="learning-filter-actionbar">
     <Button variant={advancedOpen?'contained':'outlined'} size="small" startIcon={<Tune fontSize="small"/>} endIcon={advancedOpen?<ExpandLess fontSize="small"/>:<ExpandMore fontSize="small"/>} aria-expanded={advancedOpen} aria-controls="learning-extra-filters" onClick={()=>setAdvancedOpen(v=>!v)}>More filters{extraCount?' · '+extraCount:''}</Button>
