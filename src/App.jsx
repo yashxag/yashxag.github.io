@@ -6,7 +6,7 @@ import JobToolkit from './JobToolkit.jsx';
 import {motion,useReducedMotion} from 'framer-motion';
 import {Link,NavLink,Routes,Route,useParams} from 'react-router-dom';
 import {Box,Button,Paper,Chip,TextField,MenuItem,Typography,FormControl,Select,Alert,IconButton,Tooltip,Collapse,Menu,InputAdornment} from '@mui/material';
-import {Search,ArrowBack,OpenInNew,Download,Upload,Refresh,WorkOutline,DashboardOutlined,CheckCircleOutline,HelpOutline,CancelOutlined,EventBusyOutlined,Tune,ExpandMore,ExpandLess,MoreVert,Close,DarkModeOutlined,LightModeOutlined} from '@mui/icons-material';
+import {Search,ArrowBack,OpenInNew,Download,Upload,Refresh,WorkOutline,DashboardOutlined,CheckCircleOutline,HelpOutline,CancelOutlined,EventBusyOutlined,Tune,ExpandMore,ExpandLess,MoreVert,Close,DarkModeOutlined,LightModeOutlined,RestartAlt} from '@mui/icons-material';
 import {ResponsiveContainer,AreaChart,Area,XAxis,Tooltip as CT} from 'recharts';
 const statusOptions=['Not applied','Saved','Applied','Assessment','Interview','Offer','Rejected'];
 const key='careerboard-application-status-v1';
@@ -62,12 +62,12 @@ return <div className="home-sections">
 </section>
 </div>}
 function Jobs({jobs,mine,change,save,restore,reload}){
-const [q,setQ]=useState(''),[vac,setVac]=useState('Active'),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('newest'),[applied,setApplied]=useState('All'),[dateRange,setDateRange]=useState('all');
+const [q,setQ]=useState(''),[vac,setVac]=useState(['Active']),[mode,setMode]=useState('All'),[priority,setPriority]=useState('All'),[primarySort,setPrimarySort]=useState('priority'),[secondarySort,setSecondarySort]=useState('newest'),[applied,setApplied]=useState('All'),[dateRange,setDateRange]=useState('all');
 const [moreFilters,setMoreFilters]=useState(false),[actionsAnchor,setActionsAnchor]=useState(null);
 const today=indiaDateISO();
-const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(vac==='All'||j.vacancyStatus===vac)&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)&&matchesDateRange(j.dateFound,dateRange,today)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied,dateRange,today]);
+const list=useMemo(()=>jobs.filter(j=>(j.title+' '+j.company+' '+j.location+' '+j.skills).toLowerCase().includes(q.toLowerCase())&&(!vac.length||vac.includes(j.vacancyStatus||'Unknown'))&&(mode==='All'||(j.workMode||'').toLowerCase().includes(mode.toLowerCase()))&&(priority==='All'||priority===j.priority)&&(applied==='All'||(mine[j.id]||'Not applied')===applied)&&matchesDateRange(j.dateFound,dateRange,today)).sort((a,b)=>sortValue(a,b,primarySort)||sortValue(a,b,secondarySort)||a.id.localeCompare(b.id)),[jobs,mine,q,vac,mode,priority,primarySort,secondarySort,applied,dateRange,today]);
 const activeExtra=[mode!=='All',priority!=='All',applied!=='All',dateRange!=='all'].filter(Boolean).length;
-const reset=()=>{setQ('');setVac('Active');setMode('All');setPriority('All');setPrimarySort('priority');setSecondarySort('newest');setApplied('All');setDateRange('all')};
+const reset=()=>{setQ('');setVac(['Active']);setMode('All');setPriority('All');setPrimarySort('priority');setSecondarySort('newest');setApplied('All');setDateRange('all')};
 const allowedSecondary=secondaryRules[primarySort]||[];
 const secondaryOptions=[['none','No additional sort'],...sortOptions.filter(([value])=>allowedSecondary.includes(value))];
 const handlePrimarySort=value=>{setPrimarySort(value);setSecondarySort((secondaryRules[value]||[]).includes('newest')?'newest':(secondaryRules[value]||[])[0]||'none')};
@@ -82,11 +82,11 @@ return <div className="jobs-page">
 <section className="panel jobs-search-panel" aria-label="Search and filter jobs">
 <div className="jobs-search-line"><TextField fullWidth size="small" placeholder="Search role, company, location or skill" aria-label="Search jobs" value={q} onChange={e=>setQ(e.target.value)} InputProps={{startAdornment:<InputAdornment position="start"><Search fontSize="small"/></InputAdornment>,endAdornment:q?<InputAdornment position="end"><IconButton size="small" aria-label="Clear search" onClick={()=>setQ('')}><Close fontSize="small"/></IconButton></InputAdornment>:null}}/></div>
 <div className="jobs-quick-filters" role="group" aria-label="Vacancy status">
-{[['Active','Active'],['All','All jobs'],['Recheck','Recheck'],['Unknown','Unknown'],['Closed','Closed'],['Expired','Expired']].map(([value,label])=><button type="button" key={value} className={'jobs-filter-chip '+(vac===value?'selected':'')} aria-pressed={vac===value} onClick={()=>setVac(value)}>{label}</button>)}
+<Tooltip title="Clear status filters · Show all jobs"><button type="button" className="jobs-filter-chip" style={{display:'inline-flex',alignItems:'center',justifyContent:'center',padding:'7px',minWidth:35}} aria-label="Reset vacancy statuses and show all jobs" onClick={()=>setVac([])}><RestartAlt fontSize="small"/></button></Tooltip>{['Active','Recheck','Unknown','Closed','Expired'].map(value=><button type="button" key={value} className={'jobs-filter-chip '+(vac.includes(value)?'selected':'')} aria-pressed={vac.includes(value)} onClick={()=>setVac(previous=>previous.includes(value)?previous.filter(s=>s!==value):[...previous,value])}>{value}</button>)}
 </div>
 <div className="jobs-control-row"><div className="jobs-sort-pair"><div className="jobs-primary-sort">{makeSelect('Sort by',primarySort,handlePrimarySort,sortOptions)}</div><div className="jobs-secondary-sort">{makeSelect('Then by',secondarySort,setSecondarySort,secondaryOptions)}</div></div>
 <Button variant={moreFilters?'contained':'outlined'} className="jobs-more-filter-button" size="small" startIcon={<Tune fontSize="small"/>} endIcon={moreFilters?<ExpandLess fontSize="small"/>:<ExpandMore fontSize="small"/>} onClick={()=>setMoreFilters(v=>!v)} aria-expanded={moreFilters} aria-controls="jobs-extra-filters">Filters{activeExtra?' ('+activeExtra+')':''}</Button>
-{(q||vac!=='Active'||mode!=='All'||priority!=='All'||applied!=='All'||primarySort!=='priority'||secondarySort!=='newest'||dateRange!=='all')&&<Button size="small" className="jobs-reset" onClick={reset}>Reset</Button>}
+{(q||(vac.length!==1||vac[0]!=='Active')||mode!=='All'||priority!=='All'||applied!=='All'||primarySort!=='priority'||secondarySort!=='newest'||dateRange!=='all')&&<Button size="small" className="jobs-reset" onClick={reset}>Reset</Button>}
 </div>
 <Collapse in={moreFilters} timeout={140}><div id="jobs-extra-filters" className="jobs-extra-filters">
 {makeSelect('Work mode',mode,setMode,['All','Remote','Hybrid','Office','On-site'])}
@@ -96,7 +96,7 @@ return <div className="jobs-page">
 <p className="jobs-filter-help">Sorting is applied in order: primary first, then your selected tie-breaker.</p>
 </div></Collapse>
 </section>
-<div className="jobs-results-line"><div><strong>{list.length} {list.length===1?'job':'jobs'}</strong><span>{vac==='Active'?'Verified open listings':vac==='All'?'All vacancy statuses':vac+' listings'}{dateRange!=='all'?' · '+dateRangeOptions.find(([value])=>value===dateRange)?.[1]:''}</span></div><span className="jobs-sort-summary">{sortOptions.find(([key])=>key===primarySort)?.[1]}{secondarySort!=='none'?' · '+sortOptions.find(([key])=>key===secondarySort)?.[1]:''}</span></div>
+<div className="jobs-results-line"><div><strong>{list.length} {list.length===1?'job':'jobs'}</strong><span>{!vac.length?'All vacancy statuses':vac.length===1&&vac[0]==='Active'?'Verified open listings':vac.join(', ')+' listings'}{dateRange!=='all'?' · '+dateRangeOptions.find(([value])=>value===dateRange)?.[1]:''}</span></div><span className="jobs-sort-summary">{sortOptions.find(([key])=>key===primarySort)?.[1]}{secondarySort!=='none'?' · '+sortOptions.find(([key])=>key===secondarySort)?.[1]:''}</span></div>
 <div className="jobs-list">{list.map(j=><article className="panel job" key={j.id}>
 <div className="job-content"><div className="job-topline"><CompanyPill name={j.company}/><Status s={j.vacancyStatus}/></div>
 <Link to={'/jobs/'+slug(j)} className="job-title-link"><h3 title={j.title}>{j.title}</h3></Link>
@@ -104,7 +104,7 @@ return <div className="jobs-page">
 <div className="tags">{(j.skills||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,4).map((skill,i)=><span key={i} className="tag" title={skill}>{skill}</span>)}</div>
 <p className="job-meta">{j.priority} priority · {briefFit(j.fit)} fit · Found {date(j.dateFound)}</p>
 </div><div className="job-side"><label className="input-caption" htmlFor={'job-status-'+j.id}>Your application</label><div id={'job-status-'+j.id}><Picker value={mine[j.id]} onChange={value=>change(j.id,value)}/></div><Link className="job-detail-link" to={'/jobs/'+slug(j)}>View details ↗</Link></div></article>)}</div>
-{!list.length&&<div className="panel home-empty">No results for these filters. Try All jobs or reset your search.</div>}
+{!list.length&&<div className="panel home-empty">No results for these filters. Clear status filters or reset your search.</div>}
 <p className="jobs-privacy-note">Application statuses are saved only on this device. Use the menu above to export or import them.</p>
 </div>}
 function Detail({jobs,mine,change}){
